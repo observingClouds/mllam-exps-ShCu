@@ -1,0 +1,3 @@
+dcgm-gpu*.stats
+logs/
+wandb/

@@ -1,0 +1,25 @@
+stages:
+  prepare_dataset:
+    cmd: python -m mllam_data_prep data/datastore.yaml --output data/training/dataset.zarr
+    deps:
+      - data/datastore.yaml
+    outs:
+      - data/training/dataset.zarr
+  create_graph:
+    cmd: python -m neural_lam.create_graph --config_path data/config.yaml --name 1level --levels 1
+    params:
+      - data/config.yaml:
+        - datastore
+    outs:
+      - data/graph/
+  train:
+    cmd:
+      - sbatch -W machines/slurm.train.sh --config_path $PWD/data/config.yaml
+        --model graph_lam --graph 1level --epochs 1 --batch_size 1 --hidden_dim 8 --processor_layers 2
+        --ar_steps_eval 1 --num_workers 16
+    deps:
+      - data/graph/
+      - data/config.yaml
+      - data/training/dataset.zarr
+    outs:
+      - saved_models
