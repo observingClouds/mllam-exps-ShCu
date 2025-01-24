@@ -15,9 +15,17 @@ stages:
   train:
     cmd:
       - sbatch -W machines/slurm.train.sh --config_path $PWD/data/config.yaml
-        --model graph_lam --graph 1level --epochs 1 --batch_size 1 --hidden_dim 8 --processor_layers 2
-        --ar_steps_eval 1 --num_workers 16
+    params:
+      - data/training_params.yaml:
+        - model
+        - graph
+        - epochs
+        - batch_size
+        - hidden_dim
+        - processor_layers
+        - metrics_watch
     deps:
+      - versions.yaml
       - data/graph/
       - data/config.yaml
       - data/training/dataset.zarr

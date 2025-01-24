@@ -41,4 +41,4 @@ NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11
 OMP_NUM_THREADS=56
 set +a
 
-srun -ul python -m neural_lam.train_model "$@"
+srun -ul python train_wrapper.py "$@"

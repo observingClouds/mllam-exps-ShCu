@@ -1,0 +1,8 @@
+model: graph_lam
+graph: 1level
+epochs: 1
+batch_size: 1
+hidden_dim: 8
+processor_layers: 2
+metrics_watch: val_rmse
+logger: dvc
