@@ -11,20 +11,10 @@
 
 echo "Started slurm job $SLURM_JOB_ID"
 
-module load \
-    GCC/12.3.0 \
-    OpenMPI/4.1.5 \
-    SciPy-bundle/2024.05 \
-    Neural-LAM/0.2.0-PyTorch-2.3.1-CUDA-12.4.0 \
-    wandb/0.16.6 \
-    foss/2023a \
-    GCCcore/12.3.0 \
-    NCCL/2.18.3-CUDA-12.4.0
-
-#pip install parse --target packages --no-deps
-export PYTHONPATH=$HOME/git-repos/neural-lam:$PYTHONPATH
-export PYTHONPATH=/dcai/projects/cu_0003/user_space/has/packages:$PYTHONPATH
-export PYTHONPATH=/dcai/projects/cu_0003/user_space/has/packages_dvc:$PYTHONPATH
+# uv venv nlm
+# source nlm/bin/activate
+# uv pip install neural-lam dvc dvclive
+source ~/git-repos/nlm/bin/activate
 
 
 wandb disabled
