@@ -2,3 +2,5 @@ dcgm-gpu*.stats
 logs/
 wandb/
 /saved_models
+data/datastore.zarr
+data/training
