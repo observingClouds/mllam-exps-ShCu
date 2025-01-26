@@ -5,18 +5,22 @@
 #SBATCH --ntasks-per-node=8
 #SBATCH --gres=gpu:8
 #SBATCH --no-requeue
-#SBATCH --exclusive
 #SBATCH --output=logs/neurallam.%j.log
 #SBATCH --error=logs/neurallam.%j.log
 
 echo "Started slurm job $SLURM_JOB_ID"
 
+# export UV_INDEX=https://nexus.gefion.dcai.dk/repository/pypi/simple/
+# UV_INDEX=https://nexus.gefion.dcai.dk/repository/pypi/simple/ TMPDIR=~/tmp/ ~/.local/bin/uv pip install . --native-tls
 # uv venv nlm
 # source nlm/bin/activate
 # uv pip install neural-lam dvc dvclive
-source ~/git-repos/nlm/bin/activate
+#source ~/git-repos/nlm/bin/activate
+source ~/envs/nlm_login2/bin/activate
 
+export CARTOPY_DATA_DIR=/dcai/projects/cu_0003/user_space/has/cartopy_features/
 
+wandb off
 wandb disabled
 
 set -a
