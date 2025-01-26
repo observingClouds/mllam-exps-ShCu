@@ -2,32 +2,69 @@ stages:
   prepare_dataset:
     cmd: python -m mllam_data_prep data/datastore.yaml --output data/training/dataset.zarr
     deps:
-      - data/datastore.yaml
+    - data/datastore.yaml
     outs:
-      - data/training/dataset.zarr
+    - data/training/dataset.zarr
   create_graph:
-    cmd: python -m neural_lam.create_graph --config_path data/config.yaml --name 1level --levels 1
+    cmd: python -m neural_lam.create_graph --config_path data/config.yaml --name 1level
+      --levels 1
     params:
-      - data/config.yaml:
-        - datastore
+    - data/config.yaml:
+      - datastore
     outs:
-      - data/graph/
+    - data/graph/
   train:
     cmd:
-      - sbatch -W machines/slurm.train.sh --config_path $PWD/data/config.yaml
+    - mkdir plots; module load slurm; sbatch -W machines/slurm.train.sh --config_path
+      $PWD/data/config.yaml
     params:
-      - data/training_params.yaml:
-        - model
-        - graph
-        - epochs
-        - batch_size
-        - hidden_dim
-        - processor_layers
-        - metrics_watch
+    - data/training_params.yaml:
+      - model
+      - graph
+      - epochs
+      - batch_size
+      - hidden_dim
+      - num_workers
+      - processor_layers
+      - metrics_watch
+      - logger
+      - val_steps_to_log
     deps:
-      - versions.yaml
-      - data/graph/
-      - data/config.yaml
-      - data/training/dataset.zarr
+    - versions.yaml
+    - data/graph/
+    - data/config.yaml
+    - data/training/dataset.zarr
     outs:
-      - saved_models
+    - saved_models
+  evaluate:
+    cmd:
+    - mkdir plots; module load slurm; sbatch -W machines/slurm.train.sh --config_path
+      $PWD/data/config.yaml --eval val --load $PWD/saved_models/*/last.ckpt
+    params:
+    - data/training_params.yaml:
+      - model
+      - graph
+      - epochs
+      - batch_size
+      - hidden_dim
+      - num_workers
+      - processor_layers
+      - metrics_watch
+      - logger
+      - val_steps_to_log
+    deps:
+    - versions.yaml
+    - data/graph/
+    - data/config.yaml
+    - data/training/dataset.zarr
+    - saved_models
+    outs:
+    - plots
+params:
+- dvclive/params.yaml
+metrics:
+- metrics/metrics.json
+plots:
+- plots:
+- metrics/plots/metrics:
+    x: step
