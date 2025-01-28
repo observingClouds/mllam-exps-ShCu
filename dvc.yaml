@@ -1,22 +1,25 @@
 stages:
+  mllam_version:
+    cmd: source machines/environment.sh; python -c "from neural_lam import __version__; print(__version__)" > version.mllam.txt
   prepare_dataset:
-    cmd: python -m mllam_data_prep data/datastore.yaml --output data/training/dataset.zarr
+    cmd: python -m mllam_data_prep data/datastore.yaml --output data/datastore.zarr
     deps:
     - data/datastore.yaml
     outs:
-    - data/training/dataset.zarr
-  create_graph:
+    - data/datastore.zarr
+  create_graph-slurm:
     cmd: python -m neural_lam.create_graph --config_path data/config.yaml --name 1level
       --levels 1
     params:
     - data/config.yaml:
       - datastore
+    deps:
+    - data/datastore.zarr
     outs:
     - data/graph/
   train:
     cmd:
-    - mkdir plots; module load slurm; sbatch -W machines/slurm.train.sh --config_path
-      $PWD/data/config.yaml
+    - sbatch -W machines/slurm.train.sh --config_path ./data/config.yaml --logger mlflow
     params:
     - data/training_params.yaml:
       - model
@@ -24,24 +27,24 @@ stages:
       - epochs
       - batch_size
       - hidden_dim
-      - num_workers
       - processor_layers
       - metrics_watch
-      - logger
+      - num_workers
+      - num_nodes
       - val_steps_to_log
     deps:
-    - versions.yaml
+    - version.mllam.txt
     - data/graph/
     - data/config.yaml
-    - data/training/dataset.zarr
+    - data/datastore.yaml
     outs:
     - saved_models
   evaluate:
     cmd:
-    - mkdir plots; module load slurm; sbatch -W machines/slurm.train.sh --config_path
-      $PWD/data/config.yaml --eval val --load $PWD/saved_models/*/last.ckpt
+    - sbatch -W --nodes 1 machines/slurm.train.sh --config_path ./data/config.yaml --eval val --load
+      ./saved_models/*/last.ckpt --logger mlflow
     params:
-    - data/training_params.yaml:
+    - data/evaluate_params.yaml:
       - model
       - graph
       - epochs
@@ -50,21 +53,12 @@ stages:
       - num_workers
       - processor_layers
       - metrics_watch
-      - logger
       - val_steps_to_log
+      - num_nodes
+      - ar_steps_eval
     deps:
-    - versions.yaml
+    - version.mllam.txt
     - data/graph/
     - data/config.yaml
-    - data/training/dataset.zarr
+    - data/datastore.yaml
     - saved_models
-    outs:
-    - plots
-params:
-- dvclive/params.yaml
-metrics:
-- metrics/metrics.json
-plots:
-- plots:
-- metrics/plots/metrics:
-    x: step
