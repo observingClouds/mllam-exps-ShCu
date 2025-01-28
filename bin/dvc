@@ -1,0 +1,60 @@
+#!/dcai/users/schhau/envs/nlm_login2/bin/python3
+# -*- coding: utf-8 -*-
+import sys
+import os
+import subprocess
+from dvc.cli import main
+
+if __name__ == "__main__":
+    # Check if the --slurm argument is provided
+    if '-slurm' in sys.argv[-1]:
+        # Prepare the SLURM submission command
+        slurm_script = f"""#!/bin/bash
+#SBATCH --job-name=HAS-NeuralLam
+#SBATCH --time=1:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=8
+#SBATCH --gres=gpu:8
+#SBATCH --chdir=/dcai/users/schhau/git-repos/mllam-exps/
+#SBATCH --no-requeue
+#SBATCH --output=logs/neurallam.%j.log
+#SBATCH --error=logs/neurallam.%j.log
+
+source ~/envs/nlm_login2/bin/activate
+
+export CARTOPY_DATA_DIR=/dcai/projects/cu_0003/user_space/has/cartopy_features/
+
+wandb off
+wandb disabled
+
+set -a
+LOGLEVEL=INFO
+CUDA_LAUNCH_BLOCKING=1
+
+OMPI_MCA_pml=ucx
+OMPI_MCA_btl=^vader,tcp,openib,uct
+UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_9:1,mlx5_10:1,mlx5_11:1
+NCCL_SOCKET_IFNAME=ens6f0
+NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11
+OMP_NUM_THREADS=56
+set +a
+
+# Run the script
+/dcai/users/schhau/envs/nlm_login2/bin/dvc {' '.join(sys.argv[1:])}
+"""
+
+        # Write the SLURM script to a temporary file
+        with open('submit_slurm.sh', 'w') as f:
+            f.write(slurm_script)
+
+        # Submit the SLURM job
+        subprocess.run(['sbatch', 'submit_slurm.sh'])
+
+    else:
+        # Run the script locally
+        if sys.argv[0].endswith("-script.pyw"):
+            sys.argv[0] = sys.argv[0][:-11]
+        elif sys.argv[0].endswith(".exe"):
+            sys.argv[0] = sys.argv[0][:-4]
+        
+        sys.exit(main())

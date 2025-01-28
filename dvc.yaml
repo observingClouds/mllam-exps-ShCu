@@ -1,23 +1,24 @@
 stages:
   prepare_dataset:
-    cmd: source ~/envs/nlm_login2/bin/activate; python -m mllam_data_prep data/datastore.yaml
-      --output data/training/dataset.zarr
+    cmd: python -m mllam_data_prep data/datastore.yaml
+      --output data/datastore.zarr
     deps:
     - data/datastore.yaml
     outs:
-    - data/training/dataset.zarr
-  create_graph:
-    cmd: source ~/envs/nlm_login2/bin/activate; python -m neural_lam.create_graph
+    - data/datastore.zarr
+  create_graph-slurm:
+    cmd: python -m neural_lam.create_graph
       --config_path data/config.yaml --name 1level --levels 1
     params:
     - data/config.yaml:
       - datastore
+    deps:
+    - data/datastore.zarr
     outs:
     - data/graph/
-  train:
+  train-slurm:
     cmd:
-    - mkdir plots; module load slurm; sbatch -W machines/slurm.train.sh --config_path
-      $PWD/data/config.yaml
+    - python train_wrapper.py --config_path $PWD/data/config.yaml
     params:
     - data/training_params.yaml:
       - model
@@ -41,7 +42,7 @@ stages:
     - training/metrics/metrics.yaml
   evaluate:
     cmd:
-    - mkdir plots; module load slurm; sbatch -W machines/slurm.train.sh --config_path
+    - python train_wrapper.py --config_path
       $PWD/data/config.yaml --eval val --load $PWD/saved_models/*/last.ckpt
     params:
     - data/training_params.yaml:

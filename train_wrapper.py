@@ -22,7 +22,7 @@ if __name__ == '__main__':
     parser.add_argument("--eval", type=str, default=None, choices=[None, "val", "test"])
     parser.add_argument("--load", type=str, default=None, help="Path to model checkpoint to load if evaluating")
     options = parser.parse_args()
-    params = dvc.api.params_show(stages=["train"])
+    params = dvc.api.params_show(stages=["train-slurm"])
     params.update(vars(options))
 
     if options.eval is not None and options.load is None:
