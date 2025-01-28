@@ -1,0 +1,4 @@
+[core]
+    remote = localshare
+['remote "localshare"']
+    url = /dcai/projects/cu_0003/dvc/
