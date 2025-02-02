@@ -1,6 +1,6 @@
 model: graph_lam
 graph: 1level
-epochs: 200
+epochs: 30
 batch_size: 10
 hidden_dim: 8
 processor_layers: 2

@@ -1,14 +1,14 @@
 #!/bin/bash -l
 #SBATCH --job-name=HAS-NeuralLam
-#SBATCH --time=2-00:00:00
+#SBATCH --time=1-00:00:00
 #SBATCH --nodes=10
 #SBATCH --ntasks-per-node=8
 #SBATCH --gres=gpu:8  #per node
 #SBATCH --no-requeue
 #SBATCH --exclusive
 #SBATCH --account=cu_0003
-#SBATCH --output=logs/neurallam.%j.log
-#SBATCH --error=logs/neurallam.%j.log
+#SBATCH --output=/dcai/users/schhau/git-repos/mllam-exps/logs/neurallam.%j.log
+#SBATCH --error=/dcai/users/schhau/git-repos/mllam-exps/logs/neurallam.%j.log
 
 echo "Started slurm job $SLURM_JOB_ID"
 

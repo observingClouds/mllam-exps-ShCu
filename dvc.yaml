@@ -39,7 +39,7 @@ stages:
     - saved_models
   evaluate:
     cmd:
-    - python train_wrapper.py --config_path $PWD/data/config.yaml --eval val --load
+    - sbatch -W --nodes 1 machines/slurm.train.sh --config_path $PWD/data/config.yaml --eval val --load
       $PWD/saved_models/*/last.ckpt --logger mlflow
     params:
     - data/training_params.yaml:
