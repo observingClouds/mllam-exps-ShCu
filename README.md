@@ -42,14 +42,14 @@ DVC automatically runs only the stages that have been updated as it keeps track 
 Once an experiment has been run and worth sharing with others, it can be pushed to the remote:
 
 ```bash
-dvc exp push <experiment> /dcai/projects/cu_0003/dvc/
+dvc exp push /dcai/projects/cu_0003/dvc/ <experiment>
 ```
 This command will push all tracked experiment data (model, graph, data, ...) to the remote.
 
 In the same way, experiments can be pulled from the remote:
 
 ```bash
-dvc exp pull <experiment> /dcai/projects/cu_0003/dvc/
+dvc exp pull /dcai/projects/cu_0003/dvc/ <experiment>
 ```
 
 And if one is just curious which experiments are available:
