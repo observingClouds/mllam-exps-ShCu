@@ -1,10 +1,12 @@
 #!/bin/bash -l
 #SBATCH --job-name=HAS-NeuralLam
-#SBATCH --time=1:00:00
-#SBATCH --nodes=1
+#SBATCH --time=2-00:00:00
+#SBATCH --nodes=10
 #SBATCH --ntasks-per-node=8
-#SBATCH --gres=gpu:8
+#SBATCH --gres=gpu:8  #per node
 #SBATCH --no-requeue
+#SBATCH --exclusive
+#SBATCH --account=cu_0003
 #SBATCH --output=logs/neurallam.%j.log
 #SBATCH --error=logs/neurallam.%j.log
 
@@ -16,12 +18,30 @@ echo "Started slurm job $SLURM_JOB_ID"
 # source nlm/bin/activate
 # uv pip install neural-lam dvc dvclive
 #source ~/git-repos/nlm/bin/activate
-source ~/envs/nlm_login2/bin/activate
+# source ~/envs/nlm_login2/bin/activate
 
 export CARTOPY_DATA_DIR=/dcai/projects/cu_0003/user_space/has/cartopy_features/
+export MLFLOW_TRACKING_URI="https://mlflow.dmi.dcs.dcai.dk" #sqlite:///mlflow.db #
+export MLFLOW_TRACKING_USERNAME="admin"
+export MLFLOW_TRACKING_PASSWORD="aI23ss#rPplP[:,qQ01Kl"
+export MLFLOW_TRACKING_INSECURE_TLS=true
 
-wandb off
-wandb disabled
+module load GCC/12.3.0
+module load OpenMPI/4.1.5
+module load SciPy-bundle/2024.05
+module load foss/2023a
+# module load Neural-LAM/0.2.0-PyTorch-2.3.1-CUDA-12.4.0
+module load GCCcore/12.3.0
+module load NCCL/2.18.3-CUDA-12.4.0
+# module load wandb/0.16.6
+module load slurm
+
+# wandb off
+
+# export PYTHONPATH=/dcai/projects/cu_0003/user_space/hinkas/neural-lam:$PYTHONPATH
+# export PYTHONPATH=$PYTHONPATH:/dcai/projects/cu_0003/user_space/skc/packages/
+
+source /dcai/users/schhau/git-repos/neural-lam/.venv/bin/activate
 
 set -a
 LOGLEVEL=INFO

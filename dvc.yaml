@@ -1,14 +1,13 @@
 stages:
   prepare_dataset:
-    cmd: python -m mllam_data_prep data/datastore.yaml
-      --output data/datastore.zarr
+    cmd: python -m mllam_data_prep data/datastore.yaml --output data/datastore.zarr
     deps:
     - data/datastore.yaml
     outs:
     - data/datastore.zarr
   create_graph-slurm:
-    cmd: python -m neural_lam.create_graph
-      --config_path data/config.yaml --name 1level --levels 1
+    cmd: python -m neural_lam.create_graph --config_path data/config.yaml --name 1level
+      --levels 1
     params:
     - data/config.yaml:
       - datastore
@@ -16,9 +15,9 @@ stages:
     - data/datastore.zarr
     outs:
     - data/graph/
-  train-slurm:
+  train:
     cmd:
-    - python train_wrapper.py --config_path $PWD/data/config.yaml
+    - sbatch -W machines/slurm.train.sh --config_path $PWD/data/config.yaml --logger mlflow
     params:
     - data/training_params.yaml:
       - model
@@ -26,24 +25,22 @@ stages:
       - epochs
       - batch_size
       - hidden_dim
-      - num_workers
       - processor_layers
       - metrics_watch
-      - logger
+      - num_workers
+      - num_nodes
       - val_steps_to_log
     deps:
     - versions.yaml
     - data/graph/
     - data/config.yaml
-    - data/training/dataset.zarr
+    - data/datastore.yaml
     outs:
     - saved_models
-    metrics:
-    - training/metrics/metrics.yaml
   evaluate:
     cmd:
-    - python train_wrapper.py --config_path
-      $PWD/data/config.yaml --eval val --load $PWD/saved_models/*/last.ckpt
+    - python train_wrapper.py --config_path $PWD/data/config.yaml --eval val --load
+      $PWD/saved_models/*/last.ckpt --logger mlflow
     params:
     - data/training_params.yaml:
       - model
@@ -54,15 +51,12 @@ stages:
       - num_workers
       - processor_layers
       - metrics_watch
-      - logger
       - val_steps_to_log
     deps:
     - versions.yaml
     - data/graph/
     - data/config.yaml
-    - data/training/dataset.zarr
+    - data/datastore.yaml
     - saved_models
     plots:
     - evaluation/plots
-plots:
-- plots:
