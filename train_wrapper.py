@@ -28,7 +28,10 @@ if __name__ == '__main__':
     parser.add_argument("--load", type=none_or_str, default=None, help="Path to model checkpoint to load if evaluating")
     parser.add_argument("--logger", type=str, default="mlflow")
     options = parser.parse_args()
-    params = dvc.api.params_show(stages=["train"])
+    if options.eval is not None:
+        params = dvc.api.params_show(stages=["evaluate"])
+    else:
+        params = dvc.api.params_show(stages=["train"])
     params.update(vars(options))
     print(params)
 
