@@ -2,7 +2,7 @@ model: graph_lam
 graph: 1level
 epochs: 30
 batch_size: 10
-hidden_dim: 8
+hidden_dim: 16
 processor_layers: 2
 metrics_watch: val_rmse, mse, random_metric
 logger: mlflow

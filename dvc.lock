@@ -52,9 +52,9 @@ stages:
     params:
       data/training_params.yaml:
         batch_size: 10
-        epochs: 200
+        epochs: 30
         graph: 1level
-        hidden_dim: 8
+        hidden_dim: 16
         metrics_watch: val_rmse, mse, random_metric
         model: graph_lam
         num_nodes: 10
@@ -64,8 +64,8 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 655ba222696beebce7434d55638260e6.dir
-      size: 278496
+      md5: 506183832cb1bd4a0cfcb54be8b674e2.dir
+      size: 471392
       nfiles: 2
   evaluate:
     cmd:
