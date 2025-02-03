@@ -5,13 +5,14 @@ stages:
     deps:
     - path: data/datastore.yaml
       hash: md5
-      md5: 69fe3c7d4618efaa4e819e5b7d01fc09
-      size: 2331
+      md5: 832157ad151ed45383edc0fffddf75b3
+      size: 2815
+      isexec: true
     outs:
     - path: data/datastore.zarr
       hash: md5
-      md5: 8fd9f4688b6dc136245939edb5087bff.dir
-      size: 129680003233
+      md5: 0ed2edc0185c8450a4b49d7995d19816.dir
+      size: 142862366978
       nfiles: 58550
   create_graph:
     cmd: python -m neural_lam.create_graph --config_path data/config.yaml --name 1level
