@@ -1,4 +1,6 @@
 stages:
+  mllam_version:
+    cmd: source machines/environment.sh; python -c "from neural_lam import __version__; print(__version__)" > version.mllam.txt
   prepare_dataset:
     cmd: python -m mllam_data_prep data/datastore.yaml --output data/datastore.zarr
     deps:
@@ -31,7 +33,7 @@ stages:
       - num_nodes
       - val_steps_to_log
     deps:
-    - versions.yaml
+    - version.mllam.txt
     - data/graph/
     - data/config.yaml
     - data/datastore.yaml
@@ -52,8 +54,10 @@ stages:
       - processor_layers
       - metrics_watch
       - val_steps_to_log
+      - num_nodes
+      - ar_steps_eval
     deps:
-    - versions.yaml
+    - version.mllam.txt
     - data/graph/
     - data/config.yaml
     - data/datastore.yaml
