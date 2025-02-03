@@ -69,8 +69,7 @@ inputs:
         dim: time
       state_feature:
         method: stack_variables_by_var_name
-        dims: [altitude]
-        name_format: "{var_name}{altitude}m"
+        name_format: "{var_name}"
       grid_index:
         method: stack
         dims: [x, y]
