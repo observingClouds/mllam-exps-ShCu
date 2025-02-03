@@ -73,7 +73,7 @@ inputs:
       forcing_feature:
         method: stack_variables_by_var_name
         name_format: "{var_name}"
-    target_output_variable: forcing
+    target_output_variable: state
 
   danra_lsm:
     path: /dcai/projects/cu_0003/data/sources/danra/v0.4.0/lsm.zarr
