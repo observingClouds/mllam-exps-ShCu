@@ -19,7 +19,7 @@ stages:
     - data/graph/
   train:
     cmd:
-    - sbatch -W machines/slurm.train.sh --config_path $PWD/data/config.yaml --logger mlflow
+    - sbatch -W machines/slurm.train.sh --config_path ./data/config.yaml --logger mlflow
     params:
     - data/training_params.yaml:
       - model
@@ -41,8 +41,8 @@ stages:
     - saved_models
   evaluate:
     cmd:
-    - sbatch -W --nodes 1 machines/slurm.train.sh --config_path $PWD/data/config.yaml --eval val --load
-      $PWD/saved_models/*/last.ckpt --logger mlflow
+    - sbatch -W --nodes 1 machines/slurm.train.sh --config_path ./data/config.yaml --eval val --load
+      ./saved_models/*/last.ckpt --logger mlflow
     params:
     - data/evaluate_params.yaml:
       - model
