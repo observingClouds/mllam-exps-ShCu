@@ -62,3 +62,5 @@ stages:
     - data/config.yaml
     - data/datastore.yaml
     - saved_models
+    outs:
+    - mlruns
