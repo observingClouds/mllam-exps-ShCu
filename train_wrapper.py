@@ -27,6 +27,7 @@ if __name__ == '__main__':
     parser.add_argument("--eval", type=none_or_str, default=None, choices=[None, "val", "test"])
     parser.add_argument("--load", type=none_or_str, default=None, help="Path to model checkpoint to load if evaluating")
     parser.add_argument("--logger", type=str, default="mlflow")
+    parser.add_argument("--logger_project", type=str, default="neural_lam")
     options = parser.parse_args()
     if options.eval is not None:
         params = dvc.api.params_show(stages=["evaluate"])

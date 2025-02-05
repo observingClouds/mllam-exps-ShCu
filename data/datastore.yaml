@@ -30,31 +30,6 @@ output:
         end: 2001-01-01T00:00
 
 inputs:
-  danra_height_levels:
-    path: /dcai/projects/cu_0003/data/sources/danra/v0.5.0/height_levels.zarr
-    dims: [time, x, y, altitude]
-    variables:
-      u:
-        altitude:
-          values: [100,]
-          units: m
-      v:
-        altitude:
-          values: [100, ]
-          units: m
-    dim_mapping:
-      time:
-        method: rename
-        dim: time
-      state_feature:
-        method: stack_variables_by_var_name
-        dims: [altitude]
-        name_format: "{var_name}{altitude}m"
-      grid_index:
-        method: stack
-        dims: [x, y]
-    target_output_variable: state
-  
   
   danra_surface:
     path: /dcai/projects/cu_0003/data/sources/danra/v0.5.0/single_levels.zarr
@@ -78,7 +53,6 @@ inputs:
   danra_surface_forcing:
     path: /dcai/projects/cu_0003/data/sources/danra/v0.5.0/single_levels.zarr
     dims: [time, x, y]
-    variables:
     derived_variables:
       # derive variables to be used as forcings
       toa_radiation:

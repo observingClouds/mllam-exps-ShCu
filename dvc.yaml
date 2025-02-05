@@ -19,7 +19,7 @@ stages:
     - data/graph/
   train:
     cmd:
-    - sbatch -W machines/slurm.train.sh --config_path ./data/config.yaml --logger mlflow
+    - sbatch -W machines/slurm.train.sh --config_path ./data/config.yaml --logger mlflow --logger_project has_hidden_dim
     params:
     - data/training_params.yaml:
       - model
@@ -42,7 +42,7 @@ stages:
   evaluate:
     cmd:
     - sbatch -W --nodes 1 machines/slurm.train.sh --config_path ./data/config.yaml --eval val --load
-      ./saved_models/*/last.ckpt --logger mlflow
+      ./saved_models/*/last.ckpt --logger mlflow --logger_project has_hidden_dim
     params:
     - data/evaluate_params.yaml:
       - model
@@ -62,3 +62,5 @@ stages:
     - data/config.yaml
     - data/datastore.yaml
     - saved_models
+    outs:
+    - mlruns
