@@ -1,11 +1,12 @@
 #!/bin/bash -l
 #SBATCH --job-name=HAS-NeuralLam
 #SBATCH --time=1-00:00:00
-#SBATCH --nodes=10
+#SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --gres=gpu:8  #per node
 #SBATCH --no-requeue
 #SBATCH --exclusive
+#SBATCH --partition=prodq
 #SBATCH --account=cu_0003
 #SBATCH --output=/dcai/users/schhau/git-repos/mllam-exps/logs/neurallam.%j.log
 #SBATCH --error=/dcai/users/schhau/git-repos/mllam-exps/logs/neurallam.%j.log
