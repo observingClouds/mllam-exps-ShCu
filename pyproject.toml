@@ -1,0 +1,24 @@
+[project]
+name = "mllam-exps-shcu"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+dependencies = [
+    "dvc>=3.59.1",
+    "intake>=2.0.8",
+    "intake-xarray>=2.0.0",
+    "jinja2>=3.1.5",
+    "loguru>=0.7.3",
+    "mllam-data-prep>=0.5.0",
+    "xarray>=2025.1.2",
+    "zarr>=3.0.3",
+]
+
+[dependency-groups]
+dev = [
+    "ipython>=8.32.0",
+]
+
+[tool.uv.sources]
+mllam-data-prep = { git = "ssh://git@github.com/mllam/mllam-data-prep.git" }
