@@ -8,36 +8,52 @@ output:
     forcing: [time, grid_index, forcing_feature]
   coord_ranges:
     time:
-      start: 1991-01-01T00:00
-      end: 2001-01-01T00:00
-      step: PT3H
+      start: 2020-01-11T22:20
+      end: 2020-01-11T22:30  #2020-02-19T10:00
+      step: PT10M
   chunking:
     time: 1
   splitting:
     dim: time
     splits:
       train:
-        start: 1991-01-01T00:00
-        end: 1999-01-01T00:00
+        start: 2020-01-11T22:20
+        end: 2020-01-11T22:30  #2020-02-19T10:00
         compute_statistics:
           ops: [mean, std, diff_mean, diff_std]
           dims: [grid_index, time]
       val:
-        start: 1999-01-01T00:00
-        end: 2000-01-01T00:00
+        start: 2020-01-11T22:20
+        end: 2020-01-11T22:30
       test:
-        start: 2000-01-01T00:00
-        end: 2001-01-01T00:00
+        start: 2020-01-11T22:20
+        end: 2020-01-11T22:30
 
 inputs:
   
-  danra_surface:
-    path: /dcai/projects/cu_0003/data/sources/danra/v0.5.0/single_levels.zarr
-    dims: [time, x, y]
+  icon_merged:
+    path: test.zarr
+    dims: [time, cell]
     variables:
-      - t2m
-      - u10m
-      - v10m
+      - t_2m
+      - u_10m
+      - v_10m
+      - clct
+      - lhfl_s
+      - pres_sfc
+      - qv_2m
+      - rain_gsp_rate
+      - shfl_s 
+      - t_seasfc
+      # - tot_prec  # accumulated precipitation
+      - tqc_dia
+      - tqi_dia
+      - tqv_dia
+      - sob_t
+      - sod_t
+      - sou_t
+      - thb_t
+      # - synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7  # regridded satellite data, need original along cell dim
     dim_mapping:
       time:
         method: rename
@@ -47,20 +63,20 @@ inputs:
         name_format: "{var_name}"
       grid_index:
         method: stack
-        dims: [x, y]
+        dims: [cell]
     target_output_variable: state
   
   danra_surface_forcing:
-    path: /dcai/projects/cu_0003/data/sources/danra/v0.5.0/single_levels.zarr
-    dims: [time, x, y]
+    path: test.zarr
+    dims: [time, cell]
     derived_variables:
       # derive variables to be used as forcings
-      toa_radiation:
-        kwargs:
-          time: ds_input.time
-          lat: ds_input.lat
-          lon: ds_input.lon
-        function: mllam_data_prep.ops.derive_variable.physical_field.calculate_toa_radiation
+      # toa_radiation:
+      #   kwargs:
+      #     time: ds_input.time
+      #     lat: ds_input.lat
+      #     lon: ds_input.lon
+      #   function: mllam_data_prep.ops.derive_variable.physical_field.calculate_toa_radiation
       hour_of_day_sin:
         kwargs:
           time: ds_input.time
@@ -77,34 +93,8 @@ inputs:
         dim: time
       grid_index:
         method: stack
-        dims: [x, y]
+        dims: [cell]
       forcing_feature:
         method: stack_variables_by_var_name
         name_format: "{var_name}"
     target_output_variable: forcing
-
-
-  danra_lsm:
-    path: /dcai/projects/cu_0003/data/sources/danra/v0.4.0/lsm.zarr
-    dims: [x, y]
-    variables:
-      - lsm
-    dim_mapping:
-      grid_index:
-        method: stack
-        dims: [x, y]
-      static_feature:
-        method: stack_variables_by_var_name
-        name_format: "{var_name}"
-    target_output_variable: static
-
-extra:
-  projection:
-    class_name: LambertConformal
-    kwargs:
-      central_longitude: 25.0
-      central_latitude: 56.7
-      standard_parallels: [56.7, 56.7]
-      globe:
-        semimajor_axis: 6367470.0
-        semiminor_axis: 6367470.0
