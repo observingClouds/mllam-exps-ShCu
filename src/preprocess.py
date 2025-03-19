@@ -6,6 +6,15 @@ import numpy as np
 import argparse
 from dask.diagnostics import ProgressBar
 
+async def get_client(**kwargs):
+    import aiohttp
+    import aiohttp_retry
+    retry_options = aiohttp_retry.ExponentialRetry(
+            attempts=3,
+            exceptions={OSError, aiohttp.ServerDisconnectedError})
+    retry_client = aiohttp_retry.RetryClient(raise_for_status=False, retry_options=retry_options, timeout=aiohttp.ClientTimeout(total=300, sock_connect=60, sock_read=60))
+    return retry_client
+
 if __name__ == "__main__":
     cat = open_catalog("https://raw.githubusercontent.com/observingClouds/eurec4a-intake/refs/heads/add/ICON-LES_DOM02_synsat_native/catalog.yml")
 
@@ -62,4 +71,4 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     with ProgressBar():
-        ds.to_zarr(args.output, mode="w")
+        ds.to_zarr(args.output, mode="w", storage_options={"get_client": get_client})
