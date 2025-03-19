@@ -5,6 +5,16 @@ This repository contains a [DVC](dvc.org) pipeline to train, reproduce and share
 >[!Warning]
 >This package is still under heavy development and currently has also a tendency to be geared towards a specific HPC environment.
 
+## Initial transfer of input data
+The data can be transfered from the cloud via:
+```bash
+git clone https://github.com/observingClouds/mllam-exps-ShCu.git
+cd mllam-exps-ShCu
+curl -LsSf https://astral.sh/uv/install.sh | sh   # see https://docs.astral.sh/uv/getting-started/installation/ for other options
+uv run python src/preprocess.py --output /dcai/projects/cu_0003/data/sources/icon/ICON312_v1.0.0.zarr
+```
+This step will take about 1-2 hours depending on the network connection and used resources.
+
 ## Design
 Pipelines consist of several stages, each stage describes a single step in the experiment process. Main stages for an ML experiment consist
 typically of data preparation, model training, evaluation and inference. These stages are defined in the `dvc.yaml` file. For the Neural-LAM
