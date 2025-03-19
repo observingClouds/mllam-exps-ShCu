@@ -4,6 +4,7 @@ import xarray as xr
 import pandas as pd
 import numpy as np
 import argparse
+from dask.diagnostics import ProgressBar
 
 if __name__ == "__main__":
     cat = open_catalog("https://raw.githubusercontent.com/observingClouds/eurec4a-intake/refs/heads/add/ICON-LES_DOM02_synsat_native/catalog.yml")
@@ -60,4 +61,5 @@ if __name__ == "__main__":
     parser.add_argument("--output", type=str, required=True, help="Output file path for the Zarr dataset.", default="/dcai/projects/cu_0003/data/sources/icon/ICON-DOM02.v1.zarr")
     args = parser.parse_args()
 
-    ds.to_zarr(args.output, mode="w")
+    with ProgressBar():
+        ds.to_zarr(args.output, mode="w")
