@@ -45,7 +45,7 @@ if __name__ == "__main__":
     ]
     ds = merged_ds[variables]
     logger.info("Rechunking")
-    ds = ds.isel(time=slice(0,10)).chunk({'time':1, 'cell':-1})
+    ds = ds.chunk({'time':1, 'cell':-1})
 
     for var in ds.data_vars:
         del ds[var].encoding["chunks"]
