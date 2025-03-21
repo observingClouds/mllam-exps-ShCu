@@ -53,7 +53,7 @@ inputs:
       - sod_t
       - sou_t
       - thb_t
-      # - synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7  # regridded satellite data, need original along cell dim
+      - synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7
     dim_mapping:
       time:
         method: rename
