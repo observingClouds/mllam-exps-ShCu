@@ -8,15 +8,22 @@ dependencies = [
     "intake>=2.0.8",
     "intake-xarray>=2.0.0",
     "loguru>=0.7.3",
+    "mllam-data-prep",
+    "neural-lam",
     "numpy<=2.1",
-    "xarray>=2025.1.2",
+    "scipy==1.15.2",
+    "weather-model-graphs",
+    "xarray<=2025.2.0",
     "zarr<3",
 ]
 
 [dependency-groups]
 dev = [
+    "ipykernel>=6.29.5",
     "ipython>=8.32.0",
 ]
 
 [tool.uv.sources]
-mllam-data-prep = { git = "ssh://git@github.com/mllam/mllam-data-prep.git" }
+mllam-data-prep = { path = "/Users/haukeschulz/Documents/GitHub/mllam-data-prep" , editable = true}
+neural-lam = { path = "../neural-lam" }
+weather-model-graphs = { path = "/Users/haukeschulz/Documents/GitProjects/weather-model-graphs" , editable = true}
