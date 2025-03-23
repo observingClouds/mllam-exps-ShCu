@@ -10,7 +10,7 @@ dependencies = [
     "loguru>=0.7.3",
     "mllam-data-prep",
     "neural-lam",
-    "numpy<=2.1",
+    "numpy<2.0",
     "scipy==1.15.2",
     "weather-model-graphs",
     "xarray<=2025.2.0",
