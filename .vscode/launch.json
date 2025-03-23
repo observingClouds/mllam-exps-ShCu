@@ -13,6 +13,24 @@
             "args": ["data/datastore.yaml", "--output", "data/datastore.zarr"],
             "python": "${workspaceFolder}/.venv/bin/python",
             "justMyCode": false
+        },
+        {
+            "name": "Python Debugger: graph",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "neural_lam.create_graph",
+            "args": ["--config_path", "data/config.yaml", "--name", "hierarchical_4lvl", "--levels", "4", "--hierarchical"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "justMyCode": false
+        }
+        {
+            "name": "Python Debugger: weather-model-graphs",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "neural_lam.create_graph",
+            "args": ["--config_path", "data/config.yaml", "--name", "hierarchical_4lvl", "--levels", "4", "--hierarchical"],
+            "python": "${workspaceFolder}/.venv/bin/python",
+            "justMyCode": false
         }
     ]
 }
