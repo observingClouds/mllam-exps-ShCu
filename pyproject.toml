@@ -3,8 +3,9 @@ name = "mllam-exps-shcu"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.11,<3.13"
+requires-python = ">=3.10,<3.13"
 dependencies = [
+    "dvc>=3.59.1",
     "intake>=2.0.8",
     "intake-xarray>=2.0.0",
     "loguru>=0.7.3",
@@ -25,6 +26,6 @@ dev = [
 ]
 
 [tool.uv.sources]
-mllam-data-prep = { path = "/Users/haukeschulz/Documents/GitHub/mllam-data-prep" , editable = true}
-neural-lam = { path = "../neural-lam", editable = true}
-weather-model-graphs = { path = "/Users/haukeschulz/Documents/GitProjects/weather-model-graphs" , editable = true}
+mllam-data-prep = { path = "../mllam-data-prep/" , editable = true}
+neural-lam = { path = "../neural-lam-ShCu", editable = true}
+weather-model-graphs = { path = "../weather-model-graphs" , editable = true}
