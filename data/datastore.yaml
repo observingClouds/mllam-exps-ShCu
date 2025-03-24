@@ -33,21 +33,21 @@ inputs:
       - t_2m
       - u_10m
       - v_10m
-      - clct
-      - lhfl_s
+      # - clct
+      # - lhfl_s
       - pres_sfc
-      - qv_2m
-      - rain_gsp_rate
-      - shfl_s 
-      - t_seasfc
-      # - tot_prec  # accumulated precipitation
-      - tqc_dia
-      - tqi_dia
-      - tqv_dia
-      - sob_t
-      - sod_t
-      - sou_t
-      - thb_t
+      # - qv_2m
+      # - rain_gsp_rate
+      # - shfl_s 
+      # - t_seasfc
+      # # # - tot_prec  # accumulated precipitation
+      # - tqc_dia
+      # - tqi_dia
+      # - tqv_dia
+      # - sob_t
+      # - sod_t
+      # - sou_t
+      # - thb_t
       - synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7
     dim_mapping:
       time:
