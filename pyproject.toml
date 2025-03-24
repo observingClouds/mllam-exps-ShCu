@@ -11,8 +11,9 @@ dependencies = [
     "mllam-data-prep",
     "neural-lam",
     "numpy<2.0",
+    "rtree>=1.4.0",
     "scipy==1.15.2",
-    "weather-model-graphs",
+    "spherely>=0.1.0",
     "xarray<=2025.2.0",
     "zarr<3",
 ]
@@ -25,5 +26,5 @@ dev = [
 
 [tool.uv.sources]
 mllam-data-prep = { path = "/Users/haukeschulz/Documents/GitHub/mllam-data-prep" , editable = true}
-neural-lam = { path = "../neural-lam" }
+neural-lam = { path = "../neural-lam", editable = true}
 weather-model-graphs = { path = "/Users/haukeschulz/Documents/GitProjects/weather-model-graphs" , editable = true}
