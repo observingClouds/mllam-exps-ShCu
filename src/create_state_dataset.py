@@ -9,11 +9,11 @@ import numpy as np
 import argparse
 
 parser = argparse.ArgumentParser(description="Create a static dataset for neural-lam.")
-parser.add_argument("input_path", type=str, help="Path to the input Zarr dataset.", default="../data/test.zarr")
-parser.add_argument("output_path", type=str, help="Path to the output Zarr dataset.", default="../data/lsm_DOM02.zarr")
+parser.add_argument("--input", type=str, help="Path to the input Zarr dataset.", default="../data/test.zarr")
+parser.add_argument("--output", type=str, help="Path to the output Zarr dataset.", default="../data/lsm_DOM02.zarr")
 args = parser.parse_args()
 
-ds = xr.open_zarr(args.input_path)
+ds = xr.open_zarr(args.input)
 r=np.random.randn(len(ds.cell))/1e3
 
-(xr.where(ds.t_seasfc.isel(time=0).isnull(), 0., 1.)*r).rename("lsm").drop_vars("time").squeeze(drop=True).to_zarr(args.output_path, mode="w", consolidated=True)
+(xr.where(ds.t_seasfc.isel(time=0).isnull(), 0., 1.)*r).rename("lsm").drop_vars("time").squeeze(drop=True).to_zarr(args.output, mode="w", consolidated=True)

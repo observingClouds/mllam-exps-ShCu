@@ -13,7 +13,7 @@ try:
     data = cat.simulations.ICON.LES_CampaignDomain_control.surface_DOM02.to_dask()
     grid = cat.simulations.grids[data.uuidOfHGrid].to_dask()
 except:
-    grid = xr.open_dataset("data/grid.nc")
+    grid = xr.open_dataset("/dcai/projects/cu_0003/data/sources/icon/grid.nc")
 
 R = 6371e3
 
