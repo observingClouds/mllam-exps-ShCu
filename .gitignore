@@ -6,5 +6,6 @@ wandb/
 /saved_models
 data/datastore.zarr
 data/training
+data/semaphore.lsm.created
 machines/secrets.sh
 /mlruns
