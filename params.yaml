@@ -22,7 +22,7 @@ graph-defaults:
   rotate_ico: true
   plot: true
   hierarchical: false
-  graph-name: &graph_name triangular  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
+  graph_name: &graph_name triangular  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 8 
