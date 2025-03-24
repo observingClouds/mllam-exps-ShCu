@@ -19,6 +19,7 @@ logger-project: &logger-project has/LES/dev
 graph-defaults:
   splits: 8
   g2m_radius: 1.5
+  rotate_ico: true
   plot: true
   hierarchical: false
   graph-name: &graph_name triangular  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
