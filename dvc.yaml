@@ -9,10 +9,15 @@ stages:
     cmd: machines/check_for_venv_path.sh
   mllam_version:
     cmd: '$MLLAM_VENV_PATH/bin/python -c "from neural_lam import __version__; print(__version__)" > version.mllam.txt'
+  create_lsm_dataset:
+    cmd: '$MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input /dcai/projects/cu_0003/data/sources/icon/ICON312_v1.0.0.zarr --output /dcai/projects/cu_0003/data/sources/icon/ICON312_lsm.zarr; touch data/semaphore.lsm.created'
+    outs:
+    - data/semaphore.lsm.created
   prepare_dataset:
     cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.yaml --output data/datastore.zarr
     deps:
     - data/datastore.yaml
+    - data/semaphore.lsm.created
     outs:
     - data/datastore.zarr
   create_graph:
