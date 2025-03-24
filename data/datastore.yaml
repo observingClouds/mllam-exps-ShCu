@@ -64,13 +64,10 @@ inputs:
     target_output_variable: state
   static_features:
     path: lsm_DOM02.zarr
-    dims: [time, cell]
+    dims: [cell]
     variables:
     - lsm
     dim_mapping:
-      time:
-        method: rename
-        dim: time
       grid_index:
         method: rename
         dim: cell
