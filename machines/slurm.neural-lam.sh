@@ -9,7 +9,7 @@ cd ${DVC_WORKING_DIR}
 
 echo "Started slurm job $SLURM_JOB_ID"
 
-export CARTOPY_DATA_DIR=/dcai/projects01/cu_0003/data/cartopy_features
+export CARTOPY_DATA_DIR=/dcai/projects01/cu_0003/user_space/has/cartopy_features
 export MLFLOW_TRACKING_URI="https://mlflow.dmi.dcs.dcai.dk" #sqlite:///mlflow.db #
 export MLFLOW_TRACKING_INSECURE_TLS=true
 
