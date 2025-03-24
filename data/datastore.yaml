@@ -1,5 +1,5 @@
-schema_version: v0.5.0
-dataset_version: v0.1.0
+schema_version: v0.6.0
+dataset_version: v1.0.0
 
 output:
   variables:
