@@ -59,7 +59,7 @@ stages:
       --nodes 2 --ntasks-per-node 8 --gres gpu:8 --no-requeue --exclusive --account
       cu_0003 --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml
       --logger mlflow --logger-project has/LES/dev --num_workers 8 --batch_size 1
-      --hidden_dim 128 --precision bf16-mixed --processor_layers 4 --model graph_lam
+      --hidden_dim 32 --precision bf16-mixed --processor_layers 4 --model graph_lam
       --graph triangular --epochs 1 --ar_steps_train 2 --lr 0.001 --val_interval 1
       --ar_steps_eval 2 --val_steps_to_log 1 2 --num_sanity_steps 0 --eval_init_times
       --plot_vars t_2m u_10m v_10m pres_sfc synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7
@@ -72,13 +72,13 @@ stages:
       isexec: true
     - path: data/datastore.yaml
       hash: md5
-      md5: cc9ee82aa55381da6805fc78ff0a4f17
-      size: 4189
+      md5: c5df825f4368eb5c4eda15480a289bb5
+      size: 8390306
       isexec: true
     - path: data/graph/
       hash: md5
-      md5: d41cff19c7b9094ecf957be6f042494c.dir
-      size: 56404
+      md5: f8c994b0f79d96cd0cf8185d4168d43c.dir
+      size: 193587284
       nfiles: 9
     - path: version.mllam.txt
       hash: md5
@@ -88,8 +88,8 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: cc405ac6f638ff2c6fa3c356feec8357.dir
-      size: 31597632
+      md5: 30bee5a05e5a2d12ceee96f77f7419cb.dir
+      size: 2477120
       nfiles: 3
   evaluate:
     cmd:
@@ -97,7 +97,7 @@ stages:
       --nodes 1 --ntasks-per-node 8 --gres gpu:8 --no-requeue --exclusive --account
       cu_0003 --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml
       --eval val --load ./saved_models/*/last.ckpt --logger mlflow --logger-project
-      has/LES/dev --num_workers 8 --batch_size 1 --hidden_dim 128 --precision bf16-mixed
+      has/LES/dev --num_workers 8 --batch_size 1 --hidden_dim 32 --precision bf16-mixed
       --processor_layers 4 --model graph_lam --graph triangular --epochs 1 --ar_steps_train
       2 --lr 0.001 --val_interval 1 --ar_steps_eval 2 --val_steps_to_log 1 2 --num_sanity_steps
       0 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7
@@ -110,18 +110,18 @@ stages:
       isexec: true
     - path: data/datastore.yaml
       hash: md5
-      md5: cc9ee82aa55381da6805fc78ff0a4f17
-      size: 4189
+      md5: c5df825f4368eb5c4eda15480a289bb5
+      size: 8390306
       isexec: true
     - path: data/graph/
       hash: md5
-      md5: d41cff19c7b9094ecf957be6f042494c.dir
-      size: 56404
+      md5: f8c994b0f79d96cd0cf8185d4168d43c.dir
+      size: 193587284
       nfiles: 9
     - path: saved_models
       hash: md5
-      md5: cc405ac6f638ff2c6fa3c356feec8357.dir
-      size: 31597632
+      md5: 30bee5a05e5a2d12ceee96f77f7419cb.dir
+      size: 2477120
       nfiles: 3
     - path: version.mllam.txt
       hash: md5
@@ -131,6 +131,6 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: c028f8bd0dddbc5d6bf83078fecb3b62.dir
-      size: 985356
+      md5: e183d55c1ae64ae06bdf29cdc6e72599.dir
+      size: 68017099
       nfiles: 24
