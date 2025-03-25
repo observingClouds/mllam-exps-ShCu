@@ -11,8 +11,8 @@ stages:
     deps:
     - path: data/datastore.yaml
       hash: md5
-      md5: cc9ee82aa55381da6805fc78ff0a4f17
-      size: 4189
+      md5: c5df825f4368eb5c4eda15480a289bb5
+      size: 8390306
       isexec: true
     - path: data/semaphore.lsm.created
       hash: md5
@@ -21,19 +21,19 @@ stages:
     outs:
     - path: data/datastore.zarr
       hash: md5
-      md5: 4d6d79fa6fd984de88f5b578b59f83d6.dir
-      size: 5898190
-      nfiles: 5623
+      md5: 0b875c3b6379cc63504458f4046b1192.dir
+      size: 13831565683
+      nfiles: 5630
   create_graph:
     cmd: $MLLAM_VENV_PATH/bin/python -m neural_lam.build_triangular_graph --config_path
       data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits 8 --plot
-      --splits 8 --g2m_radius 1.5 --rotate_ico --plot --graph_name triangular
+      --splits 12 --g2m_radius 1.5 --rotate_ico --plot --graph_name triangular
     deps:
     - path: data/datastore.zarr
       hash: md5
-      md5: 4d6d79fa6fd984de88f5b578b59f83d6.dir
-      size: 5898190
-      nfiles: 5623
+      md5: 0b875c3b6379cc63504458f4046b1192.dir
+      size: 13831565683
+      nfiles: 5630
     params:
       data/config.yaml:
         datastore:
@@ -42,8 +42,8 @@ stages:
     outs:
     - path: data/graph/
       hash: md5
-      md5: d41cff19c7b9094ecf957be6f042494c.dir
-      size: 56404
+      md5: f8c994b0f79d96cd0cf8185d4168d43c.dir
+      size: 193587284
       nfiles: 9
   create_lsm_dataset:
     cmd: $MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input /dcai/projects/cu_0003/data/sources/icon/ICON312_v1.0.0.zarr
