@@ -524339,8 +524339,8 @@ output:
     dim: time
     splits:
       test:
-        end: 2020-01-12T00:50
-        start: 2020-01-11T22:30
+        start: 2020-02-01T00:00
+        end: 2020-02-12T00:00
       train:
         compute_statistics:
           dims:
@@ -524351,11 +524351,11 @@ output:
           - std
           - diff_mean
           - diff_std
-        end: 2020-01-12T00:50
-        start: 2020-01-11T22:30
+        end: 2020-01-31T10:00
+        start: 2020-01-11T22:00
       val:
-        end: 2020-01-12T00:50
-        start: 2020-01-11T22:30
+        end: 2020-02-19T10:00
+        start: 2020-02-12T00:00
   variables:
     forcing:
     - time
