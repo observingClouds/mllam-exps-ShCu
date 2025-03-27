@@ -1,6 +1,9 @@
 datastore:
   kind: mdp
   config_path: ../data/datastore.yaml
+datastore_boundary:
+  kind: mdp
+  config_path: ../data/datastore.cropped.yaml
 training:
   state_feature_weighting:
     __config_class__: UniformFeatureWeighting

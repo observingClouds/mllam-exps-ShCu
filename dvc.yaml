@@ -20,6 +20,13 @@ stages:
     - data/semaphore.lsm.created
     outs:
     - data/datastore.zarr
+  prepare_boundary_dataset:
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.cropped.yaml --output data/datastore.cropped.zarr
+    deps:
+    - data/datastore.yaml
+    - data/datastore.cropped.yaml
+    outs:
+    - data/datastore.cropped.zarr
   create_graph:
     cmd: '$MLLAM_VENV_PATH/bin/python -m neural_lam.build_triangular_graph --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits 8 --plot ${graph-defaults}'
     params:
