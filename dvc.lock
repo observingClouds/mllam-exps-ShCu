@@ -524419,3 +524419,21 @@ stages:
       md5: 53bb9acf2e517b3b31015c2b0ee70adf.dir
       size: 67768090
       nfiles: 24
+  prepare_boundary_dataset:
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh
+      data/datastore.cropped.yaml --output data/datastore.cropped.zarr
+    deps:
+    - path: data/datastore.cropped.yaml
+      hash: md5
+      md5: 914cd07197fd681865869ea2e6596a80
+      size: 8390341
+    - path: data/datastore.yaml
+      hash: md5
+      md5: d8ff8a8246a6f2afa4247102b8e689cd
+      size: 8390306
+    outs:
+    - path: data/datastore.cropped.zarr
+      hash: md5
+      md5: aa18f13169f68c064ba9086a6e2feb32.dir
+      size: 1934486467
+      nfiles: 5641

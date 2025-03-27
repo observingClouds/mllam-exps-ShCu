@@ -524315,7 +524315,7 @@ inputs:
     - u_10m
     - v_10m
     - pres_sfc
-    - synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7
+    - t_seasfc 
   static_features:
     coord_ranges:
       cell: *id001
