@@ -27,7 +27,7 @@ graph-defaults:
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 8 
   batch_size: 1
-  hidden_dim: 32 
+  hidden_dim: 8 
   precision: bf16-mixed
   processor_layers: 4
   model: graph_lam
@@ -58,6 +58,7 @@ slurm-defaults: &slurm-defaults    # SLURM directives, which gets passed to sbat
   gres: gpu:8  #per node
   no-requeue: true                 # becomes `--no-requeue`
   exclusive: true
+  mem: 2000GB
   account: cu_0003
 
 slurm-eval:                        # Overwriting SLURM defaults with evaluation stage specifics

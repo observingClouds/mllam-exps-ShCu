@@ -23,7 +23,6 @@ stages:
   prepare_boundary_dataset:
     cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.cropped.yaml --output data/datastore.cropped.zarr
     deps:
-    - data/datastore.yaml
     - data/datastore.cropped.yaml
     outs:
     - data/datastore.cropped.zarr
