@@ -32,11 +32,11 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   processor_layers: 4
   model: graph_lam
   graph: *graph_name
-  epochs: 2 
+  epochs: 20 
   ar_steps_train: 2
   lr: 0.001
   val_interval: 1
-  ar_steps_eval: 2
+  ar_steps_eval: 15
   val_steps_to_log:
     - 1
     - 2

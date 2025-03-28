@@ -524344,8 +524344,8 @@ stages:
       --account cu_0003 --chdir ~/logs machines/slurm.neural-lam.sh --config_path
       ./data/config.yaml --logger mlflow --logger-project has/LES/dev --num_workers
       8 --batch_size 1 --hidden_dim 8 --precision bf16-mixed --processor_layers 4
-      --model graph_lam --graph triangular --epochs 2 --ar_steps_train 2 --lr 0.001
-      --val_interval 1 --ar_steps_eval 2 --val_steps_to_log 1 2 --num_sanity_steps
+      --model graph_lam --graph triangular --epochs 20 --ar_steps_train 2 --lr 0.001
+      --val_interval 1 --ar_steps_eval 15 --val_steps_to_log 1 2 --num_sanity_steps
       0 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc t_seasfc --metrics_watch
       'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -524371,9 +524371,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 71eff5568f7c8a776b66b923ee4ec91d.dir
-      size: 69846384
-      nfiles: 3
+      md5: d18208e4e97c77fffd977e0e389d538f.dir
+      size: 279411714
+      nfiles: 12
   evaluate:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name has/LES/dev --time 1-00:00:00
