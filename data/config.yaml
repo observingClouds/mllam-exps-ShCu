@@ -1,9 +1,9 @@
 datastore:
   kind: mdp
-  config_path: ../data/datastore.yaml
+  config_path: /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.interior.yaml
 datastore_boundary:
   kind: mdp
-  config_path: ../data/datastore.cropped.yaml
+  config_path: /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.boundary.yaml
 training:
   state_feature_weighting:
     __config_class__: UniformFeatureWeighting

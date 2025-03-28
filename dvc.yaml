@@ -13,19 +13,22 @@ stages:
     cmd: '$MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input /dcai/projects/cu_0003/data/sources/icon/ICON312_v1.0.0.zarr --output /dcai/projects/cu_0003/data/sources/icon/ICON312_lsm.zarr; touch data/semaphore.lsm.created'
     outs:
     - data/semaphore.lsm.created
-  prepare_dataset:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.yaml --output data/datastore.zarr
-    deps:
-    - data/datastore.yaml
-    - data/semaphore.lsm.created
-    outs:
-    - data/datastore.zarr
-  prepare_boundary_dataset:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.cropped.yaml --output data/datastore.cropped.zarr
+  split_dataset:
+    cmd: '$MLLAM_VENV_PATH/bin/python -m neural_lam.split_datastore --source_config_path /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.cropped.yaml --interior_config_path /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.interior.yaml --boundary_config_path /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.boundary.yaml'
     deps:
     - data/datastore.cropped.yaml
     outs:
-    - data/datastore.cropped.zarr
+    - data/datastore.boundary.yaml
+    - data/datastore.interior.yaml
+  prepare_dataset:
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.boundary.yaml --output data/datastore.boundary.zarr
+    deps:
+    - data/datastore.boundary.yaml
+    - data/datastore.interior.yaml
+    - data/semaphore.lsm.created
+    outs:
+    - data/datastore.boundary.zarr
+    - data/datastore.interior.zarr
   create_graph:
     cmd: '$MLLAM_VENV_PATH/bin/python -m neural_lam.build_triangular_graph --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits 8 --plot ${graph-defaults}'
     params:
