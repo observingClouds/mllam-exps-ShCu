@@ -5,24 +5,6 @@ stages:
   mllam_version:
     cmd: $MLLAM_VENV_PATH/bin/python -c "from neural_lam import __version__; print(__version__)"
       > version.mllam.txt
-  prepare_dataset:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh
-      data/datastore.yaml --output data/datastore.zarr
-    deps:
-    - path: data/datastore.yaml
-      hash: md5
-      md5: badde4a716eef741c8611a98144777af
-      size: 8390259
-    - path: data/semaphore.lsm.created
-      hash: md5
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
-    outs:
-    - path: data/datastore.zarr
-      hash: md5
-      md5: 5134c8c2b65c44a020620515bb18442c.dir
-      size: 9499233180
-      nfiles: 5630
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh
       --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits
