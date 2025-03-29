@@ -20,24 +20,15 @@ stages:
     outs:
     - data/datastore.boundary.yaml
     - data/datastore.interior.yaml
-  prepare_dataset:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.mllam-data-prep.sh data/datastore.boundary.yaml --output data/datastore.boundary.zarr
+  create_graph:
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits 8 --plot ${graph-defaults}
     deps:
+    - data/semaphore.lsm.created
     - data/datastore.boundary.yaml
     - data/datastore.interior.yaml
-    - data/semaphore.lsm.created
     outs:
     - data/datastore.boundary.zarr
     - data/datastore.interior.zarr
-  create_graph:
-    cmd: '$MLLAM_VENV_PATH/bin/python -m neural_lam.build_triangular_graph --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits 8 --plot ${graph-defaults}'
-    params:
-    - data/config.yaml:
-      - datastore
-    - data/datastore.yaml:
-      - inputs.icon_merged.path
-      - inputs.icon_merged.coord_ranges.cell
-    outs:
     - data/graph/
   train:
     cmd:
