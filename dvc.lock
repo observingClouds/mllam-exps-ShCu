@@ -67,3 +67,42 @@ stages:
       hash: md5
       md5: cd29c17992c77df456eaea9e05acddc3
       size: 15285859
+  train:
+    cmd:
+    - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name has/LES/dev --time 1-00:00:00
+      --nodes 2 --ntasks-per-node 8 --gres gpu:8 --no-requeue --exclusive --mem 2000GB
+      --account cu_0003 --chdir ~/logs machines/slurm.neural-lam.sh --config_path
+      ./data/config.yaml --logger mlflow --logger-project has/LES/dev --num_workers
+      8 --batch_size 1 --hidden_dim 32 --precision bf16-mixed --processor_layers 4
+      --model graph_lam --graph triangular --epochs 100 --ar_steps_train 1 --lr 0.001
+      --val_interval 1 --ar_steps_eval 15 --val_steps_to_log 1 2 --num_sanity_steps
+      0 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 'val_rmse,
+      mse, random_metric' --num_nodes 2
+    deps:
+    - path: data/config.yaml
+      hash: md5
+      md5: fb770049a9f34529539f7469321b8e52
+      size: 368
+    - path: data/datastore.boundary.yaml
+      hash: md5
+      md5: 05346784bec0b74de860505702575a17
+      size: 18876666
+    - path: data/datastore.interior.yaml
+      hash: md5
+      md5: cd29c17992c77df456eaea9e05acddc3
+      size: 15285859
+    - path: data/graph/
+      hash: md5
+      md5: de02504daf2dc35c0c778b9a7e75a331.dir
+      size: 192885716
+      nfiles: 9
+    - path: version.mllam.txt
+      hash: md5
+      md5: d03a8d7953fe639d93c5d57409e9b956
+      size: 30
+    outs:
+    - path: saved_models
+      hash: md5
+      md5: 216c796fafd7de50c8015b174e5e9691.dir
+      size: 167559438
+      nfiles: 7
