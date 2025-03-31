@@ -37,18 +37,19 @@ stages:
     - version.mllam.txt
     - data/graph/
     - data/config.yaml
-    - data/datastore.yaml
+    - data/datastore.interior.yaml
+    - data/datastore.boundary.yaml
     outs:
     - saved_models
-  evaluate:
-    cmd:
-    - export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-eval} --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --eval val --load
-      ./saved_models/*/last.ckpt --logger ${logger} --logger-project ${logger-project} ${baseline-eval}
-    deps:
-    - version.mllam.txt
-    - data/graph/
-    - data/config.yaml
-    - data/datastore.yaml
-    - saved_models
-    outs:
-    - mlruns
+      #evaluate:
+      #cmd:
+      #- export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-eval} --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --eval val --load
+      #./saved_models/*/last.ckpt --logger ${logger} --logger-project ${logger-project} ${baseline-eval}
+      #deps:
+      #- version.mllam.txt
+      #- data/graph/
+      #- data/config.yaml
+      #- data/datastore.yaml
+      #- saved_models
+      #outs:
+      #- mlruns
