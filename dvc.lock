@@ -69,16 +69,15 @@ stages:
       size: 15285859
   train:
     cmd:
-    - LASTCHECKPT=`find ./saved_models -maxdepth 1 -type d ! -name '.' -exec stat
-      --format='%n' {} + | sort -n | tail -n 1`; export DVC_WORKING_DIR=$(pwd); sbatch
-      -W --job-name has/LES/dev --time 1-00:00:00 --nodes 2 --ntasks-per-node 8 --gres
-      gpu:8 --no-requeue --exclusive --mem 2000GB --account cu_0003 --chdir ~/logs
-      machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger mlflow
-      --logger-project has/LES/dev --num_workers 8 --batch_size 1 --hidden_dim 32
-      --precision bf16-mixed --processor_layers 4 --model graph_lam --graph triangular
-      --epochs 200 --ar_steps_train 2 --lr 0.0001 --min_lr 0.0001 --val_interval 2
-      --ar_steps_eval 15 --val_steps_to_log 1 2 --restore_opt --num_sanity_steps 0
-      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 'val_rmse,
+    - LASTCHECKPT=./saved_models/train-bluff-hoot/; export DVC_WORKING_DIR=$(pwd);
+      sbatch -W --job-name has/LES/dev --time 1-00:00:00 --nodes 2 --ntasks-per-node
+      8 --gres gpu:8 --no-requeue --exclusive --mem 2000GB --account cu_0003 --chdir
+      ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger
+      mlflow --logger-project has/LES/dev --num_workers 8 --batch_size 1 --hidden_dim
+      32 --precision bf16-mixed --processor_layers 4 --model graph_lam --graph triangular
+      --epochs 250 --ar_steps_train 3 --lr 0.0001 --min_lr 0.0001 --val_interval 2
+      --ar_steps_eval 15 --val_steps_to_log 1 2 3 4 --restore_opt --num_sanity_steps
+      0 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 'val_rmse,
       mse, random_metric' --num_nodes 2  --load ${LASTCHECKPT:-"./saved_models/*"}/last.ckpt
     deps:
     - path: data/config.yaml
@@ -105,9 +104,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 5710f588a43639bbd693a2ec76fba53f.dir
-      size: 382988618
-      nfiles: 16
+      md5: 5a5800eda451d5d5b27ba90874c3164a.dir
+      size: 478734276
+      nfiles: 20
   evaluate:
     cmd:
     - LASTCHECKPT=`find ./saved_models -maxdepth 1 -type d ! -name '.' -exec stat
