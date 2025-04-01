@@ -32,7 +32,7 @@ stages:
     - data/graph/
   train:
     cmd:
-      - LASTCHECKPT=`find ./saved_models -maxdepth 1 -type d ! -name '.' -exec stat --format='%n' {} + | sort -n | tail -n 1`; export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-defaults} --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}  --load \${LASTCHECKPT:-"./saved_models/*"}/last.ckpt
+      - LASTCHECKPT=./saved_models/train-bluff-hoot/; export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-defaults} --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}  --load \${LASTCHECKPT:-"./saved_models/*"}/last.ckpt
     deps:
     - version.mllam.txt
     - data/graph/
