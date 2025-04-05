@@ -21,7 +21,7 @@ stages:
     - data/datastore.boundary.yaml
     - data/datastore.interior.yaml
   create_graph:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits 8 --plot ${graph-defaults}
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh --config_path data/config.yaml ${graph-defaults}
     deps:
     - data/semaphore.lsm.created
     - data/datastore.boundary.yaml
@@ -32,7 +32,7 @@ stages:
     - data/graph/
   train:
     cmd:
-      - LASTCHECKPT=./saved_models/train-silky-airs/; export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-defaults} --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}  --load \${LASTCHECKPT:-"./saved_models/*"}/last.ckpt
+      - export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-defaults} --chdir ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}
     deps:
     - version.mllam.txt
     - data/graph/

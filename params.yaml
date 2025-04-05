@@ -19,23 +19,23 @@ logger-project: &logger-project has/LES/dev
 graph-defaults:
   splits: 12
   g2m_radius: 1.5
-  rotate_ico: true
-  plot: true
+  rotate_ico: false
+  plot: false
   hierarchical: false
   graph_name: &graph_name triangular  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 8 
   batch_size: 1
-  hidden_dim: 32 
+  hidden_dim: 128 
   precision: bf16-mixed
   processor_layers: 4
   model: graph_lam
   graph: *graph_name
   epochs: 500
-  ar_steps_train: 5
-  lr: 0.0001
-  min_lr: 0.0001
+  ar_steps_train: 1
+  lr: 0.001
+  min_lr: 0.001
   val_interval: 2
   ar_steps_eval: 15
   val_steps_to_log:
