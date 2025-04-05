@@ -23,17 +23,17 @@ stages:
     deps:
     - path: data/datastore.cropped.yaml
       hash: md5
-      md5: b5f405a2f0998d1366d477b79183b4b2
-      size: 8390325
+      md5: f8fa9b788b318738ce6ee30a3895ad01
+      size: 8390537
     outs:
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 05346784bec0b74de860505702575a17
-      size: 18876666
+      md5: 3bae39f914be4a7661f0c1ff5313a2d5
+      size: 18876878
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: cd29c17992c77df456eaea9e05acddc3
-      size: 15285859
+      md5: 0aec24dcf12debd01405e9c08f187a1f
+      size: 15286071
   train:
     cmd:
     - LASTCHECKPT=./saved_models/train-chirk-impi/; export DVC_WORKING_DIR=$(pwd);
@@ -114,3 +114,35 @@ stages:
       md5: 9a4af803ef5a91d97dc59f549615f65f.dir
       size: 243482860
       nfiles: 74
+  create_graph:
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh
+      --config_path data/config.yaml --splits 12 --g2m_radius 1.5 --graph_name triangular
+    deps:
+    - path: data/datastore.boundary.yaml
+      hash: md5
+      md5: 3bae39f914be4a7661f0c1ff5313a2d5
+      size: 18876878
+    - path: data/datastore.interior.yaml
+      hash: md5
+      md5: 0aec24dcf12debd01405e9c08f187a1f
+      size: 15286071
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/datastore.boundary.zarr
+      hash: md5
+      md5: 2b971154b790d539849dcfc5ef535c5b.dir
+      size: 10600243817
+      nfiles: 5641
+    - path: data/datastore.interior.zarr
+      hash: md5
+      md5: 4a758c2d6de07df80518a319cbf62825.dir
+      size: 46082954761
+      nfiles: 5630
+    - path: data/graph/
+      hash: md5
+      md5: 73573e4078dd3d286b6ad77a00492305.dir
+      size: 233805012
+      nfiles: 9

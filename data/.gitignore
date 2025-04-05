@@ -2,3 +2,5 @@
 /graphs
 /datastore.boundary.yaml
 /datastore.interior.yaml
+/datastore.boundary.zarr
+/datastore.interior.zarr
