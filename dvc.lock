@@ -5,39 +5,6 @@ stages:
   mllam_version:
     cmd: $MLLAM_VENV_PATH/bin/python -c "from neural_lam import __version__; print(__version__)"
       > version.mllam.txt
-  create_graph:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh
-      --config_path data/config.yaml --graph_name triangular --g2m_radius 1.5  --splits
-      8 --plot --splits 12 --g2m_radius 1.5 --rotate_ico --plot --graph_name triangular
-    deps:
-    - path: data/datastore.boundary.yaml
-      hash: md5
-      md5: 05346784bec0b74de860505702575a17
-      size: 18876666
-    - path: data/datastore.interior.yaml
-      hash: md5
-      md5: cd29c17992c77df456eaea9e05acddc3
-      size: 15285859
-    - path: data/semaphore.lsm.created
-      hash: md5
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
-    outs:
-    - path: data/datastore.boundary.zarr
-      hash: md5
-      md5: 6d91f0ff6ab03f31ddb28c6b20fc03ea.dir
-      size: 2610571218
-      nfiles: 5641
-    - path: data/datastore.interior.zarr
-      hash: md5
-      md5: 5a2dd5c21a1d84214a2a280ddb9ac293.dir
-      size: 11292302720
-      nfiles: 5630
-    - path: data/graph/
-      hash: md5
-      md5: de02504daf2dc35c0c778b9a7e75a331.dir
-      size: 192885716
-      nfiles: 9
   create_lsm_dataset:
     cmd: $MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input /dcai/projects/cu_0003/data/sources/icon/ICON312_v1.0.0.zarr
       --output /dcai/projects/cu_0003/data/sources/icon/ICON312_lsm.zarr; touch data/semaphore.lsm.created
