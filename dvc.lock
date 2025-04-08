@@ -36,16 +36,15 @@ stages:
       size: 15286071
   train:
     cmd:
-    - LASTCHECKPT=./saved_models/train-chirk-impi/; export DVC_WORKING_DIR=$(pwd);
-      sbatch -W --job-name has/LES/dev --time 3-00:00:00 --nodes 2 --ntasks-per-node
-      8 --gres gpu:8 --no-requeue --exclusive --mem 2000GB --account cu_0003 --chdir
-      ~/logs machines/slurm.neural-lam.sh --config_path ./data/config.yaml --logger
-      mlflow --logger-project has/LES/dev --num_workers 8 --batch_size 1 --hidden_dim
-      32 --precision bf16-mixed --processor_layers 4 --model graph_lam --graph triangular
-      --epochs 500 --ar_steps_train 4 --lr 0.0001 --min_lr 0.0001 --val_interval 2
-      --ar_steps_eval 15 --val_steps_to_log 1 2 3 4 5 6 --restore_opt --num_sanity_steps
-      0 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 'val_rmse,
-      mse, random_metric' --num_nodes 2  --load ${LASTCHECKPT:-"./saved_models/*"}/last.ckpt
+    - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name has/LES/dev --time 3-00:00:00
+      --nodes 2 --ntasks-per-node 8 --gres gpu:8 --no-requeue --exclusive --mem 2000GB
+      --account cu_0003 --chdir ~/logs machines/slurm.neural-lam.sh --config_path
+      ./data/config.yaml --logger mlflow --logger-project has/LES/dev --num_workers
+      8 --batch_size 1 --hidden_dim 90 --precision bf16-mixed --processor_layers 4
+      --model graph_lam --graph triangular --epochs 500 --ar_steps_train 1 --lr 0.001
+      --min_lr 0.001 --val_interval 2 --ar_steps_eval 15 --val_steps_to_log 1 2 3
+      4 5 6 7 10 --num_sanity_steps 0 --eval_init_times --plot_vars t_2m u_10m v_10m
+      pres_sfc --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 2
     deps:
     - path: data/config.yaml
       hash: md5
@@ -53,16 +52,16 @@ stages:
       size: 368
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 05346784bec0b74de860505702575a17
-      size: 18876666
+      md5: 3bae39f914be4a7661f0c1ff5313a2d5
+      size: 18876878
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: cd29c17992c77df456eaea9e05acddc3
-      size: 15285859
+      md5: 0aec24dcf12debd01405e9c08f187a1f
+      size: 15286071
     - path: data/graph/
       hash: md5
-      md5: de02504daf2dc35c0c778b9a7e75a331.dir
-      size: 192885716
+      md5: 73573e4078dd3d286b6ad77a00492305.dir
+      size: 233805012
       nfiles: 9
     - path: version.mllam.txt
       hash: md5
@@ -71,9 +70,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 081638e1bcaf284a3552563d70c1c9f7.dir
-      size: 1340497752
-      nfiles: 56
+      md5: 492c5b809ee45e81d23269c34471daff.dir
+      size: 2119351538
+      nfiles: 83
   evaluate:
     cmd:
     - LASTCHECKPT=`find ./saved_models -maxdepth 1 -type d ! -name '.' -exec stat
