@@ -9,11 +9,29 @@ cd ${DVC_WORKING_DIR}
 
 echo "Started slurm job $SLURM_JOB_ID"
 
-export CARTOPY_DATA_DIR=/dcai/projects01/cu_0003/user_space/has/cartopy_features
-export MLFLOW_TRACKING_URI="https://mlflow.dmi.dcs.dcai.dk" #sqlite:///mlflow.db #
-export MLFLOW_TRACKING_INSECURE_TLS=true
+# Get the hostname
+HOSTNAME=$(hostname)
 
-source machines/environment.sh
+# Flag to check if any script is sourced
+SOURCED=false
+
+# Loop through all environment scripts
+for SCRIPT in machines/environment.*.sh; do
+    # Extract the base name from the script name (e.g., 'leonardo' from 'environment.leonardo.sh')
+    BASE_NAME=$(basename "$SCRIPT" | cut -d '.' -f 2)
+
+    # Check if the base name is part of the hostname
+    if [[ "$HOSTNAME" == *"$BASE_NAME"* ]]; then
+        echo "Sourcing $SCRIPT for hostname $HOSTNAME"
+        source "$SCRIPT"
+        SOURCED=true
+    fi
+done
+
+# If no script was sourced, print a message
+if ! $SOURCED; then
+    echo "No matching environment script found for hostname $HOSTNAME"
+fi
 
 set -a
 LOGLEVEL=INFO

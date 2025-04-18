@@ -4,13 +4,35 @@
 #SBATCH --ntasks=1
 #SBATCH --gpus=1
 #SBATCH --account=cu_0003
-#SBATCH --output=/dcai/users/%u/logs/neurallam.%j.log
-#SBATCH --error=/dcai/users/%u/logs/neurallam.%j.log
+#SBATCH --output=/leonardo/home/userexternal/%u/logs/neurallam.%j.log
+#SBATCH --error=/leonardo/home/userexternal/%u/logs/neurallam.%j.log
 
 cd ${DVC_WORKING_DIR}
 echo "Started slurm job $SLURM_JOB_ID"
 
-source machines/environment.sh
+# Get the hostname
+HOSTNAME=$(hostname)
+
+# Flag to check if any script is sourced
+SOURCED=false
+
+# Loop through all environment scripts
+for SCRIPT in machines/environment.*.sh; do
+    # Extract the base name from the script name (e.g., 'leonardo' from 'environment.leonardo.sh')
+    BASE_NAME=$(basename "$SCRIPT" | cut -d '.' -f 2)
+
+    # Check if the base name is part of the hostname
+    if [[ "$HOSTNAME" == *"$BASE_NAME"* ]]; then
+        echo "Sourcing $SCRIPT for hostname $HOSTNAME"
+        source "$SCRIPT"
+        SOURCED=true
+    fi
+done
+
+# If no script was sourced, print a message
+if ! $SOURCED; then
+    echo "No matching environment script found for hostname $HOSTNAME"
+fi
 
 # Export for stability
 export OMPI_MCA_coll_hcoll_enable=0
