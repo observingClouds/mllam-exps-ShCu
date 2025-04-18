@@ -28,4 +28,3 @@ dev = [
 [tool.uv.sources]
 mllam-data-prep = { path = "../mllam-data-prep/" , editable = true}
 neural-lam = { path = "../neural-lam-ShCu", editable = true}
-weather-model-graphs = { path = "../weather-model-graphs" , editable = true}
