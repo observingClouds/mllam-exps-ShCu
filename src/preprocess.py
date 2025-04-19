@@ -5,22 +5,48 @@ import pandas as pd
 import numpy as np
 import argparse
 from dask.diagnostics import ProgressBar
+import logging
+
+from dask.distributed import Client, LocalCluster
+
+def log_retry_attempt(retry_state):
+    attempt = retry_state.attempt
+    exception = retry_state.exception
+    logger.warning(f"Retry attempt {attempt}: {exception}")
 
 async def get_client(**kwargs):
     import aiohttp
     import aiohttp_retry
     retry_options = aiohttp_retry.ExponentialRetry(
-            attempts=3,
-            exceptions={OSError, aiohttp.ServerDisconnectedError})
-    retry_client = aiohttp_retry.RetryClient(raise_for_status=False, retry_options=retry_options, timeout=aiohttp.ClientTimeout(total=300, sock_connect=60, sock_read=60))
+            #retry_callback=log_retry_attempt,
+            attempts=20,
+            #exceptions={OSError, aiohttp.ServerDisconnectedError})
+            )
+    connector = aiohttp.TCPConnector(limit=5)
+    retry_client = aiohttp_retry.RetryClient(connector=connector,raise_for_status=False, retry_options=retry_options, timeout=aiohttp.ClientTimeout(total=300, sock_connect=120, sock_read=120))
     return retry_client
 
 if __name__ == "__main__":
-    cat = open_catalog("https://raw.githubusercontent.com/observingClouds/eurec4a-intake/refs/heads/add/ICON-LES_DOM02_synsat_native/catalog.yml")
+     # Create a local Dask cluster
+    #cluster = LocalCluster(
+    #        n_workers=8,
+    #        threads_per_worker=2,
+    #        memory_limit="40GB"
+    #        )
+    #client = Client(cluster)
+    #logger.warning(client)
 
-    ds_surface = cat.simulations.ICON.LES_CampaignDomain_control.surface_DOM02.to_dask()
-    ds_rttov = cat.simulations.ICON.LES_CampaignDomain_control.rttov_DOM02_native.to_dask()
-    ds_radiation = cat.simulations.ICON.LES_CampaignDomain_control.radiation_DOM02.to_dask()
+    cat = open_catalog("https://raw.githubusercontent.com/observingClouds/eurec4a-intake/refs/heads/remove/compression/catalog.yml")
+
+    ds_surface = cat.simulations.ICON.LES_CampaignDomain_control.surface_DOM02
+    ds_surface.storage_options["get_client"] = get_client
+    ds_surface = ds_surface.to_dask()
+    ds_rttov = cat.simulations.ICON.LES_CampaignDomain_control.rttov_DOM02_native
+    ds_rttov.storage_options["get_client"] = get_client
+    ds_rttov = ds_rttov.to_dask()
+    ds_radiation = cat.simulations.ICON.LES_CampaignDomain_control.radiation_DOM02
+    ds_radiation.storage_options["get_client"] = get_client
+    ds_radiation = ds_radiation.to_dask()
 
     times_expected = pd.date_range("2020-01-11T22:20:00", "2020-02-19T10:00:00", freq='10min')
     times_sfc = pd.to_datetime(ds_surface.time.values)
