@@ -5,6 +5,7 @@
 vars:
   - logger: mlflow
   - scratch: /leonardo_scratch/large/userexternal/hschulz0/
+  - repo: /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu/
 stages:
   check_for_venv_path:
     cmd: machines/check_for_venv_path.sh
@@ -21,7 +22,7 @@ stages:
     outs:
     - data/semaphore.lsm.created
   split_dataset:
-    cmd: '$MLLAM_VENV_PATH/bin/python -m neural_lam.split_datastore --source_config_path /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.cropped.yaml --interior_config_path /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.interior.yaml --boundary_config_path /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.boundary.yaml'
+    cmd: '$MLLAM_VENV_PATH/bin/python -m neural_lam.split_datastore --source_config_path ${repo}/data/datastore.cropped.yaml --interior_config_path ${repo}/data/datastore.interior.yaml --boundary_config_path ${repo}/data/datastore.boundary.yaml'
     deps:
     - data/datastore.cropped.yaml
     outs:
