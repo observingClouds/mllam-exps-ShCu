@@ -9,3 +9,7 @@ data/training
 data/semaphore.lsm.created
 machines/secrets.sh
 /mlruns
+
+# pixi environments
+.pixi
+*.egg-info

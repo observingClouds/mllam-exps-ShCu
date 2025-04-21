@@ -18,25 +18,25 @@ stages:
       size: 0
   split_dataset:
     cmd: $MLLAM_VENV_PATH/bin/python -m neural_lam.split_datastore --source_config_path
-      /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.cropped.yaml
+      /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu//data/datastore.cropped.yaml
       --interior_config_path 
-      /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.interior.yaml
+      /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu//data/datastore.interior.yaml
       --boundary_config_path 
-      /dcai/projects/cu_0003/user_space/has/git-repos/mllam/mllam-exps-ShCu3/data/datastore.boundary.yaml
+      /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu//data/datastore.boundary.yaml
     deps:
     - path: data/datastore.cropped.yaml
       hash: md5
-      md5: f8fa9b788b318738ce6ee30a3895ad01
-      size: 8390537
+      md5: 23d8dea9707bb93db56fe9359eae0913
+      size: 8390583
     outs:
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 3bae39f914be4a7661f0c1ff5313a2d5
-      size: 18876878
+      md5: dd9c71744f4809991c1b8d03d35fa421
+      size: 18876913
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: 0aec24dcf12debd01405e9c08f187a1f
-      size: 15286071
+      md5: ebf2956648478d7d85fab5765f600ade
+      size: 15286117
   train:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name has/LES/dev --time 3-00:00:00
