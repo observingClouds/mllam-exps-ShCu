@@ -94,7 +94,9 @@ if __name__ == "__main__":
     logger.info("Writing to Zarr")
     parser = argparse.ArgumentParser(description="Process and save ICON-LES data.")
     parser.add_argument("--output", type=str, required=True, help="Output file path for the Zarr dataset.", default="/dcai/projects/cu_0003/data/sources/icon/ICON-DOM02.v1.zarr")
+    parser.add_argument("--var", type=str, required=True)
     args = parser.parse_args()
 
+    var = args.var
     with ProgressBar():
-        ds.to_zarr(args.output, mode="w", storage_options={"get_client": get_client})
+        ds[[var]].to_zarr(args.output+f"{var}", mode="w", storage_options={"get_client": get_client})

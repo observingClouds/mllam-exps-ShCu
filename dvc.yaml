@@ -4,18 +4,18 @@
 #  has been used.
 vars:
   - logger: mlflow
-  - scratch: $CINECA_SCRATCH
+  - scratch: /leonardo_scratch/large/userexternal/hschulz0/
 stages:
   check_for_venv_path:
     cmd: machines/check_for_venv_path.sh
   mllam_version:
     cmd: '$MLLAM_VENV_PATH/bin/python -c "from neural_lam import __version__; print(__version__)" > version.mllam.txt'
-  get_input_datasets:
-    cmd: uv run python src/preprocess.py --output ${scratch}/data/sources/icon/ICON312_v1.0.0.zarr
-    deps:
-    - src/preprocess.py
-    outs:
-    - ${scratch}/data/sources/icon/ICON312_v1.0.0.zarr
+  #get_input_datasets:
+  #  cmd: uv run python src/preprocess.py --output ${scratch}/data/sources/icon/ICON312_v1.0.0.zarr
+  #  deps:
+  #  - src/preprocess.py
+  #  outs:
+  #  - ${scratch}/data/sources/icon/ICON312_v1.0.0.zarr
   create_lsm_dataset:
     cmd: '$MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input ${scratch}/data/sources/icon/ICON312_v1.0.0.zarr --output ${scratch}/data/sources/icon/ICON312_lsm.zarr; touch data/semaphore.lsm.created'
     outs:
