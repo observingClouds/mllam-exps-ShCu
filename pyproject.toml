@@ -9,6 +9,8 @@ dependencies = [
     "distributed>=2025.3.0",
     "dvc>=3.59.1",
     "intake<2",
+    "neural-lam",
+    "mllam-data-prep",
     "intake-xarray<2.0.0",
     "jinja2>=3.1.6",
     "loguru>=0.7.3",
