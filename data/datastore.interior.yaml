@@ -524315,18 +524315,8 @@ inputs:
     - u_10m
     - v_10m
     - pres_sfc
-    - lhfl_s
     - qv_2m
-    - rain_gsp_rate
-    - shfl_s
-    - t_seasfc
     - tqc_dia
-    - tqv_dia
-    - sob_t
-    - sod_t
-    - sou_t
-    - thb_t
-    - synsat_rttov_forward_model_2__abi_ir__goes_16__channel_7
   static_features:
     coord_ranges:
       cell: *id001
@@ -524344,10 +524334,6 @@ inputs:
     variables:
     - lsm
 output:
-  domain_cropping:
-    margin_width_degrees: -0.06
-    interior_dataset_config_path: ../data/datastore.og.yaml
-    include_interior_points: true
   chunking:
     time: 1
   splitting:
