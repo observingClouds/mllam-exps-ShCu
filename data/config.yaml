@@ -1,9 +1,9 @@
 datastore:
   kind: mdp
-  config_path: /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu/data/datastore.interior.yaml
+  config_path: /leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/data/datastore.interior.yaml
 datastore_boundary:
   kind: mdp
-  config_path: /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu/data/datastore.exterior.yaml
+  config_path: /leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/data/datastore.exterior.yaml
 training:
   state_feature_weighting:
     __config_class__: UniformFeatureWeighting

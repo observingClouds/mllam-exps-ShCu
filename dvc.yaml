@@ -5,7 +5,7 @@
 vars:
   - logger: mlflow
   - scratch: /leonardo_scratch/large/userexternal/hschulz0/
-  - repo: /leonardo/home/userexternal/hschulz0/repos/mllam-exps-ShCu/
+  - repo: /leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/ 
 stages:
   check_for_venv_path:
     cmd: machines/check_for_venv_path.sh

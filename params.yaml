@@ -74,3 +74,13 @@ slurm-defaults: &slurm-defaults    # SLURM directives, which gets passed to sbat
 slurm-eval:                        # Overwriting SLURM defaults with evaluation stage specifics
   <<: *slurm-defaults
   nodes: *num_nodes_eval
+
+slurm-graph:
+  job-name: *logger-project
+  time: 24:00:00
+  nodes: *num_nodes
+  gres: gpu:0
+  mem: 300GB
+  account: deste_330_25
+  partition: boost_usr_prod
+  qos: normal
