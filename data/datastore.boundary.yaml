@@ -44,7 +44,7 @@ inputs:
 output:
   domain_cropping:
     margin_width_degrees: 0.06
-    interior_dataset_config_path: ../data/datastore.boundary.yaml
+    interior_dataset_config_path: /leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/data/datastore.boundary.yaml
     include_interior_points: false
   chunking:
     time: 1
