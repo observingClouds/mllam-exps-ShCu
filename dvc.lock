@@ -124,12 +124,12 @@ stages:
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 49b9e68a61134c7cde961228b673f030
-      size: 1608
+      md5: f2add4efa4fae50fcd9200acb3fd2989
+      size: 1783
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: 2c5329809c020848ed88f6be51e216c7
-      size: 8390077
+      md5: c6dfdac63bd1337b044da77a3c9457e3
+      size: 8390252
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e

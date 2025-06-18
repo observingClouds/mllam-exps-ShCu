@@ -28,6 +28,8 @@ stages:
     - data/datastore.boundary.yaml
     - data/datastore.interior.yaml
     outs:
+    - data/datastore.boundary.zarr
+    - data/datastore.interior.zarr
     - data/graph/
   train:
     cmd:
