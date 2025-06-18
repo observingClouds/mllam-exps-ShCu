@@ -84,3 +84,4 @@ slurm-graph:
   account: deste_330_25
   partition: boost_usr_prod
   qos: normal
+  ntasks-per-node: 1

@@ -117,34 +117,26 @@ stages:
       size: 243482860
       nfiles: 74
   create_graph:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --chdir ~/logs machines/slurm.graph-creation.sh
+    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name has/LES/dev --time 24:00:00
+      --nodes 1 --gres gpu:0 --mem 300GB --account deste_330_25 --partition boost_usr_prod
+      --qos normal --ntasks-per-node 1 --chdir ~/logs machines/slurm.graph-creation.sh
       --config_path data/config.yaml --splits 12 --g2m_radius 1.5 --graph_name triangular
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 3bae39f914be4a7661f0c1ff5313a2d5
-      size: 18876878
+      md5: 49b9e68a61134c7cde961228b673f030
+      size: 1608
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: 0aec24dcf12debd01405e9c08f187a1f
-      size: 15286071
+      md5: 2c5329809c020848ed88f6be51e216c7
+      size: 8390077
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
       size: 0
     outs:
-    - path: data/datastore.boundary.zarr
-      hash: md5
-      md5: 2b971154b790d539849dcfc5ef535c5b.dir
-      size: 10600243817
-      nfiles: 5641
-    - path: data/datastore.interior.zarr
-      hash: md5
-      md5: 4a758c2d6de07df80518a319cbf62825.dir
-      size: 46082954761
-      nfiles: 5630
     - path: data/graph/
       hash: md5
-      md5: 73573e4078dd3d286b6ad77a00492305.dir
-      size: 233805012
+      md5: 5c9650b7f68593814e4690ad770485a0.dir
+      size: 280154132
       nfiles: 9
