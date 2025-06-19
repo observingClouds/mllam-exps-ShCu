@@ -2,3 +2,4 @@
 /graphs
 /datastore.boundary.zarr
 /datastore.interior.zarr
+/grid.zarr

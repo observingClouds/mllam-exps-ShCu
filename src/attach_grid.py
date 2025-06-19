@@ -8,12 +8,9 @@ import xarray as xr
 import numpy as np
 from intake import open_catalog
 
-try:
-    cat = open_catalog("https://raw.githubusercontent.com/observingClouds/eurec4a-intake/refs/heads/add/ICON-LES_DOM02_synsat_native/catalog.yml")
-    data = cat.simulations.ICON.LES_CampaignDomain_control.surface_DOM02.to_dask()
-    grid = cat.simulations.grids[data.uuidOfHGrid].to_dask()
-except:
-    grid = xr.open_dataset("/dcai/projects/cu_0003/data/sources/icon/grid.nc")
+cat = open_catalog("https://raw.githubusercontent.com/observingClouds/eurec4a-intake/refs/heads/add/ICON-LES_DOM02_synsat_native/catalog.yml")
+data = cat.simulations.ICON.LES_CampaignDomain_control.surface_DOM02.to_dask()
+grid = cat.simulations.grids[data.uuidOfHGrid].to_dask()
 
 R = 6371e3
 
