@@ -143,18 +143,18 @@ stages:
     outs:
     - path: data/datastore.boundary.zarr
       hash: md5
-      md5: f8f674ced19492fc85737a5a275611a3.dir
+      md5: 4c80ef0e21f38d5f0f05ebb1b5368196.dir
       size: 7989935584
       nfiles: 5617
     - path: data/datastore.interior.zarr
       hash: md5
-      md5: bb0aa89bd2371d98981dfa874289ebde.dir
+      md5: 4a44d2e3a8b56a4ccc8257167830c035.dir
       size: 41332640694
       nfiles: 5621
     - path: data/graph/
       hash: md5
-      md5: 5c9650b7f68593814e4690ad770485a0.dir
-      size: 280154132
+      md5: 0ec8d33b38104ccd613f1c9db99d1f62.dir
+      size: 280157817
       nfiles: 9
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
