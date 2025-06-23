@@ -143,14 +143,14 @@ stages:
     outs:
     - path: data/datastore.boundary.zarr
       hash: md5
-      md5: 4c80ef0e21f38d5f0f05ebb1b5368196.dir
-      size: 7989935584
-      nfiles: 5617
+      md5: f9ed883e161220f97d1c33996d20f075.dir
+      size: 7992359045
+      nfiles: 5626
     - path: data/datastore.interior.zarr
       hash: md5
-      md5: 4a44d2e3a8b56a4ccc8257167830c035.dir
-      size: 41332640694
-      nfiles: 5621
+      md5: 1106f7dba61b861562ace9c7f5875dcb.dir
+      size: 41345224968
+      nfiles: 5630
     - path: data/graph/
       hash: md5
       md5: 0ec8d33b38104ccd613f1c9db99d1f62.dir
