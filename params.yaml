@@ -62,11 +62,11 @@ slurm-defaults: &slurm-defaults    # SLURM directives, which gets passed to sbat
   job-name: *logger-project
   time: 00:30:00
   nodes: *num_nodes                # set in baseline-defaults section above and referenced here via alias
-  ntasks-per-node: 4
-  gres: gpu:4  #per node
+  ntasks-per-node: 1
+  gres: gpu:1  #per node
   no-requeue: true                 # becomes `--no-requeue`
   exclusive: true
-  mem: 300GB
+  mem: 100GB
   account: deste_330_25
   partition: boost_usr_prod
   qos: boost_qos_dbg               # see https://wiki.u-gov.it/confluence/display/SCAIUS/Booster+Section

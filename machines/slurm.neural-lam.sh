@@ -59,4 +59,5 @@ if [[ " $@ " == *" --eval "* ]]; then
 fi
 
 # pass all arguments to the python script
+NCCL_DEBUG=INFO
 srun -ul -K1 python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"

@@ -19,6 +19,7 @@ dependencies = [
     "rtree>=1.4.0",
     "scipy==1.15.2",
     "spherely>=0.1.0",
+    "nvidia-nccl-cu12>2.26",
     "xarray<=2025.2.0",
     "zarr<3",
 ]
