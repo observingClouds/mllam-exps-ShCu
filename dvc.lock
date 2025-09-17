@@ -7,10 +7,9 @@ stages:
       print(__version__)" > version.mllam.txt
   create_lsm_dataset:
     cmd: $MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input 
-      /leonardo_scratch/large/userexternal/hschulz0//data/sources/icon/ICON312_v1.0.0.zarr
-      --output 
-      /leonardo_scratch/large/userexternal/hschulz0//data/sources/icon/ICON312_lsm.zarr;
-      touch data/semaphore.lsm.created
+      /home/has/data//sources/icon/ICON312_v1.0.0.zarr --output 
+      /home/has/data//sources/icon/ICON312_lsm.zarr; touch 
+      data/semaphore.lsm.created
     outs:
     - path: data/semaphore.lsm.created
       hash: md5
