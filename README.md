@@ -173,3 +173,9 @@ To continue training on a previous experiment a few steps are necessary with the
 
 >[!Info]
 >This stage can currently only be run in the workspace and not via `--temp` or in the `queue` [Discord-Conversation](https://discord.com/channels/485586884165107732/563406153334128681/1343195392908726272)
+
+
+# Adjustments necessary for new machine
+
+# Adjust DVC cache
+Edit `.dvc/config` to point to a new DVC cache location. This can point to a local folder.
