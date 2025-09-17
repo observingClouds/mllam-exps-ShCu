@@ -524308,7 +524308,7 @@ inputs:
     dims:
     - time
     - cell
-    path: /leonardo_scratch/large/userexternal/hschulz0/data/sources/icon/ICON312_v1.0.0.zarr
+    path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
     target_output_variable: state
     variables:
     - t_2m
@@ -524329,7 +524329,7 @@ inputs:
         name_format: '{var_name}'
     dims:
     - cell
-    path: /leonardo_scratch/large/userexternal/hschulz0/data/sources/icon/ICON312_lsm.zarr
+    path: /home/has/data/sources/icon/ICON312_lsm.zarr
     target_output_variable: static
     variables:
     - lsm

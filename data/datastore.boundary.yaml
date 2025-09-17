@@ -18,7 +18,7 @@ inputs:
     dims:
     - time
     - cell
-    path: /leonardo_scratch/large/userexternal/hschulz0/data/sources/icon/ICON312_v1.0.0.zarr
+    path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
     target_output_variable: forcing
     variables:
     - t_2m
@@ -37,14 +37,14 @@ inputs:
         name_format: '{var_name}'
     dims:
     - cell
-    path: /leonardo_scratch/large/userexternal/hschulz0/data/sources/icon/ICON312_lsm.zarr
+    path: /home/has/data/sources/icon/ICON312_lsm.zarr
     target_output_variable: static
     variables:
     - lsm
 output:
   domain_cropping:
     margin_width_degrees: 0.06
-    interior_dataset_config_path: /leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/data/datastore.interior.yaml
+    interior_dataset_config_path: /home/has/repos/mllam-exps-ShCu/data/datastore.interior.yaml
     include_interior_points: false
   chunking:
     time: 1
