@@ -26,7 +26,7 @@ stages:
     outs:
     - data/semaphore.lsm.created
   create_graph:
-    cmd: export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-graph} --chdir ~/logs machines/slurm.graph-creation.sh --config_path data/config.yaml ${graph-defaults}
+    cmd: export DVC_WORKING_DIR=$(pwd); python -m neural_lam.build_triangular_graph --config_path data/config.yaml ${graph-defaults}
     deps:
     - data/semaphore.lsm.created
     - data/datastore.boundary.yaml
