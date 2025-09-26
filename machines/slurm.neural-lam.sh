@@ -7,7 +7,7 @@
 
 cd ${DVC_WORKING_DIR}
 
-echo "Started slurm job $SLURM_JOB_ID"
+#echo "Started slurm job $SLURM_JOB_ID"
 
 # Get the hostname
 HOSTNAME=$(hostname)
@@ -60,4 +60,4 @@ fi
 
 # pass all arguments to the python script
 NCCL_DEBUG=INFO
-srun -ul -K1 python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
+python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
