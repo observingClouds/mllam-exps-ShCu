@@ -72,9 +72,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 7f7b2f720aeddbfe20a67a858ab48119.dir
+      size: 11476794
+      nfiles: 2
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-silky-airs/; export 

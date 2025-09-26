@@ -35,15 +35,15 @@ fi
 
 set -a
 LOGLEVEL=INFO
-CUDA_LAUNCH_BLOCKING=1
+#CUDA_LAUNCH_BLOCKING=1
 
-OMPI_MCA_pml=ucx
-OMPI_MCA_btl=^vader,tcp,openib,uct
-UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_9:1,mlx5_10:1,mlx5_11:1
-NCCL_SOCKET_IFNAME=ens6f0
-NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11
-OMP_NUM_THREADS=56
-OMPI_MCA_coll_hcoll_enable=0
+#OMPI_MCA_pml=ucx
+#OMPI_MCA_btl=^vader,tcp,openib,uct
+#UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_9:1,mlx5_10:1,mlx5_11:1
+#NCCL_SOCKET_IFNAME=ens6f0
+#NCCL_IB_HCA=mlx5_0,mlx5_3,mlx5_4,mlx5_5,mlx5_6,mlx5_9,mlx5_10,mlx5_11
+#OMP_NUM_THREADS=56
+#OMPI_MCA_coll_hcoll_enable=0
 set +a
 
 echo "Using venv in ${MLLAM_VENV_PATH}"
