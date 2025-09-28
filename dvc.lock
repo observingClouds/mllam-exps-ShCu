@@ -43,7 +43,7 @@ stages:
       --config_path ./data/config.yaml --logger mlflow --logger-project 
       has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 80 --precision 
       bf16-mixed --processor_layers 4 --model graph_lam --graph triangular 
-      --epochs 2 --ar_steps_train 1 --lr 0.001 --min_lr 0.001 --val_interval 2 
+      --epochs 50 --ar_steps_train 1 --lr 0.001 --min_lr 0.001 --val_interval 5 
       --ar_steps_eval 15 --val_steps_to_log 1 2 3 4 5 6 7 10 --num_sanity_steps 
       0 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 
       'val_rmse, mse, random_metric' --num_nodes 1
@@ -72,16 +72,13 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 7f7b2f720aeddbfe20a67a858ab48119.dir
-      size: 11476794
-      nfiles: 2
+      md5: 27346c7df6a418b143719e508dd4e229.dir
+      size: 34431914
+      nfiles: 6
   evaluate:
     cmd:
-    - LASTCHECKPT=./saved_models/train-silky-airs/; export 
-      DVC_WORKING_DIR=$(pwd); sbatch -W --job-name has/LES/dev --time 00:30:00 
-      --nodes 1 --ntasks-per-node 1 --gres gpu:1 --no-requeue --exclusive --mem 
-      100GB --account deste_330_25 --partition boost_usr_prod --qos 
-      boost_qos_dbg --chdir ~/logs machines/slurm.neural-lam.sh --config_path 
+    - LASTCHECKPT=./saved_models/train-fifty-byte/; export 
+      DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 80 --precision bf16-mixed --processor_layers 4 --model 
@@ -102,9 +99,9 @@ stages:
       nfiles: 9
     - path: saved_models
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 7f7b2f720aeddbfe20a67a858ab48119.dir
+      size: 11476794
+      nfiles: 2
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -112,9 +109,9 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 8c69f556a65d77717a5d42746d4b0fc7.dir
+      size: 397221073
+      nfiles: 62
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
