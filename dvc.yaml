@@ -49,7 +49,7 @@ stages:
         persist: true
   evaluate:
     cmd:
-    - LASTCHECKPT=./saved_models/train-sewed-pour/; export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path ./data/config.yaml --eval val --load \${LASTCHECKPT}/last.ckpt --logger ${logger} --logger-project ${logger-project} ${baseline-eval}
+    - LASTCHECKPT=./saved_models/train-inner-main/; export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path ./data/config.yaml --eval val --load \${LASTCHECKPT}/last.ckpt --logger ${logger} --logger-project ${logger-project} ${baseline-eval}
     deps:
     - version.mllam.txt
     - data/graph/
