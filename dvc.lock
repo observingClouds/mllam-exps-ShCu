@@ -72,9 +72,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 8c14d7fc12e62e7a7e5f5b644dfe7889.dir
-      size: 53233979
-      nfiles: 11
+      md5: 4c586f9449072668f6634e85871bf722.dir
+      size: 55675608
+      nfiles: 12
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glary-tegu/; export 
