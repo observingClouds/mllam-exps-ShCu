@@ -43,7 +43,7 @@ stages:
       --config_path ./data/config.yaml --logger mlflow --logger-project 
       has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 40 --precision 
       bf16-mixed --processor_layers 4 --model graph_lam --graph triangular 
-      --epochs 10 --ar_steps_train 2 --lr 0.01 --min_lr 0.01 --val_interval 5 
+      --epochs 1 --ar_steps_train 2 --lr 0.01 --min_lr 0.01 --val_interval 5 
       --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7 10 --num_sanity_steps 
       1 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 
       'val_rmse, mse, random_metric' --num_nodes 1
@@ -72,9 +72,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: cd0848c527426b0e209c441bd2ed54f2.dir
-      size: 50792350
-      nfiles: 10
+      md5: 8c14d7fc12e62e7a7e5f5b644dfe7889.dir
+      size: 53233979
+      nfiles: 11
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-inner-main/; export 
