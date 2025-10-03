@@ -42,7 +42,7 @@ stages:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
       --config_path ./data/config.yaml --logger mlflow --logger-project 
       has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 40 --precision 
-      bf16-mixed --processor_layers 4 --model graph_lam --graph triangulartest 
+      bf16-mixed --processor_layers 4 --model graph_lam --graph triangulartest2D
       --epochs 1 --ar_steps_train 2 --lr 0.01 --min_lr 0.01 --val_interval 5 
       --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7 10 --num_sanity_steps 
       1 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 
@@ -62,9 +62,9 @@ stages:
       size: 8390180
     - path: data/graph/
       hash: md5
-      md5: b150c1074a84d5cfe23cbebe62504bc7.dir
-      size: 385097394
-      nfiles: 18
+      md5: 7a4b182a6efaad400fd3a7f22cbacc5e.dir
+      size: 464901867
+      nfiles: 27
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -77,12 +77,12 @@ stages:
       nfiles: 12
   evaluate:
     cmd:
-    - LASTCHECKPT=./saved_models/train-glary-tegu/; export 
+    - LASTCHECKPT=./saved_models/train-braky-eggs/; export 
       DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 40 --precision bf16-mixed --processor_layers 4 --model 
-      graph_lam --graph triangulartest --epochs 1 --ar_steps_train 2 --lr 0.01 
+      graph_lam --graph triangulartest2D --epochs 1 --ar_steps_train 2 --lr 0.01
       --min_lr 0.01 --val_interval 5 --ar_steps_eval 10 --val_steps_to_log 1 2 3
       4 5 6 7 10 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m 
       v_10m pres_sfc --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 
@@ -94,14 +94,14 @@ stages:
       size: 290
     - path: data/graph/
       hash: md5
-      md5: b150c1074a84d5cfe23cbebe62504bc7.dir
-      size: 385097394
-      nfiles: 18
+      md5: 7a4b182a6efaad400fd3a7f22cbacc5e.dir
+      size: 464901867
+      nfiles: 27
     - path: saved_models
       hash: md5
-      md5: 8c14d7fc12e62e7a7e5f5b644dfe7889.dir
-      size: 53233979
-      nfiles: 11
+      md5: 4c586f9449072668f6634e85871bf722.dir
+      size: 55675608
+      nfiles: 12
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -109,13 +109,14 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 9387c33c6bcdb867e792995d7b9941fb.dir
-      size: 15417394
-      nfiles: 47
+      md5: 99add92828d83bdd9309a3367cb70865.dir
+      size: 264768808
+      nfiles: 43
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
-      12 --g2m_radius 1.5 --graph_name triangulartest
+      11 --g2m_radius 0.6 --g2m_radius_boundary 0.6 --two_dim_features 
+      --graph_name triangulartest2D
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
@@ -142,9 +143,9 @@ stages:
       nfiles: 5621
     - path: data/graph/
       hash: md5
-      md5: b150c1074a84d5cfe23cbebe62504bc7.dir
-      size: 385097394
-      nfiles: 18
+      md5: 7a4b182a6efaad400fd3a7f22cbacc5e.dir
+      size: 464901867
+      nfiles: 27
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
