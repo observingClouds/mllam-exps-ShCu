@@ -42,11 +42,11 @@ stages:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
       --config_path ./data/config.yaml --logger mlflow --logger-project 
       has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 32 --precision 
-      bf16-mixed --processor_layers 4 --model graph_lam --graph triangulartest2D
-      --epochs 20 --ar_steps_train 1 --lr 0.001 --min_lr 0.001 --val_interval 5 
-      --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7 10 --num_sanity_steps 
-      1 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 
-      'val_rmse, mse, random_metric' --num_nodes 1
+      bf16-mixed --processor_layers 4 --model graph_lam --graph 
+      triangular2D_split13 --epochs 20 --ar_steps_train 1 --lr 0.001 --min_lr 
+      0.001 --val_interval 5 --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7
+      10 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
+      pres_sfc --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -72,9 +72,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 331471b0bc93a6be34b4596a3c3adcfd.dir
-      size: 75192956
-      nfiles: 20
+      md5: bea3ce8ebde0f16f10394bf063b51c72.dir
+      size: 83385840
+      nfiles: 24
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
