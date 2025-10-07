@@ -55,17 +55,17 @@ stages:
       size: 290
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 484992b7d856f5a83d39b316f8967ce6
-      size: 1686
+      md5: 052719d1fab707d41b757efec1dfde5a
+      size: 1940
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: d410160027f57b4404296fb746830b18
-      size: 8390180
+      md5: aa8b6e608504e49dedc9570da313432d
+      size: 8390434
     - path: data/graph/
       hash: md5
-      md5: 17602a12b58cb787dd84522592b50c69.dir
-      size: 248820651
-      nfiles: 27
+      md5: 846f4710661f65effdd164ae1cdff0fc.dir
+      size: 423350109
+      nfiles: 45
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -83,8 +83,8 @@ stages:
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 32 --precision bf16-mixed --processor_layers 4 --model 
-      graph_lam --graph triangular2D_split13 --epochs 20 --ar_steps_train 1 --lr
-      0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 10 
+      graph_lam --graph triangular2D_distancetest --epochs 20 --ar_steps_train 1
+      --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 10 
       --val_steps_to_log 1 2 3 4 5 6 7 10 --num_sanity_steps 1 --eval_init_times
       --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 'val_rmse, mse, 
       random_metric' --num_nodes 1
@@ -95,14 +95,14 @@ stages:
       size: 290
     - path: data/graph/
       hash: md5
-      md5: 17602a12b58cb787dd84522592b50c69.dir
-      size: 248820651
-      nfiles: 27
+      md5: 846f4710661f65effdd164ae1cdff0fc.dir
+      size: 423350109
+      nfiles: 45
     - path: saved_models
       hash: md5
-      md5: bea3ce8ebde0f16f10394bf063b51c72.dir
-      size: 83385840
-      nfiles: 24
+      md5: c3ea0af348e0a10678cd7d2ff5cc04bb.dir
+      size: 91578724
+      nfiles: 28
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -110,23 +110,23 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 760e19a7c0792eb97bdb0de19c478c99.dir
-      size: 8988710
-      nfiles: 26
+      md5: f611b0136a5b050bbf983cb841696248.dir
+      size: 265679894
+      nfiles: 48
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
-      13 --g2m_radius 0.6 --g2m_radius_boundary 0.6 --rotate_ico 
-      --two_dim_features --graph_name triangular2D_split13
+      8 --g2m_radius 0.8 --g2m_radius_boundary 0.8 --rotate_ico 
+      --two_dim_features --graph_name triangular2D_distancetest
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
-      md5: 484992b7d856f5a83d39b316f8967ce6
-      size: 1686
+      md5: 052719d1fab707d41b757efec1dfde5a
+      size: 1940
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: d410160027f57b4404296fb746830b18
-      size: 8390180
+      md5: aa8b6e608504e49dedc9570da313432d
+      size: 8390434
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -144,9 +144,9 @@ stages:
       nfiles: 5621
     - path: data/graph/
       hash: md5
-      md5: 17602a12b58cb787dd84522592b50c69.dir
-      size: 248820651
-      nfiles: 27
+      md5: 846f4710661f65effdd164ae1cdff0fc.dir
+      size: 423350109
+      nfiles: 45
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
