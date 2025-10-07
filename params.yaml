@@ -17,25 +17,25 @@
 logger-project: &logger-project has/LES/dev
 
 graph-defaults:
-  splits: 8 
+  splits: 13
   g2m_radius: 0.8
   g2m_radius_boundary: 0.8
   rotate_ico: true
   plot: false
   hierarchical: false
   two_dim_features: true
-  graph_name: &graph_name triangular2D_distancetest  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
+  graph_name: &graph_name triangular2D_split13  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4 
   batch_size: 1
-  hidden_dim: 32
+  hidden_dim: 64
   precision: bf16-mixed
   processor_layers: 4
   model: graph_lam
   graph: *graph_name
-  epochs: 20
-  ar_steps_train: 1 
+  epochs: 100
+  ar_steps_train: 1
   lr: 0.001
   min_lr: 0.001
   val_interval: 5
