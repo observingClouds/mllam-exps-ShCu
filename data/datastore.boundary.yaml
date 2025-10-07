@@ -1,8 +1,16 @@
 dataset_version: v1.0.0
 extra:
   projection:
-    class_name: PlateCarree
-    kwargs: {}
+    class_name: LambertConformal
+    kwargs:
+      central_longitude: -57.82988033758235
+      central_latitude: 13.599319931930872
+      standard_parallels:
+        - 13.599319931930872
+        - 13.599319931930872
+      globe:
+        semimajor_axis: 6367470.0
+        semiminor_axis: 6367470.0
 inputs:
   icon_merged:
     dim_mapping:
