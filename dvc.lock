@@ -41,13 +41,13 @@ stages:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
       --config_path ./data/config.yaml --logger mlflow --logger-project 
-      has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 400 
-      --hidden_dim_grid 200 --grad_checkpointing --precision bf16-mixed 
+      has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 10 
+      --hidden_dim_grid 10 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 2 --model graph_lam --graph triangular2D_split13 
-      --epochs 150 --ar_steps_train 12 --lr 0.001 --min_lr 0.001 --val_interval 
-      5 --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7 10 
-      --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
-      pres_sfc --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
+      --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 0.001 --val_interval 5
+      --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7 10 --num_sanity_steps 
+      1 --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc --metrics_watch 
+      'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -59,12 +59,12 @@ stages:
       size: 2545
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: 57e63cbad43bd1d6979058e2636ede52
-      size: 8391039
+      md5: 01c1de550286b9a01c023f39acaad371
+      size: 8391506
     - path: data/graph/
       hash: md5
-      md5: 2bc275014aa56127c094f5e23eb22427.dir
-      size: 665923286
+      md5: 9cff508fc8d301ffc62fda38afdd52cf.dir
+      size: 626620630
       nfiles: 54
     - path: version.mllam.txt
       hash: md5
@@ -73,18 +73,18 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 7abc7f92403a75fac2b05691e79821b2.dir
-      size: 155967918
-      nfiles: 46
+      md5: 884454cbdb705121a9c0b2879eb9970c.dir
+      size: 157307277
+      nfiles: 47
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
       DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
-      --hidden_dim 400 --hidden_dim_grid 200 --grad_checkpointing --precision 
+      --hidden_dim 10 --hidden_dim_grid 10 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 2 --model graph_lam --graph 
-      triangular2D_split13 --epochs 150 --ar_steps_train 12 --lr 0.001 --min_lr 
+      triangular2D_split13 --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 
       0.001 --val_interval 5 --ar_steps_eval 10 --val_steps_to_log 1 2 3 4 5 6 7
       10 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
       pres_sfc --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
@@ -95,14 +95,14 @@ stages:
       size: 290
     - path: data/graph/
       hash: md5
-      md5: 2bc275014aa56127c094f5e23eb22427.dir
-      size: 665923286
+      md5: 9cff508fc8d301ffc62fda38afdd52cf.dir
+      size: 626620630
       nfiles: 54
     - path: saved_models
       hash: md5
-      md5: 7abc7f92403a75fac2b05691e79821b2.dir
-      size: 155967918
-      nfiles: 46
+      md5: 884454cbdb705121a9c0b2879eb9970c.dir
+      size: 157307277
+      nfiles: 47
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -110,8 +110,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 489a38b95dcc9aac687b4dea8f332883.dir
-      size: 353508687
+      md5: f8cb4d7f69c197a7c4f1b251bf21d471.dir
+      size: 353555844
       nfiles: 98
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
@@ -125,8 +125,8 @@ stages:
       size: 2545
     - path: data/datastore.interior.yaml
       hash: md5
-      md5: 57e63cbad43bd1d6979058e2636ede52
-      size: 8391039
+      md5: 01c1de550286b9a01c023f39acaad371
+      size: 8391506
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -139,13 +139,13 @@ stages:
       nfiles: 5623
     - path: data/datastore.interior.zarr
       hash: md5
-      md5: 1bbf517d479c1cc87940caf849ce63b8.dir
-      size: 57925626628
-      nfiles: 5621
+      md5: 9618f4e327582e61a603eba6803b3a6e.dir
+      size: 48946302096
+      nfiles: 11190
     - path: data/graph/
       hash: md5
-      md5: 2bc275014aa56127c094f5e23eb22427.dir
-      size: 665923286
+      md5: 9cff508fc8d301ffc62fda38afdd52cf.dir
+      size: 626620630
       nfiles: 54
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
