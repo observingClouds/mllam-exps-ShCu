@@ -524325,6 +524325,23 @@ inputs:
     - pres_sfc
     - qv_2m
     - tqc_dia
+    derived_variables:
+      toa_radiation:
+        kwargs:
+          time: ds_input.time
+          lat: ds_input.clat
+          lon: ds_input.clon
+        function: mllam_exps_ShCu.src.custom_mdp_funcs.compute_toa_radiation_radians
+      hour_of_day_sin:
+        kwargs:
+          time: ds_input.time
+          component: sin
+        function: mllam_data_prep.ops.derive_variable.time_components.calculate_hour_of_day
+      hour_of_day_cos:
+        kwargs:
+          time: ds_input.time
+          component: cos
+        function: mllam_data_prep.ops.derive_variable.time_components.calculate_hour_of_day
   static_features:
     coord_ranges:
       cell: *id001
