@@ -29,13 +29,15 @@ graph-defaults:
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4 
   batch_size: 1
-  hidden_dim: 64
+  hidden_dim: 400
+  hidden_dim_grid: 200
+  grad_checkpointing: true
   precision: bf16-mixed
-  processor_layers: 4
+  processor_layers: 2
   model: graph_lam
   graph: *graph_name
-  epochs: 100
-  ar_steps_train: 1
+  epochs: 150
+  ar_steps_train: 12
   lr: 0.001
   min_lr: 0.001
   val_interval: 5
