@@ -41,7 +41,7 @@ inputs:
           time: ds_input.time
           lat: ds_input.clat
           lon: ds_input.clon
-        function: mllam_exps_ShCu.src.custom_mdp_funcs.compute_toa_radiation_radians
+        function: mllam-exps-ShCu.src.custom_mdp_funcs.compute_toa_radiation_radians
       hour_of_day_sin:
         kwargs:
           time: ds_input.time
