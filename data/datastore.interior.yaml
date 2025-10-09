@@ -524325,6 +524325,27 @@ inputs:
     - pres_sfc
     - qv_2m
     - tqc_dia
+  static_features:
+    coord_ranges:
+      cell: *id001
+    dim_mapping:
+      grid_index:
+        dim: cell
+        method: rename
+      static_feature:
+        method: stack_variables_by_var_name
+        name_format: '{var_name}'
+    dims:
+    - cell
+    path: /home/has/data/sources/icon/ICON312_lsm.zarr
+    target_output_variable: static
+    variables:
+    - lsm
+  forcing_features:
+    path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
+    dims: [time, cell]
+    coord_ranges:
+      cell: *id001
     derived_variables:
       toa_radiation:
         kwargs:
@@ -524342,22 +524363,17 @@ inputs:
           time: ds_input.time
           component: cos
         function: mllam_data_prep.ops.derive_variable.time_components.calculate_hour_of_day
-  static_features:
-    coord_ranges:
-      cell: *id001
     dim_mapping:
+      time:
+        dim: time
+        method: rename
       grid_index:
         dim: cell
         method: rename
-      static_feature:
+      forcing_feature:
         method: stack_variables_by_var_name
-        name_format: '{var_name}'
-    dims:
-    - cell
-    path: /home/has/data/sources/icon/ICON312_lsm.zarr
-    target_output_variable: static
-    variables:
-    - lsm
+        name_format: "{var_name}"
+    target_output_variable: forcing
 output:
   chunking:
     time: 1
@@ -524390,4 +524406,8 @@ output:
     static:
     - grid_index
     - static_feature
+    forcing:
+    - time
+    - grid_index
+    - forcing_feature
 schema_version: v0.6.0
