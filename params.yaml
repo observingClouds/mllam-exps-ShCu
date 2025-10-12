@@ -24,7 +24,7 @@ graph-defaults:
   plot: false
   hierarchical: false
   two_dim_features: true
-  graph_name: &graph_name triangular2D_split13  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
+  graph_name: &graph_name triangular2D_split13_DOM02  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4 
@@ -33,14 +33,14 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   hidden_dim_grid: 64
   grad_checkpointing: true
   precision: bf16-mixed
-  processor_layers: 2
+  processor_layers: 4
   model: graph_lam
   graph: *graph_name
   epochs: 150
   ar_steps_train: 1
   lr: 0.001
   min_lr: 0.001
-  val_interval: 5
+  val_interval: 1
   ar_steps_eval: 5
   val_steps_to_log:
     - 1
