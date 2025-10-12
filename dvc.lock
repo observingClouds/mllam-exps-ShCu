@@ -41,12 +41,11 @@ stages:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
       --config_path ./data/config.yaml --logger mlflow --logger-project 
-      has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 300 
-      --hidden_dim_grid 150 --grad_checkpointing --precision bf16-mixed 
+      has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 64 
+      --hidden_dim_grid 64 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 2 --model graph_lam --graph triangular2D_split13 
       --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 0.001 --val_interval 5
-      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-acerb-sway/last.ckpt --num_sanity_steps 1 
+      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -74,16 +73,16 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: ae709394c97b0544deb1b7ed4a190b9d.dir
-      size: 289318440
-      nfiles: 52
+      md5: 1bf5b48fdae07db389ede89fe7ede579.dir
+      size: 316922144
+      nfiles: 60
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
       DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
-      --hidden_dim 300 --hidden_dim_grid 150 --grad_checkpointing --precision 
+      --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 2 --model graph_lam --graph 
       triangular2D_split13 --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 
       0.001 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 
@@ -97,14 +96,14 @@ stages:
       size: 290
     - path: data/graph/
       hash: md5
-      md5: 03ceaee667203218ff96180f6b00cbda.dir
-      size: 727894427
-      nfiles: 64
+      md5: 7f415c849b2ed71e5063a8f3f6024456.dir
+      size: 824130068
+      nfiles: 73
     - path: saved_models
       hash: md5
-      md5: e2f07f8e4094f1268897548f6ee1b764.dir
-      size: 236513898
-      nfiles: 50
+      md5: 1bf5b48fdae07db389ede89fe7ede579.dir
+      size: 316922144
+      nfiles: 60
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -112,8 +111,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: c559b8e28b2292396a6603e9b71d508f.dir
-      size: 352536815
+      md5: 58e37580aef7c064817db4fed7fcea9d.dir
+      size: 353825738
       nfiles: 100
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
@@ -146,9 +145,9 @@ stages:
       nfiles: 11190
     - path: data/graph/
       hash: md5
-      md5: 03ceaee667203218ff96180f6b00cbda.dir
-      size: 727894427
-      nfiles: 64
+      md5: 7f415c849b2ed71e5063a8f3f6024456.dir
+      size: 824130068
+      nfiles: 73
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
