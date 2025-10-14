@@ -14,15 +14,20 @@ dependencies = [
     "intake-xarray<2.0.0",
     "jinja2>=3.1.6",
     "loguru>=0.7.3",
-    "numpy<2.0",
+    "numpy",
     "psutil>=7.0.0",
     "rtree>=1.4.0",
     "scipy==1.15.2",
     "spherely>=0.1.0",
     "nvidia-nccl-cu12>2.26",
-    "xarray<=2025.2.0",
+    "xarray",
     "zarr<3",
     "ipdb>=0.13.13",
+    "xarray-regrid>=0.4.1",
+    "xesmf>=0.8.10",
+    "uxarray>=0.21.0",
+    "spherical-geometry>=1.3.2",
+    "trimesh>=4.8.3",
 ]
 
 [dependency-groups]
@@ -39,11 +44,6 @@ neural-lam = { path = "../neural-lam-ShCu", editable = true}
 channels = ["conda-forge"]
 platforms = ["linux-64"]
 
-[tool.pixi.pypi-dependencies]
-mllam-exps-shcu = { path = ".", editable = true }
-mllam-data-prep = { path = "../mllam-data-prep/" , editable = true}
-neural-lam = { path = "../neural-lam-ShCu", editable = true}
-
 [tool.pixi.environments]
 default = { solve-group = "default" }
 dev = { features = ["dev"], solve-group = "default" }
@@ -52,3 +52,8 @@ dev = { features = ["dev"], solve-group = "default" }
 
 [tool.pixi.dependencies]
 aiohttp = ">=3.11.16,<4"
+xesmf = ">=0.8.10,<0.9"
+pyresample = ">=1.34.2,<2"
+cdo = ">=2.5.0,<3"
+python-cdo = ">=1.6.1,<2"
+uxarray = ">=2024"
