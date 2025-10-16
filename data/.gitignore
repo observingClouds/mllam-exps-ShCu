@@ -5,3 +5,5 @@
 /grid.zarr
 /datastore.boundary.domain02.zarr
 /datastore.interior.domain02.zarr
+/datastore.interior.domain03.zarr
+/datastore.boundary.domain03.zarr
