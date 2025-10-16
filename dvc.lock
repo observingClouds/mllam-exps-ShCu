@@ -40,15 +40,15 @@ stages:
   train:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
-      --config_path ./data/config.yaml --logger mlflow --logger-project 
+      --config_path ./data/config.domain03.yaml --logger mlflow --logger-project
       has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 64 
       --hidden_dim_grid 64 --grad_checkpointing --precision bf16-mixed 
-      --processor_layers 2 --model graph_lam --graph triangular2D_split13 
-      --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 0.001 --val_interval 1
-      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-peppy-rubs/last.ckpt --num_sanity_steps 1 
-      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
-      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
+      --processor_layers 4 --model hi_lam --mesh_aggr mean --graph 
+      triangular2D_split10_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
+      --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
+      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
+      mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -64,19 +64,19 @@ stages:
       size: 8391506
     - path: data/graph/
       hash: md5
-      md5: 4d1aa97ea98c82ba8accbcdaee356887.dir
-      size: 912635811
-      nfiles: 87
+      md5: b386a876407147042c6136ed934eb322.dir
+      size: 1010693146
+      nfiles: 99
     - path: version.mllam.txt
       hash: md5
-      md5: e704daffe4e36699770f5fd4bc16b5fa
+      md5: 7027194b1ba8ce214cc59eb67a3c7614
       size: 20
     outs:
     - path: saved_models
       hash: md5
-      md5: 88cb764cb4adcc9df82c41809794a470.dir
-      size: 461844214
-      nfiles: 102
+      md5: 43653571702757d8ae95bf72f16743d4.dir
+      size: 512101547
+      nfiles: 105
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -86,7 +86,8 @@ stages:
       --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 2 --model graph_lam --graph 
       triangular2D_split13 --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 
-      0.001 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 
+      0.001 --val_interval 1 --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 
+      --restore_opt --load saved_models/train-peppy-rubs/last.ckpt 
       --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
       pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
       --num_nodes 1
@@ -97,14 +98,14 @@ stages:
       size: 290
     - path: data/graph/
       hash: md5
-      md5: 7f415c849b2ed71e5063a8f3f6024456.dir
-      size: 824130068
-      nfiles: 73
+      md5: b386a876407147042c6136ed934eb322.dir
+      size: 1010693146
+      nfiles: 99
     - path: saved_models
       hash: md5
-      md5: 1bf5b48fdae07db389ede89fe7ede579.dir
-      size: 316922144
-      nfiles: 60
+      md5: 88cb764cb4adcc9df82c41809794a470.dir
+      size: 461844214
+      nfiles: 102
     - path: version.mllam.txt
       hash: md5
       md5: e704daffe4e36699770f5fd4bc16b5fa
@@ -112,9 +113,9 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 58e37580aef7c064817db4fed7fcea9d.dir
-      size: 353825738
-      nfiles: 100
+      md5: 00eb397f313078cf667d8e6e02cc9b8b.dir
+      size: 370465897
+      nfiles: 210
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
@@ -146,9 +147,9 @@ stages:
       nfiles: 11190
     - path: data/graph/
       hash: md5
-      md5: 7f415c849b2ed71e5063a8f3f6024456.dir
-      size: 824130068
-      nfiles: 73
+      md5: b386a876407147042c6136ed934eb322.dir
+      size: 1010693146
+      nfiles: 99
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:

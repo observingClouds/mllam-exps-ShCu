@@ -21,10 +21,11 @@ graph-defaults:
   g2m_radius: 0.8
   g2m_radius_boundary: 0.8
   rotate_ico: true
+  levels: 3
   plot: false
-  hierarchical: false
+  hierarchical: true
   two_dim_features: true
-  graph_name: &graph_name triangular2D_split13  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
+  graph_name: &graph_name triangular2D_split10_DOM03_hierarchical  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4 
@@ -33,14 +34,15 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   hidden_dim_grid: 64
   grad_checkpointing: true
   precision: bf16-mixed
-  processor_layers: 2
-  model: graph_lam
+  processor_layers: 4
+  model: hi_lam
+  mesh_aggr: mean
   graph: *graph_name
   epochs: 150
   ar_steps_train: 1
   lr: 0.001
   min_lr: 0.001
-  val_interval: 1
+  val_interval: 5
   ar_steps_eval: 5
   val_steps_to_log:
     - 1
@@ -48,8 +50,7 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
     - 3
     - 4
     - 5
-  restore_opt: true
-  load: saved_models/train-peppy-rubs/last.ckpt
+  restore_opt: false
   num_sanity_steps: 1
   eval_init_times: true  # work around to remove eval_init_times
   plot_vars: [t_2m, u_10m, v_10m, pres_sfc, tqc_dia] 
