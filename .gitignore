@@ -13,3 +13,4 @@ machines/secrets.sh
 # pixi environments
 .pixi
 *.egg-info
+/my.db
