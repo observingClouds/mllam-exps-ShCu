@@ -46,9 +46,10 @@ stages:
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph 
       triangular2D_split10_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
       --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
-      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
-      mse, random_metric' --num_nodes 1
+      --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
+      saved_models/train-pasty-snow/last.ckpt --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -74,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 43653571702757d8ae95bf72f16743d4.dir
-      size: 512101547
-      nfiles: 105
+      md5: 6e131bab7dba3c73cfa1e022a392cd52.dir
+      size: 550471801
+      nfiles: 107
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -84,13 +85,13 @@ stages:
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
-      bf16-mixed --processor_layers 2 --model graph_lam --graph 
-      triangular2D_split13 --epochs 150 --ar_steps_train 1 --lr 0.001 --min_lr 
-      0.001 --val_interval 1 --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 
-      --restore_opt --load saved_models/train-peppy-rubs/last.ckpt 
-      --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
-      pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
-      --num_nodes 1
+      bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean --graph 
+      triangular2D_split10_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
+      --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
+      saved_models/train-pasty-snow/last.ckpt --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -103,24 +104,25 @@ stages:
       nfiles: 99
     - path: saved_models
       hash: md5
-      md5: 88cb764cb4adcc9df82c41809794a470.dir
-      size: 461844214
-      nfiles: 102
+      md5: 6e131bab7dba3c73cfa1e022a392cd52.dir
+      size: 550471801
+      nfiles: 107
     - path: version.mllam.txt
       hash: md5
-      md5: e704daffe4e36699770f5fd4bc16b5fa
+      md5: 7027194b1ba8ce214cc59eb67a3c7614
       size: 20
     outs:
     - path: mlruns
       hash: md5
-      md5: 00eb397f313078cf667d8e6e02cc9b8b.dir
-      size: 370465897
-      nfiles: 210
+      md5: ccdad3efdfeee0ba808fa3c1864f4ed7.dir
+      size: 630838026
+      nfiles: 227
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
-      13 --g2m_radius 0.8 --g2m_radius_boundary 0.8 --rotate_ico 
-      --two_dim_features --graph_name triangular2D_split13
+      13 --g2m_radius 0.8 --g2m_radius_boundary 0.8 --rotate_ico --levels 3 
+      --hierarchical --two_dim_features --graph_name 
+      triangular2D_split10_DOM03_hierarchical
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
