@@ -47,7 +47,7 @@ stages:
       triangular2D_split10_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
       --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
       --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-pasty-snow/last.ckpt --num_sanity_steps 1 
+      saved_models/train-dormy-outs/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -75,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 6e131bab7dba3c73cfa1e022a392cd52.dir
-      size: 550471801
-      nfiles: 107
+      md5: 30dddcde8b2cefc420143455850a0bdf.dir
+      size: 665582563
+      nfiles: 113
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -89,7 +89,7 @@ stages:
       triangular2D_split10_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
       --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
       --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-pasty-snow/last.ckpt --num_sanity_steps 1 
+      saved_models/train-dormy-outs/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -104,9 +104,9 @@ stages:
       nfiles: 99
     - path: saved_models
       hash: md5
-      md5: 6e131bab7dba3c73cfa1e022a392cd52.dir
-      size: 550471801
-      nfiles: 107
+      md5: 30dddcde8b2cefc420143455850a0bdf.dir
+      size: 665582563
+      nfiles: 113
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,8 +114,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: ccdad3efdfeee0ba808fa3c1864f4ed7.dir
-      size: 630838026
+      md5: bee76f64fc68a163209929dd5067cac6.dir
+      size: 379080470
       nfiles: 227
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
