@@ -1,0 +1,94 @@
+dataset_version: v1.0.0
+extra:
+  projection:
+    class_name: LambertConformal
+    kwargs:
+      central_latitude: 10.468191022659228
+      central_longitude: -51.1198038576399
+      globe:
+        semimajor_axis: 6367470.0
+        semiminor_axis: 6367470.0
+      standard_parallels:
+      - 10.468191022659228
+      - 10.468191022659228
+inputs:
+  icon_merged:
+    derived_variables:
+      hour_of_day_cos:
+        function: mllam_data_prep.ops.derive_variable.time_components.calculate_hour_of_day
+        kwargs:
+          component: cos
+          time: ds_input.time
+      hour_of_day_sin:
+        function: mllam_data_prep.ops.derive_variable.time_components.calculate_hour_of_day
+        kwargs:
+          component: sin
+          time: ds_input.time
+      toa_radiation:
+        function: mllam-exps-ShCu.src.custom_mdp_funcs.compute_toa_radiation_radians
+        kwargs:
+          lat: ds_input.clat
+          lon: ds_input.clon
+          time: ds_input.time
+    dim_mapping:
+      forcing_feature:
+        method: stack_variables_by_var_name
+        name_format: '{var_name}'
+      grid_index:
+        dim: cell
+        method: rename
+      time:
+        dim: time
+        method: rename
+    dims:
+    - time
+    - cell
+    path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
+    target_output_variable: forcing
+    variables:
+    - t_2m
+    - u_10m
+    - v_10m
+    - pres_sfc
+    - qv_2m
+    - tqc_dia
+  static_features:
+    dim_mapping:
+      grid_index:
+        dim: cell
+        method: rename
+      static_feature:
+        method: stack_variables_by_var_name
+        name_format: '{var_name}'
+    dims:
+    - cell
+    path: /home/has/data/sources/icon/ICON312_lsm.zarr
+    target_output_variable: static
+    variables:
+    - lsm
+output:
+  chunking:
+    time: 1
+  coord_ranges:
+    time:
+      end: 2020-02-12T03:00
+      start: 2020-02-12T00:00
+  domain_cropping:
+    include_interior_points: false
+    interior_dataset_config_path: /home/has/repos/mllam-exps-ShCu/data/datastore.interior.domain12.yaml
+    margin_width_degrees: 0.06
+  splitting:
+    dim: time
+    splits:
+      test:
+        end: 2020-02-12T03:00
+        start: 2020-02-12T00:00
+  variables:
+    forcing:
+    - time
+    - grid_index
+    - forcing_feature
+    static:
+    - grid_index
+    - static_feature
+schema_version: v0.6.0
