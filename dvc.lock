@@ -45,7 +45,7 @@ stages:
       --hidden_dim_grid 64 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph 
       triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 2 
-      --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
+      --lr 0.0001 --min_lr 0.0001 --val_interval 5 --ar_steps_eval 5 
       --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
       saved_models/train-loamy-raid/epoch=099-step=0280100.ckpt 
       --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
@@ -66,9 +66,9 @@ stages:
       size: 8391506
     - path: data/graph/
       hash: md5
-      md5: 9b3290643218bb36887ae8ff9454825f.dir
-      size: 1092031581
-      nfiles: 112
+      md5: b386a876407147042c6136ed934eb322.dir
+      size: 1010693146
+      nfiles: 99
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -76,9 +76,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 3bd1f9803f310028470c0c709e63bb15.dir
-      size: 1010914081
-      nfiles: 131
+      md5: 7e978be0b6597685a04ec42e1d55ecff.dir
+      size: 1126024843
+      nfiles: 137
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
