@@ -44,13 +44,12 @@ stages:
       has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 64 
       --hidden_dim_grid 64 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph 
-      triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 2 
+      triangular2D_split13_DOM03_hierarchical --epochs 200 --ar_steps_train 3 
       --lr 0.0001 --min_lr 0.0001 --val_interval 5 --ar_steps_eval 5 
       --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-loamy-raid/epoch=099-step=0280100.ckpt 
-      --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
-      pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
-      --num_nodes 1
+      saved_models/train-kempt-lier/last.ckpt --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -76,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 7e978be0b6597685a04ec42e1d55ecff.dir
-      size: 1126024843
-      nfiles: 137
+      md5: 5d37bdac841e6e8aad7a423d0e734941.dir
+      size: 1202765351
+      nfiles: 141
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -87,11 +86,12 @@ stages:
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean --graph 
-      triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
-      --lr 0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
-      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
-      mse, random_metric' --num_nodes 1
+      triangular2D_split13_DOM03_hierarchical --epochs 200 --ar_steps_train 3 
+      --lr 0.0001 --min_lr 0.0001 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
+      saved_models/train-kempt-lier/last.ckpt --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -104,9 +104,9 @@ stages:
       nfiles: 99
     - path: saved_models
       hash: md5
-      md5: aa7acb3715e6d5e98ba5c4347a146268.dir
-      size: 895803319
-      nfiles: 125
+      md5: 5d37bdac841e6e8aad7a423d0e734941.dir
+      size: 1202765351
+      nfiles: 141
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,9 +114,9 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: ea6296bbbae9cb7d8fe21f264bfc7eaf.dir
-      size: 1173798099
-      nfiles: 348
+      md5: 038aaa9fdce240b023ecbe8f0ae4e7ed.dir
+      size: 966732216
+      nfiles: 354
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
