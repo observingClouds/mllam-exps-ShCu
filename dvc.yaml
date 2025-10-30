@@ -37,7 +37,7 @@ stages:
     - data/graph/
   train:
     cmd:
-      - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path ./data/config.domain03.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}
+      - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path ./data/config.domain03.yaml ./data/config.domain02.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}
     deps:
     - version.mllam.txt
     - data/graph/
