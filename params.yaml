@@ -39,7 +39,7 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   mesh_aggr: mean
   graph_names: *graph_names
   epochs: 2
-  ar_steps_train: 3
+  ar_steps_train: 1
   lr: 0.001
   min_lr: 0.001
   val_interval: 5

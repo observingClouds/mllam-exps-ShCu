@@ -45,7 +45,7 @@ stages:
       1 --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
       --graph_names triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM02_hierarchical --epochs 2 --ar_steps_train 3 --lr
+      triangular2D_split13_DOM02_hierarchical --epochs 2 --ar_steps_train 1 --lr
       0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log
       1 2 3 4 5 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m 
       v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
@@ -75,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 5d37bdac841e6e8aad7a423d0e734941.dir
-      size: 1202765351
-      nfiles: 141
+      md5: c85422e40177291d6474c4acc7f68c41.dir
+      size: 1221950606
+      nfiles: 142
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -87,7 +87,7 @@ stages:
       --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
       --graph_names triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM02_hierarchical --epochs 2 --ar_steps_train 3 --lr
+      triangular2D_split13_DOM02_hierarchical --epochs 2 --ar_steps_train 1 --lr
       0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log
       1 2 3 4 5 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m 
       v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
@@ -104,9 +104,9 @@ stages:
       nfiles: 112
     - path: saved_models
       hash: md5
-      md5: 5d37bdac841e6e8aad7a423d0e734941.dir
-      size: 1202765351
-      nfiles: 141
+      md5: c85422e40177291d6474c4acc7f68c41.dir
+      size: 1221950606
+      nfiles: 142
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
