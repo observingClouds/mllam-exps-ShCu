@@ -40,16 +40,18 @@ stages:
   train:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
-      --config_path ./data/config.domain03.yaml ./data/config.domain02.yaml 
-      --logger mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 
-      1 --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
-      bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM02_hierarchical --epochs 2 --ar_steps_train 1 --lr
-      0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log
-      1 2 3 4 5 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m 
-      v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
-      --num_nodes 1
+      --config_path ./data/config.domain01.yaml ./data/config.domain02.yaml 
+      ./data/config.domain03.yaml --logger mlflow --logger-project has/LES/dev 
+      --num_workers 4 --batch_size 1 --hidden_dim 300 --hidden_dim_grid 150 
+      --grad_checkpointing --precision bf16-mixed --processor_layers 4 --model 
+      hi_lam --mesh_aggr mean --graph_names 
+      triangular2D_split13_DOM01_hierarchical 
+      triangular2D_split13_DOM02_hierarchical 
+      triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
+      --lr 0.01 --min_lr 0.0001 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
+      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
+      mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -65,9 +67,9 @@ stages:
       size: 8391506
     - path: data/graph/
       hash: md5
-      md5: 788a0fd304fda229d826d728e33c980a.dir
-      size: 1422905382
-      nfiles: 151
+      md5: bfd13bd8fb71b32302834edeafd3dc4e.dir
+      size: 1840552638
+      nfiles: 204
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -75,23 +77,24 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: c85422e40177291d6474c4acc7f68c41.dir
-      size: 1221950606
-      nfiles: 142
+      md5: e01df6f88c2ae9baafc1d775e30f5c0c.dir
+      size: 1576532405
+      nfiles: 143
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
       DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
-      --hidden_dim 64 --hidden_dim_grid 64 --grad_checkpointing --precision 
+      --hidden_dim 300 --hidden_dim_grid 150 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM02_hierarchical --epochs 2 --ar_steps_train 1 --lr
-      0.001 --min_lr 0.001 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log
-      1 2 3 4 5 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m 
-      v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
-      --num_nodes 1
+      --graph_names triangular2D_split13_DOM01_hierarchical 
+      triangular2D_split13_DOM02_hierarchical 
+      triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
+      --lr 0.01 --min_lr 0.0001 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
+      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
+      mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -99,14 +102,14 @@ stages:
       size: 290
     - path: data/graph/
       hash: md5
-      md5: 788a0fd304fda229d826d728e33c980a.dir
-      size: 1422905382
-      nfiles: 151
+      md5: bfd13bd8fb71b32302834edeafd3dc4e.dir
+      size: 1840552638
+      nfiles: 204
     - path: saved_models
       hash: md5
-      md5: c85422e40177291d6474c4acc7f68c41.dir
-      size: 1221950606
-      nfiles: 142
+      md5: e01df6f88c2ae9baafc1d775e30f5c0c.dir
+      size: 1576532405
+      nfiles: 143
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,16 +117,17 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 038aaa9fdce240b023ecbe8f0ae4e7ed.dir
-      size: 966732216
+      md5: fb4e47a9e576a0d3c6e0ecff570e8c42.dir
+      size: 966730661
       nfiles: 354
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
       13 --g2m_radius 0.8 --g2m_radius_boundary 0.8 --rotate_ico --levels 3 
       --hierarchical --two_dim_features --graph_names 
-      triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM02_hierarchical
+      triangular2D_split13_DOM01_hierarchical 
+      triangular2D_split13_DOM02_hierarchical 
+      triangular2D_split13_DOM03_hierarchical
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
@@ -150,9 +154,9 @@ stages:
       nfiles: 11190
     - path: data/graph/
       hash: md5
-      md5: 788a0fd304fda229d826d728e33c980a.dir
-      size: 1422905382
-      nfiles: 151
+      md5: bfd13bd8fb71b32302834edeafd3dc4e.dir
+      size: 1840552638
+      nfiles: 204
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
