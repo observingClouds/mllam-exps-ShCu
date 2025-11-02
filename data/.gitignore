@@ -21,3 +21,5 @@
 /datastore.interior.domain08.zarr
 /datastore.interior.domain09.zarr
 /datastore.interior.domain10.zarr
+/datastore.boundary.domain11.zarr
+/datastore.interior.domain11.zarr
