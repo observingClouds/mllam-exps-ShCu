@@ -524389,6 +524389,12 @@ output:
       test:
         end: 2020-02-12T03:00
         start: 2020-02-12T00:00
+      train:
+        end: 2020-02-12T03:00
+        start: 2020-02-12T00:00
+      val:
+        end: 2020-02-12T03:00
+        start: 2020-02-12T00:00
   variables:
     forcing:
     - time

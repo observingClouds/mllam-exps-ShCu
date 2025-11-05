@@ -75,12 +75,18 @@ output:
       start: 2020-02-12T00:00
   domain_cropping:
     include_interior_points: false
-    interior_dataset_config_path: /home/has/repos/mllam-exps-ShCu/data/datastore.interior.domain09.yaml
+    interior_dataset_config_path: /home/has/repos/mllam-exps-ShCu/data/datastore.interior.domain09.ar.yaml
     margin_width_degrees: 0.06
   splitting:
     dim: time
     splits:
       test:
+        end: 2020-02-12T03:00
+        start: 2020-02-12T00:00
+      train:
+        end: 2020-02-12T03:00
+        start: 2020-02-12T00:00
+      val:
         end: 2020-02-12T03:00
         start: 2020-02-12T00:00
   variables:
