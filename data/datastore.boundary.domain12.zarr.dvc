@@ -1,0 +1,6 @@
+outs:
+- md5: e3118d092d50c661e03cee546b6d7bcb.dir
+  size: 10824073176
+  nfiles: 5617
+  hash: md5
+  path: datastore.boundary.domain12.zarr
