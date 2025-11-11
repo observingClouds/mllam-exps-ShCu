@@ -47,7 +47,7 @@ stages:
       triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
       --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
       --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-buggy-pecs/last.ckpt --num_sanity_steps 1 
+      saved_models/train-sober-ankh/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -75,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 4ee461287029a4dbac4eecc8a7c19be3.dir
-      size: 6185231152
-      nfiles: 156
+      md5: b37dff8e7618799e30a965e2ad4404de.dir
+      size: 6894237950
+      nfiles: 158
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -89,7 +89,7 @@ stages:
       --graph_names triangular2D_split13_DOM03_hierarchical --epochs 150 
       --ar_steps_train 1 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-buggy-pecs/last.ckpt --num_sanity_steps 1 
+      saved_models/train-sober-ankh/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -104,9 +104,9 @@ stages:
       nfiles: 255
     - path: saved_models
       hash: md5
-      md5: 4ee461287029a4dbac4eecc8a7c19be3.dir
-      size: 6185231152
-      nfiles: 156
+      md5: b37dff8e7618799e30a965e2ad4404de.dir
+      size: 6894237950
+      nfiles: 158
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,8 +114,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: db19e86e7a8ad3919196cd2767691976.dir
-      size: 716363720
+      md5: f11614e0d588ad0a964aaf8eb1013508.dir
+      size: 716294165
       nfiles: 354
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
