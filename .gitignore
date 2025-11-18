@@ -1,3 +1,4 @@
+**/*.zarr
 **/__pycache__
 **/.DS_Store
 dcgm-gpu*.stats
