@@ -47,7 +47,7 @@ stages:
       triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
       --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
       --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-short-male/last.ckpt --num_sanity_steps 1 
+      saved_models/train-gruff-quad/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -75,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 9d775dde0685cb8e44607b64e211877b.dir
-      size: 10439271940
-      nfiles: 168
+      md5: dfc9f15e48c3849fdc5187dba2c92047.dir
+      size: 11148278738
+      nfiles: 170
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -89,7 +89,7 @@ stages:
       --graph_names triangular2D_split13_DOM03_hierarchical --epochs 150 
       --ar_steps_train 1 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-short-male/last.ckpt --num_sanity_steps 1 
+      saved_models/train-gruff-quad/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -104,9 +104,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: 9d775dde0685cb8e44607b64e211877b.dir
-      size: 10439271940
-      nfiles: 168
+      md5: dfc9f15e48c3849fdc5187dba2c92047.dir
+      size: 11148278738
+      nfiles: 170
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,8 +114,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: d5b52f7523ff56746397c02610083332.dir
-      size: 917790561
+      md5: 89cf2c5a1d31d6302878c103863b58e3.dir
+      size: 917790431
       nfiles: 354
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
