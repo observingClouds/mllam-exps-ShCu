@@ -38,7 +38,7 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   model: hi_lam
   mesh_aggr: mean
   graph_names: *graph_names
-  epochs: 1
+  epochs: 5
   ar_steps_train: 5
   lr: 0.00001
   min_lr: 0.00001
@@ -50,8 +50,8 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
     - 3
     - 4
     - 5
-  restore_opt: false
-  load: saved_models/train-milky-jogs/last.ckpt
+  restore_opt: true
+  load: saved_models/train-minim-farm/last.ckpt
   num_sanity_steps: 1
   eval_init_times: true  # work around to remove eval_init_times
   plot_vars: [t_2m, u_10m, v_10m, pres_sfc, tqc_dia] 
