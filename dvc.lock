@@ -44,12 +44,12 @@ stages:
       finetuning/milky-jogs --num_workers 4 --batch_size 1 --hidden_dim 300 
       --hidden_dim_grid 150 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph_names 
-      triangular2D_split13_DOM03_hierarchical --epochs 5 --ar_steps_train 5 --lr
-      1e-05 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log
-      1 2 3 4 5 --restore_opt --load saved_models/train-minim-farm/last.ckpt 
-      --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
-      pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
-      --num_nodes 1
+      triangular2D_split13_DOM03_hierarchical --epochs 10 --ar_steps_train 5 
+      --lr 1e-06 --min_lr 1e-06 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --load 
+      saved_models/train-milky-jogs/last.ckpt --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -75,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: c97dd2d1f72213cf31ab921b7fd49df6.dir
-      size: 13984305226
-      nfiles: 178
+      md5: 4f16346475a9bec3b1cb641d9ae6e4cb.dir
+      size: 14693311512
+      nfiles: 180
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -86,10 +86,10 @@ stages:
       mlflow --logger-project finetuning/milky-jogs --num_workers 4 --batch_size
       1 --hidden_dim 300 --hidden_dim_grid 150 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 5 
-      --ar_steps_train 5 --lr 1e-05 --min_lr 1e-05 --val_interval 5 
-      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
-      saved_models/train-minim-farm/last.ckpt --num_sanity_steps 1 
+      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 10 
+      --ar_steps_train 5 --lr 1e-06 --min_lr 1e-06 --val_interval 5 
+      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --load 
+      saved_models/train-milky-jogs/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -104,9 +104,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: c97dd2d1f72213cf31ab921b7fd49df6.dir
-      size: 13984305226
-      nfiles: 178
+      md5: 4f16346475a9bec3b1cb641d9ae6e4cb.dir
+      size: 14693311512
+      nfiles: 180
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,8 +114,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: d6457ed41e1e550c72e8a5ca16c4f8d9.dir
-      size: 3211823718
+      md5: 9a90658559abc81d86a0909be42c07d7.dir
+      size: 1206682555
       nfiles: 434
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
