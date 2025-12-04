@@ -40,19 +40,16 @@ stages:
   train:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
-      --config_paths ./data/config.domain03.yaml ./data/config.domain11.yaml 
-      ./data/config.domain08.yaml --logger mlflow --logger-project has/LES/dev 
-      --num_workers 4 --batch_size 1 --hidden_dim 300 --hidden_dim_grid 150 
-      --grad_checkpointing --precision bf16-mixed --processor_layers 4 --model 
-      hi_lam --mesh_aggr mean --graph_names 
-      triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM11_hierarchical 
-      triangular2D_split13_DOM08_hierarchical --epochs 150 --ar_steps_train 1 
-      --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 --restore_opt --load 
-      saved_models/train-larky-male/last.ckpt --num_sanity_steps 1 
-      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
-      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
+      --config_paths ./data/config.domain03.yaml --logger mlflow 
+      --logger-project has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 
+      300 --hidden_dim_grid 150 --grad_checkpointing --precision bf16-mixed 
+      --processor_layers 4 --model hi_lam --mesh_aggr mean --graph_names 
+      triangular2D_split13_DOM03_hierarchical --epochs 150 --ar_steps_train 1 
+      --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
+      --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 
+      --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
+      pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
+      --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -78,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 6562d0a7a9a79b7ce97c61545e98b843.dir
-      size: 16465828955
-      nfiles: 185
+      md5: 51ab85228e87720c32f9527ecd569c55.dir
+      size: 17883842231
+      nfiles: 189
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -89,14 +86,12 @@ stages:
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 300 --hidden_dim_grid 150 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM11_hierarchical 
-      triangular2D_split13_DOM08_hierarchical --epochs 150 --ar_steps_train 1 
-      --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 --restore_opt --load 
-      saved_models/train-larky-male/last.ckpt --num_sanity_steps 1 
-      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
-      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
+      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 150 
+      --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
+      2 --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 --num_sanity_steps 1 --eval_init_times --plot_vars 
+      t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, 
+      random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -109,9 +104,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: 6562d0a7a9a79b7ce97c61545e98b843.dir
-      size: 16465828955
-      nfiles: 185
+      md5: 51ab85228e87720c32f9527ecd569c55.dir
+      size: 17883842231
+      nfiles: 189
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -119,17 +114,15 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 042630770f6214380e40c7a491da675a.dir
-      size: 1204110114
+      md5: adcc4cee624987778c14723717ae1575.dir
+      size: 1207136587
       nfiles: 434
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
       13 --g2m_radius 0.8 --g2m_radius_boundary 0.8 --rotate_ico --levels 3 
       --hierarchical --two_dim_features --graph_names 
-      triangular2D_split13_DOM03_hierarchical 
-      triangular2D_split13_DOM11_hierarchical 
-      triangular2D_split13_DOM08_hierarchical
+      triangular2D_split13_DOM03_hierarchical
     deps:
     - path: data/datastore.boundary.yaml
       hash: md5
