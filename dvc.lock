@@ -42,7 +42,7 @@ stages:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
       --config_paths ./data/config.domain03.yaml --logger mlflow 
       --logger-project has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 
-      300 --hidden_dim_grid 150 --grad_checkpointing --precision bf16-mixed 
+      50 --hidden_dim_grid 50 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph_names 
       triangular2D_split13_DOM03_hierarchical --epochs 20 --ar_steps_train 1 
       --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
@@ -75,16 +75,16 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 9f9dc8fe83cf74863f1de949cb33c93b.dir
-      size: 20010862305
-      nfiles: 195
+      md5: f77cc5fddff9fae7e4768867305d3c85.dir
+      size: 20048308566
+      nfiles: 198
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
       DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
-      --hidden_dim 300 --hidden_dim_grid 150 --grad_checkpointing --precision 
+      --hidden_dim 50 --hidden_dim_grid 50 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
       --graph_names triangular2D_split13_DOM03_hierarchical --epochs 20 
       --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
@@ -104,9 +104,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: 9f9dc8fe83cf74863f1de949cb33c93b.dir
-      size: 20010862305
-      nfiles: 195
+      md5: f77cc5fddff9fae7e4768867305d3c85.dir
+      size: 20048308566
+      nfiles: 198
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,8 +114,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 1e25686f8a705bad40bab93ba1a262f1.dir
-      size: 3214263090
+      md5: eb8c4307336c5f32e1d232e5022cf60a.dir
+      size: 3214263465
       nfiles: 434
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
