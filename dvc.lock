@@ -44,9 +44,10 @@ stages:
       --logger-project has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 
       50 --hidden_dim_grid 50 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph_names 
-      triangular2D_split13_DOM03_hierarchical --epochs 20 --ar_steps_train 1 
+      triangular2D_split13_DOM03_hierarchical --epochs 40 --ar_steps_train 1 
       --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
       --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 
+      --restore_opt --load saved_models/train-cured-mina/last.ckpt 
       --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
       pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
       --num_nodes 1
@@ -75,9 +76,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: f77cc5fddff9fae7e4768867305d3c85.dir
-      size: 20048308566
-      nfiles: 198
+      md5: c57581b73b1b0e2df73652fa99e58cc7.dir
+      size: 20085755211
+      nfiles: 201
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -86,12 +87,13 @@ stages:
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 50 --hidden_dim_grid 50 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 20 
+      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 40 
       --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
       2 --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 --num_sanity_steps 1 --eval_init_times --plot_vars 
-      t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, 
-      random_metric' --num_nodes 1
+      --val_steps_to_log 1 --restore_opt --load 
+      saved_models/train-cured-mina/last.ckpt --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: data/config.yaml
       hash: md5
@@ -104,9 +106,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: f77cc5fddff9fae7e4768867305d3c85.dir
-      size: 20048308566
-      nfiles: 198
+      md5: c57581b73b1b0e2df73652fa99e58cc7.dir
+      size: 20085755211
+      nfiles: 201
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -114,8 +116,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: eb8c4307336c5f32e1d232e5022cf60a.dir
-      size: 3214263465
+      md5: 1bb14f4f85da47021ed8ceccaaf2becb.dir
+      size: 3214804642
       nfiles: 434
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
