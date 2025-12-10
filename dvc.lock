@@ -44,10 +44,10 @@ stages:
       --logger-project has/LES/dev --num_workers 4 --batch_size 1 --hidden_dim 
       50 --hidden_dim_grid 50 --grad_checkpointing --precision bf16-mixed 
       --processor_layers 4 --model hi_lam --mesh_aggr mean --graph_names 
-      triangular2D_split13_DOM03_hierarchical --epochs 40 --ar_steps_train 1 
+      triangular2D_split13_DOM03_hierarchical --epochs 100 --ar_steps_train 1 
       --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
-      --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 
-      --restore_opt --load saved_models/train-cured-mina/last.ckpt 
+      --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3
+      4 5 --restore_opt --load saved_models/train-jumpy-kana/last.ckpt 
       --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
       pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
       --num_nodes 1
@@ -76,9 +76,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: c57581b73b1b0e2df73652fa99e58cc7.dir
-      size: 20085755211
-      nfiles: 201
+      md5: 25616a6455363771fd415a667a4ad927.dir
+      size: 20160648501
+      nfiles: 207
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -87,11 +87,11 @@ stages:
       mlflow --logger-project has/LES/dev --num_workers 4 --batch_size 1 
       --hidden_dim 50 --hidden_dim_grid 50 --grad_checkpointing --precision 
       bf16-mixed --processor_layers 4 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 40 
+      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 100 
       --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
       2 --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 --restore_opt --load 
-      saved_models/train-cured-mina/last.ckpt --num_sanity_steps 1 
+      --val_steps_to_log 1 2 3 4 5 --restore_opt --load 
+      saved_models/train-jumpy-kana/last.ckpt --num_sanity_steps 1 
       --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
@@ -106,9 +106,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: c57581b73b1b0e2df73652fa99e58cc7.dir
-      size: 20085755211
-      nfiles: 201
+      md5: 25616a6455363771fd415a667a4ad927.dir
+      size: 20160648501
+      nfiles: 207
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -116,9 +116,9 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 1bb14f4f85da47021ed8ceccaaf2becb.dir
-      size: 3214804642
-      nfiles: 434
+      md5: 10d275bbf26bcd1b6a97d51ab4d9cdd0.dir
+      size: 3116794219
+      nfiles: 148
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
       neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
