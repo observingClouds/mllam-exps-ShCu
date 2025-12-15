@@ -75,9 +75,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 16bc758304f2e0b5ab54609d4310e580.dir
-      size: 20347881086
-      nfiles: 222
+      md5: 470ced417f2a074c6830cbbe40aeccdf.dir
+      size: 20385327731
+      nfiles: 225
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -105,9 +105,9 @@ stages:
       nfiles: 256
     - path: saved_models
       hash: md5
-      md5: 16bc758304f2e0b5ab54609d4310e580.dir
-      size: 20347881086
-      nfiles: 222
+      md5: 470ced417f2a074c6830cbbe40aeccdf.dir
+      size: 20385327731
+      nfiles: 225
     - path: version.mllam.txt
       hash: md5
       md5: 7027194b1ba8ce214cc59eb67a3c7614
@@ -115,8 +115,8 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: 9adf458e29bbb40d46eb5f11152bc306.dir
-      size: 3136873407
+      md5: 929f2b4902ca4286480e466b41d7d410.dir
+      size: 3137278715
       nfiles: 214
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
