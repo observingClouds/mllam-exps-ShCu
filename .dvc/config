@@ -4,3 +4,5 @@
     remote = mllam-dvc-exps-bucket
 ['remote "mllam-dvc-exps-bucket"']
     url = s3://mllam-dvc-exps
+['remote "leonardo"']
+    url = ssh://leonardo:/leonardo_scratch/large/userexternal/hschulz0/mllam-exps-shcu
