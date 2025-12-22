@@ -1,0 +1,8 @@
+[submodule "neural-lam"]
+	path = neural-lam
+	url = https://github.com/observingClouds/neural-lam.git
+	branch = mllam-exps-ShCu
+[submodule "mllam-data-prep"]
+	path = mllam-data-prep
+	url = https://github.com/observingClouds/mllam-data-prep.git
+	branch = mllam-exps-ShCu
