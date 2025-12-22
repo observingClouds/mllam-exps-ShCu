@@ -22,7 +22,9 @@ stages:
     #    outs:
     #    - data/grid.zarr
   create_lsm_dataset:
-    cmd: '$MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input ${scratch}/sources/icon/ICON312_v1.0.0.zarr --output ${scratch}/sources/icon/ICON312_lsm.zarr; touch data/semaphore.lsm.created'
+    cmd: 'uv run python src/create_state_dataset.py --input ${scratch}/sources/icon/ICON312_v1.0.0.zarr --output ${scratch}/sources/icon/ICON312_lsm.zarr; touch data/semaphore.lsm.created'
+    deps:
+    - src/create_state_dataset.py
     outs:
     - data/semaphore.lsm.created
   create_graph:
