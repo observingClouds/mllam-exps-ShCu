@@ -32,9 +32,9 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   batch_size: 1
   hidden_dim: 200 
   hidden_dim_grid: 200
-  grad_checkpointing: true
+  grad_checkpointing: false
   precision: bf16-mixed
-  processor_layers: 1
+  processor_layers: 2
   model: hi_lam
   mesh_aggr: mean
   graph_names: *graph_names
