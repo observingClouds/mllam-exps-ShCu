@@ -28,25 +28,25 @@ stages:
     outs:
     - data/semaphore.lsm.created
   create_domain_specific_datastores:
-    cmd: uv run python src/create_datastores.py --domains ${mllam-data-prep.domains}
+    cmd: uv run python src/create_datastores.py ${mllam-data-prep}
     deps:
     - src/create_datastores.py
     - data/template/datastore.interior.yaml
     - data/template/datastore.boundary.yaml
     - data/template/config.yaml
     outs:
-    - data/experiment
+    - data/experiment/config
   create_graph:
     foreach: ${mllam-data-prep.domains}
     do:
-      cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m neural_lam.build_triangular_graph --config_path data/experiment/config.${item}.yaml ${graph-defaults}
+      cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m neural_lam.build_triangular_graph --config_path data/experiment/config/config.${item}.yaml ${graph-defaults}
       deps:
       - data/semaphore.lsm.created
-      - data/experiment/datastore.boundary.${item}.yaml
-      - data/experiment/datastore.interior.${item}.yaml
+      - data/experiment/config/datastore.boundary.${item}.yaml
+      - data/experiment/config/datastore.interior.${item}.yaml
       outs:
-      - data/experiment/datastore.boundary.${item}.zarr
-      - data/experiment/datastore.interior.${item}.zarr
+      - data/experiment/data/datastore.boundary.${item}.zarr
+      - data/experiment/data/datastore.interior.${item}.zarr
       - data/graph/triangular2D_split"${graph-defaults.splits}"_"${item}"_hierarchical
   train:
     cmd:

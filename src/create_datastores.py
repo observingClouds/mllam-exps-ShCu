@@ -4,6 +4,7 @@ Create mllam-data-prep datastores for each subdomain
 import argparse
 import matplotlib.pylab as plt
 import numpy as np
+import os
 import tqdm
 import xarray as xr
 import yaml
@@ -72,18 +73,20 @@ if __name__ == "__main__":
         string = yaml.dump(datastore_domain)
         string = string.replace("cell: null", "cell: *id001")
         string = string.replace("cell:\n      -", "cell: &id001\n      -")
-        with open(f"./data/experiment/datastore.interior.{domain_name}.yaml", "w") as f:
+        if not os.path.exists("./data/experiment/config/"):
+            os.makedirs("./data/experiment/config/")
+        with open(f"./data/experiment/config/datastore.interior.{domain_name}.yaml", "w") as f:
             f.write(string)
         
-        with open(f"./data/experiment/datastore.boundary.{domain_name}.yaml", "w") as f:
+        with open(f"./data/experiment/config/datastore.boundary.{domain_name}.yaml", "w") as f:
             datastore_boundary_domain = datastore_boundary.copy()
             datastore_boundary_domain['inputs']['icon_merged']['variables'] = boundary_input_variables
             datastore_boundary_domain['extra'] = {'projection': projection}
-            datastore_boundary_domain["output"]["domain_cropping"]['interior_dataset_config_path'] = f"/home/has/repos/mllam-exps-ShCu/data/experiment/datastore.interior.{domain_name}.yaml"
+            datastore_boundary_domain["output"]["domain_cropping"]['interior_dataset_config_path'] = f"/home/has/repos/mllam-exps-ShCu/data/experiment/config/datastore.interior.{domain_name}.yaml"
             yaml.dump(datastore_boundary_domain, f)
         
-        with open(f"./data/experiment/config.{domain_name}.yaml", "w") as f:
+        with open(f"./data/experiment/config/config.{domain_name}.yaml", "w") as f:
             config_domain = config.copy()
-            config_domain['datastore']['config_path'] = f"/home/has/repos/mllam-exps-ShCu/data/experiment/datastore.interior.{domain_name}.yaml"
-            config_domain['datastore_boundary']['config_path'] = f"/home/has/repos/mllam-exps-ShCu/data/experiment/datastore.boundary.{domain_name}.yaml"
+            config_domain['datastore']['config_path'] = f"/home/has/repos/mllam-exps-ShCu/data/experiment/config/datastore.interior.{domain_name}.yaml"
+            config_domain['datastore_boundary']['config_path'] = f"/home/has/repos/mllam-exps-ShCu/data/experiment/config/datastore.boundary.{domain_name}.yaml"
             yaml.dump(config_domain, f)
