@@ -2591,7 +2591,7 @@ wheels = [
 [[package]]
 name = "mllam-data-prep"
 version = "0.6.1"
-source = { editable = "../mllam-data-prep" }
+source = { editable = "mllam-data-prep" }
 dependencies = [
     { name = "aiohttp" },
     { name = "dask" },
@@ -2691,8 +2691,8 @@ requires-dist = [
     { name = "ipdb", specifier = ">=0.13.13" },
     { name = "jinja2", specifier = ">=3.1.6" },
     { name = "loguru", specifier = ">=0.7.3" },
-    { name = "mllam-data-prep", editable = "../mllam-data-prep" },
-    { name = "neural-lam", editable = "../neural-lam-ShCu" },
+    { name = "mllam-data-prep", editable = "mllam-data-prep" },
+    { name = "neural-lam", editable = "neural-lam" },
     { name = "numpy" },
     { name = "nvidia-nccl-cu12", specifier = ">2.26" },
     { name = "plotly", specifier = ">=6.3.1" },
@@ -2925,7 +2925,7 @@ wheels = [
 
 [[package]]
 name = "neural-lam"
-source = { editable = "../neural-lam-ShCu" }
+source = { editable = "neural-lam" }
 dependencies = [
     { name = "boto3" },
     { name = "cartopy" },
