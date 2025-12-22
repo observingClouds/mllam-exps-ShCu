@@ -1,6 +1,0 @@
-outs:
-- md5: b3fe712a043ff58c7fb4eb7de9da6f9e.dir
-  size: 48998072751
-  nfiles: 11190
-  hash: md5
-  path: datastore.interior.domain13.zarr

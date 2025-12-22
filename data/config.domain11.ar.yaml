@@ -1,9 +1,0 @@
-datastore:
-  config_path: /home/has/repos/mllam-exps-ShCu/data/datastore.interior.domain11.ar.yaml
-  kind: mdp
-datastore_boundary:
-  config_path: /home/has/repos/mllam-exps-ShCu/data/datastore.boundary.domain11.ar.yaml
-  kind: mdp
-training:
-  state_feature_weighting:
-    __config_class__: UniformFeatureWeighting

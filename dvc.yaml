@@ -27,16 +27,27 @@ stages:
     - src/create_state_dataset.py
     outs:
     - data/semaphore.lsm.created
-  create_graph:
-    cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m neural_lam.build_triangular_graph --config_path data/config.yaml ${graph-defaults}
+  create_domain_specific_datastores:
+    cmd: uv run python src/create_datastores.py --domains ${mllam-data-prep.domains}
     deps:
-    - data/semaphore.lsm.created
-    - data/datastore.boundary.yaml
-    - data/datastore.interior.yaml
+    - src/create_datastores.py
+    - data/template/datastore.interior.yaml
+    - data/template/datastore.boundary.yaml
+    - data/template/config.yaml
     outs:
-    - data/datastore.boundary.zarr
-    - data/datastore.interior.zarr
-    - data/graph/
+    - data/experiment
+  create_graph:
+    foreach: ${mllam-data-prep.domains}
+    do:
+      cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m neural_lam.build_triangular_graph --config_path data/experiment/config.${item}.yaml ${graph-defaults}
+      deps:
+      - data/semaphore.lsm.created
+      - data/experiment/datastore.boundary.${item}.yaml
+      - data/experiment/datastore.interior.${item}.yaml
+      outs:
+      - data/experiment/datastore.boundary.${item}.zarr
+      - data/experiment/datastore.interior.${item}.zarr
+      - data/graph/triangular2D_split"${graph-defaults.splits}"_"${item}"_hierarchical
   train:
     cmd:
       - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_paths ./data/config.domain03.yaml --logger ${logger} --logger-project ${logger-project} ${baseline-defaults}
