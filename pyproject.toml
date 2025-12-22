@@ -42,8 +42,8 @@ dev = [
 ]
 
 [tool.uv.sources]
-mllam-data-prep = { path = "./mllam-data-prep/" , editable = true}
-neural-lam = { path = "./neural-lam", editable = true}
+mllam-data-prep = { path = "./mllam-data-prep/"}
+neural-lam = { path = "./neural-lam"}
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
