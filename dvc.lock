@@ -3,13 +3,20 @@ stages:
   check_for_venv_path:
     cmd: machines/check_for_venv_path.sh
   mllam_version:
-    cmd: $MLLAM_VENV_PATH/bin/python -c "from neural_lam import __version__; 
-      print(__version__)" > version.mllam.txt
+    cmd: uv run --reinstall-package neural-lam --reinstall-package 
+      mllam-data-prep python -c "from neural_lam import __version__; 
+      print(__version__)" > version.mllam.txt; if grep -qi "dirty" 
+      version.mllam.txt; then echo "version.mllam.txt contains dirty" >&2; fi
   create_lsm_dataset:
-    cmd: $MLLAM_VENV_PATH/bin/python src/create_state_dataset.py --input 
+    cmd: uv run python src/create_state_dataset.py --input 
       /home/has/data//sources/icon/ICON312_v1.0.0.zarr --output 
       /home/has/data//sources/icon/ICON312_lsm.zarr; touch 
       data/semaphore.lsm.created
+    deps:
+    - path: src/create_state_dataset.py
+      hash: md5
+      md5: 8df2e88394035681bccaaecf404caf0d
+      size: 1249
     outs:
     - path: data/semaphore.lsm.created
       hash: md5
@@ -43,7 +50,7 @@ stages:
       --config_paths ./data/config.domain03.yaml --logger mlflow 
       --logger-project has/LES/hi_lam_200_ckptfalse --num_workers 4 --batch_size
       1 --hidden_dim 200 --hidden_dim_grid 200 --precision bf16-mixed 
-      --processor_layers 1 --model hi_lam --mesh_aggr mean --graph_names 
+      --processor_layers 2 --model hi_lam --mesh_aggr mean --graph_names 
       triangular2D_split13_DOM03_hierarchical --epochs 50 --ar_steps_train 1 
       --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
       --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3
@@ -70,8 +77,8 @@ stages:
       nfiles: 256
     - path: version.mllam.txt
       hash: md5
-      md5: 7027194b1ba8ce214cc59eb67a3c7614
-      size: 20
+      md5: b413acdc846c6c2732c0844f55383e59
+      size: 33
     outs:
     - path: saved_models
       hash: md5
@@ -85,7 +92,7 @@ stages:
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/hi_lam_200_ckptfalse --num_workers 4 
       --batch_size 1 --hidden_dim 200 --hidden_dim_grid 200 --precision 
-      bf16-mixed --processor_layers 1 --model hi_lam --mesh_aggr mean 
+      bf16-mixed --processor_layers 2 --model hi_lam --mesh_aggr mean 
       --graph_names triangular2D_split13_DOM03_hierarchical --epochs 50 
       --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
       2 --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
@@ -109,13 +116,13 @@ stages:
       nfiles: 233
     - path: version.mllam.txt
       hash: md5
-      md5: 7027194b1ba8ce214cc59eb67a3c7614
-      size: 20
+      md5: b413acdc846c6c2732c0844f55383e59
+      size: 33
     outs:
     - path: mlruns
       hash: md5
-      md5: 0eab37efabfd0a641dba463d9f9826c4.dir
-      size: 3137888347
+      md5: 692e8c4777cba5876d4813d84067956c.dir
+      size: 3135237063
       nfiles: 195
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
