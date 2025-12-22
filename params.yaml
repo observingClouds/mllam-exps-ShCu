@@ -25,7 +25,6 @@ graph-defaults:
   plot: false
   hierarchical: true
   two_dim_features: true
-  graph_names: &graph_names [triangular2D_split13_DOM03_hierarchical]  # defines an anchor `graph_name` with value `hierarchical_4lvl` that can then be reference elsewhere in the yaml-file with `*graph_name`
 
 mllam-data-prep:
   domains: [domain01, domain02, domain03]
@@ -42,7 +41,6 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   processor_layers: 2
   model: hi_lam
   mesh_aggr: mean
-  graph_names: *graph_names
   epochs: 50
   ar_steps_train: 1
   num_future_boundary_steps: 0
