@@ -167,3 +167,90 @@ stages:
       md5: 75339de88651f78f27758319b285c250.dir
       size: 334935821
       nfiles: 99
+  create_domain_specific_datastores:
+    cmd: uv run python src/create_datastores.py --domains domain01 domain02 
+      domain03 --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m 
+      --interior-input-variables u_10m v_10m qv_2m tqc_dia t_2m
+    deps:
+    - path: data/template/config.yaml
+      hash: md5
+      md5: e24d3be6fee8fdfa3e36d04e9065521f
+      size: 290
+    - path: data/template/datastore.boundary.yaml
+      hash: md5
+      md5: f2a872652d64ea61c220e65ab839f3b2
+      size: 2545
+    - path: data/template/datastore.interior.yaml
+      hash: md5
+      md5: 82f718c577114a695df026d244c4ef87
+      size: 2892
+    - path: src/create_datastores.py
+      hash: md5
+      md5: c8f4a98a13eb063fed71f9fee3de7d6a
+      size: 4165
+    outs:
+    - path: data/experiment/config
+      hash: md5
+      md5: c26c87b6a9a311a0bfdfd78508ad6fcd.dir
+      size: 25445319
+      nfiles: 9
+  create_interior_datastore_zarrs@domain01:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.interior.domain01.yaml --output 
+      data/experiment/data/datastore.interior.domain01.zarr
+    deps:
+    - path: data/experiment/config/datastore.interior.domain01.yaml
+      hash: md5
+      md5: 690603175363e3936a6238cadc086128
+      size: 8391497
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.interior.domain01.zarr
+      hash: md5
+      md5: cbae76651267baff52044806a05080e7.dir
+      size: 42136445618
+      nfiles: 11190
+  create_interior_datastore_zarrs@domain02:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.interior.domain02.yaml --output 
+      data/experiment/data/datastore.interior.domain02.zarr
+    deps:
+    - path: data/experiment/config/datastore.interior.domain02.yaml
+      hash: md5
+      md5: dcadeaa798104e6008d3e6eb7b3c4c60
+      size: 8391492
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.interior.domain02.zarr
+      hash: md5
+      md5: a21441000788da3b0318ce19e8dd6ae1.dir
+      size: 42550591931
+      nfiles: 11190
+  create_interior_datastore_zarrs@domain03:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.interior.domain03.yaml --output 
+      data/experiment/data/datastore.interior.domain03.zarr
+    deps:
+    - path: data/experiment/config/datastore.interior.domain03.yaml
+      hash: md5
+      md5: 296f34aca0d6a62469294e76128afcca
+      size: 8653641
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.interior.domain03.zarr
+      hash: md5
+      md5: a222328c088a344a72c7a073a3b9237c.dir
+      size: 43081200821
+      nfiles: 11190
