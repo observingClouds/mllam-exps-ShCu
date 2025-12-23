@@ -47,34 +47,31 @@ stages:
   train:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
-      --config_paths ./data/config.domain03.yaml --logger mlflow 
+      --config_paths $(python -c "import yaml; 
+      d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
+      print(','.join([f'./data/config.{k}.yaml' for k in d]))") --logger mlflow 
       --logger-project has/LES/hi_lam_200_ckptfalse --num_workers 4 --batch_size
       1 --hidden_dim 200 --hidden_dim_grid 200 --precision bf16-mixed 
-      --processor_layers 2 --model hi_lam --mesh_aggr mean --graph_names 
-      triangular2D_split13_DOM03_hierarchical --epochs 50 --ar_steps_train 1 
-      --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
-      --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3
-      4 5 --num_sanity_steps 1 --eval_init_times --plot_vars t_2m u_10m v_10m 
-      pres_sfc tqc_dia --metrics_watch 'val_rmse, mse, random_metric' 
-      --num_nodes 1
+      --processor_layers 2 --model hi_lam --mesh_aggr mean --epochs 50 
+      --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
+      2 --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
+      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
+      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
+      mse, random_metric' --num_nodes 1 --graph_names $(python -c "import yaml; 
+      d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
+      print(','.join([f'triangular2D_split{yaml.safe_load(open('params.yaml'))['graph-defaults']['splits']}_{k}_hierarchical'
+      for k in d]))")
     deps:
-    - path: data/config.yaml
+    - path: data/experiment/
       hash: md5
-      md5: e24d3be6fee8fdfa3e36d04e9065521f
-      size: 290
-    - path: data/datastore.boundary.yaml
-      hash: md5
-      md5: f2a872652d64ea61c220e65ab839f3b2
-      size: 2545
-    - path: data/datastore.interior.yaml
-      hash: md5
-      md5: 01c1de550286b9a01c023f39acaad371
-      size: 8391506
+      md5: b045e259b503136a1a313dfee34b2c08.dir
+      size: 140657059892
+      nfiles: 39191
     - path: data/graph/
       hash: md5
-      md5: d418d45845152472b0c162c6530f5ec9.dir
-      size: 2253468490
-      nfiles: 256
+      md5: 09ee3c2570f51d83d01bf0ca14ab0ea4.dir
+      size: 2356389965
+      nfiles: 269
     - path: version.mllam.txt
       hash: md5
       md5: b413acdc846c6c2732c0844f55383e59
@@ -82,9 +79,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 073f35e03497938f71cd41d09838b624.dir
-      size: 20808756971
-      nfiles: 233
+      md5: 4de8ffb349f286e1226781fb9a3f8ba7.dir
+      size: 21009441273
+      nfiles: 235
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-glare-newt/; export 
@@ -92,37 +89,23 @@ stages:
       ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
       mlflow --logger-project has/LES/hi_lam_200_ckptfalse --num_workers 4 
       --batch_size 1 --hidden_dim 200 --hidden_dim_grid 200 --precision 
-      bf16-mixed --processor_layers 2 --model hi_lam --mesh_aggr mean 
-      --graph_names triangular2D_split13_DOM03_hierarchical --epochs 50 
-      --ar_steps_train 1 --num_future_boundary_steps 0 --num_past_boundary_steps
-      2 --lr 0.001 --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 
-      --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 --eval_init_times 
-      --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia --metrics_watch 'val_rmse, 
-      mse, random_metric' --num_nodes 1
+      bf16-mixed --processor_layers 2 --model hi_lam --mesh_aggr mean --epochs 
+      50 --ar_steps_train 1 --num_future_boundary_steps 0 
+      --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
+      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
+      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
-    - path: data/config.yaml
-      hash: md5
-      md5: e24d3be6fee8fdfa3e36d04e9065521f
-      size: 290
-    - path: data/graph/
-      hash: md5
-      md5: d418d45845152472b0c162c6530f5ec9.dir
-      size: 2253468490
-      nfiles: 256
     - path: saved_models
       hash: md5
-      md5: 073f35e03497938f71cd41d09838b624.dir
-      size: 20808756971
-      nfiles: 233
-    - path: version.mllam.txt
-      hash: md5
-      md5: b413acdc846c6c2732c0844f55383e59
-      size: 33
+      md5: 4de8ffb349f286e1226781fb9a3f8ba7.dir
+      size: 21009441273
+      nfiles: 235
     outs:
     - path: mlruns
       hash: md5
-      md5: 692e8c4777cba5876d4813d84067956c.dir
-      size: 3135237063
+      md5: a804dd2825e19d38718ffb19ad0ed7ff.dir
+      size: 3135239003
       nfiles: 195
   create_graph:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
@@ -168,8 +151,8 @@ stages:
       size: 334935821
       nfiles: 99
   create_domain_specific_datastores:
-    cmd: uv run python src/create_datastores.py --domains domain01 domain02 
-      domain03 --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m 
+    cmd: uv run python src/create_datastores.py --domains domain01 
+      --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m t_seasfc 
       --interior-input-variables u_10m v_10m qv_2m tqc_dia t_2m
     deps:
     - path: data/template/config.yaml
@@ -182,8 +165,8 @@ stages:
       size: 2545
     - path: data/template/datastore.interior.yaml
       hash: md5
-      md5: 82f718c577114a695df026d244c4ef87
-      size: 2892
+      md5: 66966b22fa988518ba77ab09432a6945
+      size: 2918
     - path: src/create_datastores.py
       hash: md5
       md5: c8f4a98a13eb063fed71f9fee3de7d6a
@@ -191,9 +174,9 @@ stages:
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: c26c87b6a9a311a0bfdfd78508ad6fcd.dir
-      size: 25445319
-      nfiles: 9
+      md5: 80fedb06b616e79f535e0fb08a93bc3d.dir
+      size: 8394440
+      nfiles: 3
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
@@ -202,8 +185,8 @@ stages:
     deps:
     - path: data/experiment/config/datastore.interior.domain01.yaml
       hash: md5
-      md5: 690603175363e3936a6238cadc086128
-      size: 8391497
+      md5: 5c9b6b9da3f2f4a6e47af7a012b72be1
+      size: 8391527
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -211,8 +194,8 @@ stages:
     outs:
     - path: data/experiment/data/datastore.interior.domain01.zarr
       hash: md5
-      md5: cbae76651267baff52044806a05080e7.dir
-      size: 42136445618
+      md5: 2a8748b74f82040254c50b0072d5d6a9.dir
+      size: 45218413790
       nfiles: 11190
   create_interior_datastore_zarrs@domain02:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
@@ -254,3 +237,47 @@ stages:
       md5: a222328c088a344a72c7a073a3b9237c.dir
       size: 43081200821
       nfiles: 11190
+  create_boundary_datastore_zarrs@domain01:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.boundary.domain01.yaml --output 
+      data/experiment/data/datastore.boundary.domain01.zarr
+    deps:
+    - path: data/experiment/config/datastore.boundary.domain01.yaml
+      hash: md5
+      md5: c43649dd451d66b1af41632607e76d8e
+      size: 2569
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.boundary.domain01.zarr
+      hash: md5
+      md5: 6804508509da02e45edfc9d54d42ba9e.dir
+      size: 9798458902
+      nfiles: 5617
+  create_graph@domain01:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam 
+      --reinstall-package mllam-data-prep python -m 
+      neural_lam.build_triangular_graph --config_path 
+      data/experiment/config/config.domain01.yaml --splits 13 --g2m_radius 0.8 
+      --g2m_radius_boundary 0.8 --rotate_ico --levels 3 --hierarchical 
+      --two_dim_features --graph_name triangular2D_split13_domain01_hierarchical
+    deps:
+    - path: data/experiment/data/datastore.boundary.domain01.zarr
+      hash: md5
+      md5: 6804508509da02e45edfc9d54d42ba9e.dir
+      size: 9798458902
+      nfiles: 5617
+    - path: data/experiment/data/datastore.interior.domain01.zarr
+      hash: md5
+      md5: 2a8748b74f82040254c50b0072d5d6a9.dir
+      size: 45218413790
+      nfiles: 11190
+    outs:
+    - path: data/graph/triangular2D_split13_domain01_hierarchical
+      hash: md5
+      md5: ba3276089bdb250e2b59852debcb491e.dir
+      size: 102921475
+      nfiles: 13
