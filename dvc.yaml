@@ -36,10 +36,10 @@ stages:
     - data/template/config.yaml
     outs:
     - data/experiment/config
-  create_graph:
+  create_datastore_zarrs:
     foreach: ${mllam-data-prep.domains}
     do:
-      cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam --reinstall-package mllam-data-prep python -m neural_lam.build_triangular_graph --config_path data/experiment/config/config.${item}.yaml ${graph-defaults} --graph_name triangular2D_split${graph-defaults.splits}_${item}_hierarchical
+      cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package mllam-data-prep mllam_data_prep data/experiment/config/datastore.interior.${item}.yaml --output data/experiment/data/datastore.interior.${item}.zarr
       deps:
       - data/semaphore.lsm.created
       - data/experiment/config/datastore.boundary.${item}.yaml
@@ -47,6 +47,14 @@ stages:
       outs:
       - data/experiment/data/datastore.boundary.${item}.zarr
       - data/experiment/data/datastore.interior.${item}.zarr
+  create_graph:
+    foreach: ${mllam-data-prep.domains}
+    do:
+      cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam --reinstall-package mllam-data-prep python -m neural_lam.build_triangular_graph --config_path data/experiment/config/config.${item}.yaml ${graph-defaults} --graph_name triangular2D_split${graph-defaults.splits}_${item}_hierarchical
+      deps:
+      - data/experiment/data/datastore.boundary.${item}.zarr
+      - data/experiment/data/datastore.interior.${item}.zarr
+      outs:
       - data/graph/triangular2D_split${graph-defaults.splits}_${item}_hierarchical
   train:
     cmd:
