@@ -58,6 +58,7 @@ inputs:
     dims: [time, cell]
     coord_ranges:
       cell: None
+    variables: [t_seasfc]
     derived_variables:
       toa_radiation:
         kwargs:

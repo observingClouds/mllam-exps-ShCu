@@ -27,8 +27,8 @@ graph-defaults:
   two_dim_features: true
 
 mllam-data-prep:
-  domains: [domain01, domain02, domain03]
-  boundary-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m]
+  domains: [domain01]
+  boundary-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m, t_seasfc]
   interior-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m]
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
