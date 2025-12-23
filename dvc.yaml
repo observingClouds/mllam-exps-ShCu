@@ -36,17 +36,24 @@ stages:
     - data/template/config.yaml
     outs:
     - data/experiment/config
-  create_datastore_zarrs:
+  create_interior_datastore_zarrs:
     foreach: ${mllam-data-prep.domains}
     do:
       cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package mllam-data-prep mllam_data_prep data/experiment/config/datastore.interior.${item}.yaml --output data/experiment/data/datastore.interior.${item}.zarr
       deps:
       - data/semaphore.lsm.created
-      - data/experiment/config/datastore.boundary.${item}.yaml
       - data/experiment/config/datastore.interior.${item}.yaml
       outs:
-      - data/experiment/data/datastore.boundary.${item}.zarr
       - data/experiment/data/datastore.interior.${item}.zarr
+  create_boundary_datastore_zarrs:
+    foreach: ${mllam-data-prep.domains}
+    do:
+      cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package mllam-data-prep mllam_data_prep data/experiment/config/datastore.boundary.${item}.yaml --output data/experiment/data/datastore.boundary.${item}.zarr
+      deps:
+      - data/semaphore.lsm.created
+      - data/experiment/config/datastore.boundary.${item}.yaml
+      outs:
+      - data/experiment/data/datastore.boundary.${item}.zarr
   create_graph:
     foreach: ${mllam-data-prep.domains}
     do:
