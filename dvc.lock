@@ -264,6 +264,7 @@ stages:
       data/experiment/config/config.domain01.yaml --splits 13 --g2m_radius 0.8 
       --g2m_radius_boundary 0.8 --rotate_ico --levels 3 --hierarchical 
       --two_dim_features --graph_name triangular2D_split13_domain01_hierarchical
+      --save_dir data/graph/
     deps:
     - path: data/experiment/data/datastore.boundary.domain01.zarr
       hash: md5
