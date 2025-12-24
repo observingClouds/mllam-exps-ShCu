@@ -29,7 +29,7 @@ graph-defaults:
 mllam-data-prep:
   domains: [domain01]
   boundary-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m, t_seasfc]
-  interior-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m]
+  interior-input-variables: &interior-input-variables [u_10m, v_10m, qv_2m, tqc_dia, t_2m]
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4 
@@ -58,7 +58,7 @@ baseline-defaults: &baseline-defaults  # defaults across training and evaluation
   restore_opt: false
   num_sanity_steps: 1
   eval_init_times: true  # work around to remove eval_init_times
-  plot_vars: [t_2m, u_10m, v_10m, pres_sfc, tqc_dia] 
+  plot_vars: *interior-input-variables
   metrics_watch: val_rmse, mse, random_metric
   num_nodes: &num_nodes 1  # creating a YAML anchor that is referenced also in the SLURM directives so only needs to be defined here
 

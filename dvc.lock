@@ -56,9 +56,9 @@ stages:
       mean --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 0 
       --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
-      --eval_init_times --plot_vars t_2m u_10m v_10m tqc_dia --metrics_watch 
-      'val_rmse, mse, random_metric' --num_nodes 1 --graph_names $(python -c 
-      "import yaml; 
+      --eval_init_times --plot_vars u_10m v_10m qv_2m tqc_dia t_2m 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1 --graph_names
+      $(python -c "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
       print(','.join([f'triangular2D_split{yaml.safe_load(open('params.yaml'))['graph-defaults']['splits']}_{k}_hierarchical'
       for k in d]))") --graph_dir data/graph
@@ -77,6 +77,43 @@ stages:
       hash: md5
       md5: b413acdc846c6c2732c0844f55383e59
       size: 33
+    params:
+      params.yaml:
+        baseline-defaults:
+          num_workers: 4
+          batch_size: 1
+          hidden_dim: 200
+          hidden_dim_grid: 200
+          grad_checkpointing: false
+          precision: bf16-mixed
+          processor_layers: 2
+          model: hi_lam
+          mesh_aggr: mean
+          epochs: 50
+          ar_steps_train: 1
+          num_future_boundary_steps: 0
+          num_past_boundary_steps: 2
+          lr: 0.001
+          min_lr: 1e-05
+          val_interval: 5
+          ar_steps_eval: 5
+          val_steps_to_log:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          restore_opt: false
+          num_sanity_steps: 1
+          eval_init_times: true
+          plot_vars:
+          - u_10m
+          - v_10m
+          - qv_2m
+          - tqc_dia
+          - t_2m
+          metrics_watch: val_rmse, mse, random_metric
+          num_nodes: 1
     outs:
     - path: saved_models
       hash: md5
@@ -94,7 +131,7 @@ stages:
       50 --ar_steps_train 1 --num_future_boundary_steps 0 
       --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
-      --eval_init_times --plot_vars t_2m u_10m v_10m pres_sfc tqc_dia 
+      --eval_init_times --plot_vars u_10m v_10m qv_2m tqc_dia t_2m 
       --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
     deps:
     - path: saved_models
@@ -108,41 +145,6 @@ stages:
       md5: a804dd2825e19d38718ffb19ad0ed7ff.dir
       size: 3135239003
       nfiles: 195
-  create_graph:
-    cmd: export DVC_WORKING_DIR=$(pwd); uv run python -m 
-      neural_lam.build_triangular_graph --config_path data/config.yaml --splits 
-      13 --g2m_radius 0.8 --g2m_radius_boundary 0.8 --rotate_ico --levels 3 
-      --hierarchical --two_dim_features --graph_names 
-      triangular2D_split13_DOM03_hierarchical
-    deps:
-    - path: data/datastore.boundary.yaml
-      hash: md5
-      md5: f2a872652d64ea61c220e65ab839f3b2
-      size: 2545
-    - path: data/datastore.interior.yaml
-      hash: md5
-      md5: 01c1de550286b9a01c023f39acaad371
-      size: 8391506
-    - path: data/semaphore.lsm.created
-      hash: md5
-      md5: d41d8cd98f00b204e9800998ecf8427e
-      size: 0
-    outs:
-    - path: data/datastore.boundary.zarr
-      hash: md5
-      md5: d77643f89ca6a09f6d41a841029b3c1a.dir
-      size: 12448839676
-      nfiles: 5623
-    - path: data/datastore.interior.zarr
-      hash: md5
-      md5: 9618f4e327582e61a603eba6803b3a6e.dir
-      size: 48946302096
-      nfiles: 11190
-    - path: data/graph/
-      hash: md5
-      md5: d418d45845152472b0c162c6530f5ec9.dir
-      size: 2253468490
-      nfiles: 256
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
@@ -172,6 +174,24 @@ stages:
       hash: md5
       md5: c8f4a98a13eb063fed71f9fee3de7d6a
       size: 4165
+    params:
+      params.yaml:
+        mllam-data-prep:
+          domains:
+          - domain01
+          boundary-input-variables:
+          - u_10m
+          - v_10m
+          - qv_2m
+          - tqc_dia
+          - t_2m
+          - t_seasfc
+          interior-input-variables:
+          - u_10m
+          - v_10m
+          - qv_2m
+          - tqc_dia
+          - t_2m
     outs:
     - path: data/experiment/config
       hash: md5
@@ -266,17 +286,20 @@ stages:
       --g2m_radius_boundary 0.8 --rotate_ico --levels 3 --hierarchical 
       --two_dim_features --graph_name triangular2D_split13_domain01_hierarchical
       --save_dir data/graph/
-    deps:
-    - path: data/experiment/data/datastore.boundary.domain01.zarr
-      hash: md5
-      md5: 6804508509da02e45edfc9d54d42ba9e.dir
-      size: 9798458902
-      nfiles: 5617
-    - path: data/experiment/data/datastore.interior.domain01.zarr
-      hash: md5
-      md5: 2a8748b74f82040254c50b0072d5d6a9.dir
-      size: 45218413790
-      nfiles: 11190
+    params:
+      params.yaml:
+        graph-defaults:
+          splits: 13
+          g2m_radius: 0.8
+          g2m_radius_boundary: 0.8
+          rotate_ico: true
+          levels: 3
+          plot: false
+          hierarchical: true
+          two_dim_features: true
+      data/experiment/config/datastore.boundary.domain01.yaml:
+        inputs.icon_merged.path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
+        output.domain_cropping.margin_width_degrees: 0.06
     outs:
     - path: data/graph/triangular2D_split13_domain01_hierarchical
       hash: md5

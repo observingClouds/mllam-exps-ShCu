@@ -34,6 +34,8 @@ stages:
     - data/template/datastore.interior.yaml
     - data/template/datastore.boundary.yaml
     - data/template/config.yaml
+    params:
+    - mllam-data-prep
     outs:
     - data/experiment/config
   create_interior_datastore_zarrs:
@@ -58,9 +60,14 @@ stages:
     foreach: ${mllam-data-prep.domains}
     do:
       cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam --reinstall-package mllam-data-prep python -m neural_lam.build_triangular_graph --config_path data/experiment/config/config.${item}.yaml ${graph-defaults} --graph_name triangular2D_split${graph-defaults.splits}_${item}_hierarchical --save_dir data/graph/
-      deps:
-      - data/experiment/data/datastore.boundary.${item}.zarr
-      - data/experiment/data/datastore.interior.${item}.zarr
+      params:
+      - graph-defaults
+      - data/experiment/config/datastore.boundary.${item}.yaml:
+        - inputs.icon_merged.path
+        - output.domain_cropping.margin_width_degrees
+      #- data/experiment/config/datastore.interior.${item}.yaml:  # too large to track performantly
+      #  - inputs.icon_merged.path
+      #  - inputs.forcing_features.coord_ranges.cell
       outs:
       - data/graph/triangular2D_split${graph-defaults.splits}_${item}_hierarchical
   train:
@@ -70,6 +77,8 @@ stages:
     - version.mllam.txt
     - data/graph/
     - data/experiment/
+    params:
+    - baseline-defaults
     outs:
     - saved_models:
         persist: true
