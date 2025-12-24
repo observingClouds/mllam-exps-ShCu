@@ -280,8 +280,8 @@ stages:
     deps:
     - path: data/experiment/config/datastore.boundary.domain01.yaml
       hash: md5
-      md5: c43649dd451d66b1af41632607e76d8e
-      size: 2569
+      md5: 94b2592af5d89dcc5818e077909bbab3
+      size: 2675
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -289,8 +289,8 @@ stages:
     outs:
     - path: data/experiment/data/datastore.boundary.domain01.zarr
       hash: md5
-      md5: 6804508509da02e45edfc9d54d42ba9e.dir
-      size: 9798458902
+      md5: 5a3f5df7b7d77bd9ecd9dc815139f04d.dir
+      size: 16376101176
       nfiles: 5617
   create_graph@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam 
