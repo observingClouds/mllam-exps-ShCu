@@ -90,6 +90,7 @@ inputs:
 output:
   chunking:
     time: 1
+    state_feature: 1
   splitting:
     dim: time
     splits:
