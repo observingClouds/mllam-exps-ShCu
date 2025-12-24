@@ -28,7 +28,7 @@ graph-defaults:
 
 mllam-data-prep:
   domains: [domain01]
-  boundary-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m, shfl_s, lhfl_s, sob_t, thb_t, rain_gsp_rate, pres_sfc t_seasfc]
+  boundary-input-variables: [u_10m, v_10m, qv_2m, tqc_dia, t_2m, shfl_s, lhfl_s, sob_t, thb_t, rain_gsp_rate, pres_sfc, t_seasfc]
   interior-input-variables: &interior-input-variables [u_10m, v_10m, qv_2m, tqc_dia, t_2m, shfl_s, lhfl_s, sob_t, thb_t, rain_gsp_rate, pres_sfc]
 
 baseline-defaults: &baseline-defaults  # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model

@@ -155,8 +155,10 @@ stages:
       nfiles: 99
   create_domain_specific_datastores:
     cmd: uv run python src/create_datastores.py --domains domain01 
-      --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m t_seasfc 
-      --interior-input-variables u_10m v_10m qv_2m tqc_dia t_2m
+      --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m shfl_s lhfl_s 
+      sob_t thb_t rain_gsp_rate pres_sfc t_seasfc --interior-input-variables 
+      u_10m v_10m qv_2m tqc_dia t_2m shfl_s lhfl_s sob_t thb_t rain_gsp_rate 
+      pres_sfc
     deps:
     - path: data/template/config.yaml
       hash: md5
@@ -164,12 +166,12 @@ stages:
       size: 290
     - path: data/template/datastore.boundary.yaml
       hash: md5
-      md5: f2a872652d64ea61c220e65ab839f3b2
-      size: 2545
+      md5: 20b05c9eb87aa3445970f78fabf56cc8
+      size: 2566
     - path: data/template/datastore.interior.yaml
       hash: md5
-      md5: 66966b22fa988518ba77ab09432a6945
-      size: 2918
+      md5: 65598989b8f4ca3842a49c10598bfcf6
+      size: 2939
     - path: src/create_datastores.py
       hash: md5
       md5: c8f4a98a13eb063fed71f9fee3de7d6a
@@ -185,6 +187,12 @@ stages:
           - qv_2m
           - tqc_dia
           - t_2m
+          - shfl_s
+          - lhfl_s
+          - sob_t
+          - thb_t
+          - rain_gsp_rate
+          - pres_sfc
           - t_seasfc
           interior-input-variables:
           - u_10m
@@ -192,11 +200,17 @@ stages:
           - qv_2m
           - tqc_dia
           - t_2m
+          - shfl_s
+          - lhfl_s
+          - sob_t
+          - thb_t
+          - rain_gsp_rate
+          - pres_sfc
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: 80fedb06b616e79f535e0fb08a93bc3d.dir
-      size: 8394440
+      md5: b63e4449672b421921aaf889356e8065.dir
+      size: 8394652
       nfiles: 3
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
