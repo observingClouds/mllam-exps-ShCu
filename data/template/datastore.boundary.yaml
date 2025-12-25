@@ -91,7 +91,7 @@ output:
           - diff_mean
           - diff_std
         end: 2020-01-31T10:00
-        start: 2020-01-11T22:00
+        start: 2020-01-11T23:00
       val:
         end: 2020-02-19T10:00
         start: 2020-02-12T00:00
