@@ -53,21 +53,20 @@ stages:
       d]))") --logger mlflow --logger-project has/LES/hi_lam_200_ckptfalse 
       --num_workers 4 --batch_size 1 --hidden_dim 200 --hidden_dim_grid 200 
       --precision bf16-mixed --processor_layers 2 --model hi_lam --mesh_aggr 
-      mean --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 0 
-      --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
+      mean --seed 11 --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 
+      0 --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
-      --eval_init_times --plot_vars u_10m v_10m qv_2m tqc_dia t_2m 
-      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1 --graph_names
-      $(python -c "import yaml; 
+      --eval_init_times --plot_vars u_10m qv_2m --metrics_watch 'val_rmse, mse, 
+      random_metric' --num_nodes 1 --graph_names $(python -c "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
       print(','.join([f'triangular2D_split{yaml.safe_load(open('params.yaml'))['graph-defaults']['splits']}_{k}_hierarchical'
       for k in d]))") --graph_dir data/graph
     deps:
     - path: data/experiment/
       hash: md5
-      md5: b045e259b503136a1a313dfee34b2c08.dir
-      size: 140657059892
-      nfiles: 39191
+      md5: b7f7a2707a137fa47999e1e9fe814d93.dir
+      size: 91893905779
+      nfiles: 72311
     - path: data/graph/
       hash: md5
       md5: 09ee3c2570f51d83d01bf0ca14ab0ea4.dir
@@ -89,6 +88,7 @@ stages:
           processor_layers: 2
           model: hi_lam
           mesh_aggr: mean
+          seed: 11
           epochs: 50
           ar_steps_train: 1
           num_future_boundary_steps: 0
@@ -108,10 +108,7 @@ stages:
           eval_init_times: true
           plot_vars:
           - u_10m
-          - v_10m
           - qv_2m
-          - tqc_dia
-          - t_2m
           metrics_watch: val_rmse, mse, random_metric
           num_nodes: 1
     outs:
@@ -131,8 +128,8 @@ stages:
       50 --ar_steps_train 1 --num_future_boundary_steps 0 
       --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
-      --eval_init_times --plot_vars u_10m v_10m qv_2m tqc_dia t_2m 
-      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1
+      --eval_init_times --plot_vars u_10m qv_2m --metrics_watch 'val_rmse, mse, 
+      random_metric' --num_nodes 1
     deps:
     - path: saved_models
       hash: md5
@@ -157,8 +154,7 @@ stages:
     cmd: uv run python src/create_datastores.py --domains domain01 
       --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m shfl_s lhfl_s 
       sob_t thb_t rain_gsp_rate pres_sfc t_seasfc --interior-input-variables 
-      u_10m v_10m qv_2m tqc_dia t_2m shfl_s lhfl_s sob_t thb_t rain_gsp_rate 
-      pres_sfc
+      u_10m qv_2m
     deps:
     - path: data/template/config.yaml
       hash: md5
@@ -196,21 +192,12 @@ stages:
           - t_seasfc
           interior-input-variables:
           - u_10m
-          - v_10m
           - qv_2m
-          - tqc_dia
-          - t_2m
-          - shfl_s
-          - lhfl_s
-          - sob_t
-          - thb_t
-          - rain_gsp_rate
-          - pres_sfc
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: b63e4449672b421921aaf889356e8065.dir
-      size: 8394652
+      md5: 35b2a217a072c5a24cf8e6ffab07fc36.dir
+      size: 8394530
       nfiles: 3
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
@@ -220,8 +207,8 @@ stages:
     deps:
     - path: data/experiment/config/datastore.interior.domain01.yaml
       hash: md5
-      md5: 77162c02e085aa9b94c49ea2f0523296
-      size: 8391633
+      md5: e7c0bc7cd90e44f2cd94ef535e39f84a
+      size: 8391511
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -289,8 +276,8 @@ stages:
     outs:
     - path: data/experiment/data/datastore.boundary.domain01.zarr
       hash: md5
-      md5: 5a3f5df7b7d77bd9ecd9dc815139f04d.dir
-      size: 16376101176
+      md5: 80fcef650077cf7b52c7095851a2deb4.dir
+      size: 10618337432
       nfiles: 5617
   create_graph@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam 
