@@ -64,9 +64,9 @@ stages:
     deps:
     - path: data/experiment/
       hash: md5
-      md5: b7f7a2707a137fa47999e1e9fe814d93.dir
-      size: 91893905779
-      nfiles: 72311
+      md5: 1673f37fce7a66c34760b62d06f14286.dir
+      size: 33877184687
+      nfiles: 100061
     - path: data/graph/
       hash: md5
       md5: 09ee3c2570f51d83d01bf0ca14ab0ea4.dir
