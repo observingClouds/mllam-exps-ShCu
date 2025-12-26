@@ -33,7 +33,9 @@ dependencies = [
     "scores>=2.3.0",
     "seaborn>=0.13.2",
     "dvc-ssh>=4.2.2",
-    "cupy-cuda12x"
+    "cupy-cuda12x",
+    "cupy-xarray",
+    "dask-cuda[cu12]>=25.12.0",
 ]
 
 [dependency-groups]
@@ -45,6 +47,7 @@ dev = [
 [tool.uv.sources]
 mllam-data-prep = { path = "./mllam-data-prep", editable = true }
 neural-lam = { path = "./neural-lam", editable = true }
+cupy-xarray = { git = "https://github.com/xarray-contrib/cupy-xarray.git", rev = "1c50016e81c586c4f372bc0a6543f47c9b9cae5f" }
 
 [tool.pixi.workspace]
 channels = ["conda-forge"]
