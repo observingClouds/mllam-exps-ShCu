@@ -216,9 +216,9 @@ stages:
     outs:
     - path: data/experiment/data/datastore.interior.domain01.zarr
       hash: md5
-      md5: fe93555cc46b9d850f7bf363242536ba.dir
-      size: 75509410065
-      nfiles: 66690
+      md5: 7b057a0c07cb06db7227634e925ea10f.dir
+      size: 23239191874
+      nfiles: 16740
   create_interior_datastore_zarrs@domain02:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
@@ -276,7 +276,7 @@ stages:
     outs:
     - path: data/experiment/data/datastore.boundary.domain01.zarr
       hash: md5
-      md5: 80fcef650077cf7b52c7095851a2deb4.dir
+      md5: 35a74a39c90eb463051a0fa60e4e27fa.dir
       size: 10618337432
       nfiles: 5617
   create_graph@domain01:
