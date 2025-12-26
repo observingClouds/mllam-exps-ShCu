@@ -239,8 +239,8 @@ stages:
     deps:
     - path: data/experiment/config/datastore.interior.domain03.yaml
       hash: md5
-      md5: 296f34aca0d6a62469294e76128afcca
-      size: 8653641
+      md5: b69954c704782f225c941e9bb76e04d8
+      size: 8653655
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -248,9 +248,9 @@ stages:
     outs:
     - path: data/experiment/data/datastore.interior.domain03.zarr
       hash: md5
-      md5: a222328c088a344a72c7a073a3b9237c.dir
-      size: 43081200821
-      nfiles: 11190
+      md5: 2497d63086f43f04827820f071656fdf.dir
+      size: 23990694910
+      nfiles: 16740
   create_boundary_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
