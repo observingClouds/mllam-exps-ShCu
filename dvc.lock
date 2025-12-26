@@ -151,10 +151,9 @@ stages:
       size: 334935821
       nfiles: 99
   create_domain_specific_datastores:
-    cmd: uv run python src/create_datastores.py --domains domain01 
-      --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m shfl_s lhfl_s 
-      sob_t thb_t rain_gsp_rate pres_sfc t_seasfc --interior-input-variables 
-      u_10m qv_2m
+    cmd: uv run python src/create_datastores.py --domains domain03 
+      --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m 
+      --interior-input-variables u_10m qv_2m
     deps:
     - path: data/template/config.yaml
       hash: md5
@@ -176,28 +175,21 @@ stages:
       params.yaml:
         mllam-data-prep:
           domains:
-          - domain01
+          - domain03
           boundary-input-variables:
           - u_10m
           - v_10m
           - qv_2m
           - tqc_dia
           - t_2m
-          - shfl_s
-          - lhfl_s
-          - sob_t
-          - thb_t
-          - rain_gsp_rate
-          - pres_sfc
-          - t_seasfc
           interior-input-variables:
           - u_10m
           - qv_2m
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: 321af8a375e70b8d41ab64f6eb63c5af.dir
-      size: 8394532
+      md5: 53c67948313159d3036aeb05e01c5e37.dir
+      size: 8656576
       nfiles: 3
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
