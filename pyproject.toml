@@ -33,6 +33,7 @@ dependencies = [
     "scores>=2.3.0",
     "seaborn>=0.13.2",
     "dvc-ssh>=4.2.2",
+    "cupy-cuda12x"
 ]
 
 [dependency-groups]

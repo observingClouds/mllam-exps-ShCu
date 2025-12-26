@@ -162,11 +162,11 @@ stages:
       size: 290
     - path: data/template/datastore.boundary.yaml
       hash: md5
-      md5: 20b05c9eb87aa3445970f78fabf56cc8
-      size: 2566
+      md5: 927a5c1c942b95aa35615482a7fec29f
+      size: 2568
     - path: data/template/datastore.interior.yaml
       hash: md5
-      md5: 65598989b8f4ca3842a49c10598bfcf6
+      md5: 65d0bfb533c2046ff0f10292bea80f77
       size: 2939
     - path: src/create_datastores.py
       hash: md5
@@ -196,8 +196,8 @@ stages:
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: 35b2a217a072c5a24cf8e6ffab07fc36.dir
-      size: 8394530
+      md5: 321af8a375e70b8d41ab64f6eb63c5af.dir
+      size: 8394532
       nfiles: 3
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
