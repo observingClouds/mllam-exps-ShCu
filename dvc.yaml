@@ -50,7 +50,7 @@ stages:
   create_boundary_datastore_zarrs:
     foreach: ${mllam-data-prep.domains}
     do:
-      cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package mllam-data-prep mllam_data_prep data/experiment/config/datastore.boundary.${item}.yaml --output data/experiment/data/datastore.boundary.${item}.zarr
+      cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package mllam-data-prep mllam_data_prep data/experiment/config/datastore.boundary.${item}.yaml --output data/experiment/data/datastore.boundary.${item}.zarr --dask-distributed-local-core-fraction 0.8
       deps:
       - data/semaphore.lsm.created
       - data/experiment/config/datastore.boundary.${item}.yaml

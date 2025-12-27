@@ -349,12 +349,13 @@ stages:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
       data/experiment/config/datastore.boundary.domain03.yaml --output 
-      data/experiment/data/datastore.boundary.domain03.zarr
+      data/experiment/data/datastore.boundary.domain03.zarr 
+      --dask-distributed-local-core-fraction 0.8
     deps:
     - path: data/experiment/config/datastore.boundary.domain03.yaml
       hash: md5
-      md5: 16891668404515e68063558878b6d244
-      size: 2577
+      md5: df81add7466d488262e3a5462c4ad911
+      size: 2677
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -362,6 +363,6 @@ stages:
     outs:
     - path: data/experiment/data/datastore.boundary.domain03.zarr
       hash: md5
-      md5: 9395f17d001aef749231a02d2996464f.dir
-      size: 8291645379
-      nfiles: 44467
+      md5: 7a302e5f444ce97210cf1b78036ebf50.dir
+      size: 14870643234
+      nfiles: 83317
