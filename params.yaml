@@ -35,9 +35,25 @@ mllam-data-prep:
   - qv_2m
   - tqc_dia
   - t_2m
+  - lhfl_s
+  - shfl_s
+  - rain_gsp_rate
+  - pres_sfc
+  - t_seasfc
+  - sob_t
+  - thb_t
   interior-input-variables:
   - u_10m
+  - v_10m
   - qv_2m
+  - tqc_dia
+  - t_2m
+  - lhfl_s
+  - shfl_s
+  - rain_gsp_rate
+  - pres_sfc
+  - sob_t
+  - thb_t
 baseline-defaults: &baseline-defaults
                                        # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4
