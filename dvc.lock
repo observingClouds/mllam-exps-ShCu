@@ -64,8 +64,8 @@ stages:
     deps:
     - path: data/experiment/
       hash: md5
-      md5: a24137c91fbfa0a7ac8d5b9858ddc84e.dir
-      size: 66159787020
+      md5: 976c4a41b6ba89c8dff06dea112b3a0a.dir
+      size: 69296163375
       nfiles: 161268
     - path: data/graph/
       hash: md5
@@ -248,8 +248,8 @@ stages:
     outs:
     - path: data/experiment/data/datastore.interior.domain03.zarr
       hash: md5
-      md5: 2497d63086f43f04827820f071656fdf.dir
-      size: 23990694910
+      md5: ecd5457b7d5d9ef85fc46f36426d0443.dir
+      size: 27127071265
       nfiles: 16740
   create_boundary_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
