@@ -64,14 +64,14 @@ stages:
     deps:
     - path: data/experiment/
       hash: md5
-      md5: e5dbc25315d9b1d9112e45ce9e7457b4.dir
-      size: 125749127755
-      nfiles: 250068
+      md5: 2270a2816ce21a6b4b372379ad2a0745.dir
+      size: 91880337600
+      nfiles: 150010
     - path: data/graph/
       hash: md5
-      md5: 3067d44afd14cb5e18f80fc46404d108.dir
-      size: 2459441552
-      nfiles: 282
+      md5: f51ff80ba6e9591b5aefe83c7d40a0c4.dir
+      size: 383209404
+      nfiles: 22
     - path: version.mllam.txt
       hash: md5
       md5: b413acdc846c6c2732c0844f55383e59
@@ -390,9 +390,9 @@ stages:
     outs:
     - path: index.boundary.json
       hash: md5
-      md5: 04536ee4df0a54ea562be49edbcf986e
-      size: 12467188
+      md5: 9cd515a006de625fe4c32d6c71295098
+      size: 15187003
     - path: index.interior.json
       hash: md5
-      md5: 5bdcf2f655f1ec7362045859442c4f33
-      size: 43492544
+      md5: adf6f727f37076c98a5829923b037c99
+      size: 45629609
