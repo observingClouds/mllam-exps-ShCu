@@ -1,8 +1,10 @@
 [cache]
     dir = /home/has/dvc_cache
 [core]
-    remote = mllam-dvc-exps-bucket
+    remote = leonardo_local
 ['remote "mllam-dvc-exps-bucket"']
     url = s3://mllam-dvc-exps
 ['remote "leonardo"']
     url = ssh://leonardo:/leonardo_scratch/large/userexternal/hschulz0/mllam-exps-shcu
+['remote "leonardo_local"']
+    url = /leonardo_scratch/large/userexternal/hschulz0/mllam-exps-shcu
