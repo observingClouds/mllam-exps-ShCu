@@ -56,7 +56,7 @@ stages:
       mean --seed 11 --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 
       0 --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
-      --eval_init_times --plot_vars qv_2m --metrics_watch 'val_rmse, mse, 
+      --eval_init_times --plot_vars u_10m qv_2m --metrics_watch 'val_rmse, mse, 
       random_metric' --num_nodes 1 --graph_names $(python -c "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
       print(','.join([f'triangular2D_split{yaml.safe_load(open('params.yaml'))['graph-defaults']['splits']}_{k}_hierarchical'
@@ -64,9 +64,9 @@ stages:
     deps:
     - path: data/experiment/
       hash: md5
-      md5: 976c4a41b6ba89c8dff06dea112b3a0a.dir
-      size: 69296163375
-      nfiles: 161268
+      md5: e5dbc25315d9b1d9112e45ce9e7457b4.dir
+      size: 125749127755
+      nfiles: 250068
     - path: data/graph/
       hash: md5
       md5: 3067d44afd14cb5e18f80fc46404d108.dir
@@ -119,17 +119,18 @@ stages:
       nfiles: 235
   evaluate:
     cmd:
-    - LASTCHECKPT=./saved_models/train-glare-newt/; export 
+    - LASTCHECKPT=./saved_models/train-genal-dohs/; export 
       DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh --config_path 
-      ./data/config.yaml --eval val --load ${LASTCHECKPT}/last.ckpt --logger 
-      mlflow --logger-project has/LES/hi_lam_200_ckptfalse --num_workers 4 
-      --batch_size 1 --hidden_dim 200 --hidden_dim_grid 200 --precision 
-      bf16-mixed --processor_layers 2 --model hi_lam --mesh_aggr mean --seed 10 
-      --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 0 
-      --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
-      --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
-      --eval_init_times --plot_vars u_10m qv_2m --metrics_watch 'val_rmse, mse, 
-      random_metric' --num_nodes 1
+      ./data/experiment/config/config.domain03.yaml --eval val --load 
+      ${LASTCHECKPT}/last.ckpt --logger mlflow --logger-project 
+      has/LES/hi_lam_200_ckptfalse --num_workers 4 --batch_size 1 --hidden_dim 
+      200 --hidden_dim_grid 200 --precision bf16-mixed --processor_layers 2 
+      --model hi_lam --mesh_aggr mean --seed 10 --epochs 50 --ar_steps_train 1 
+      --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
+      --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3
+      4 5 --num_sanity_steps 1 --eval_init_times --plot_vars u_10m qv_2m 
+      --metrics_watch 'val_rmse, mse, random_metric' --num_nodes 1 --graph_names
+      triangular2D_split13_domain03_hierarchical --graph_dir data/graph
     deps:
     - path: saved_models
       hash: md5
@@ -139,9 +140,9 @@ stages:
     outs:
     - path: mlruns
       hash: md5
-      md5: a804dd2825e19d38718ffb19ad0ed7ff.dir
-      size: 3135239003
-      nfiles: 195
+      md5: d751713988987e9331980363e24189ce.dir
+      size: 0
+      nfiles: 0
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
