@@ -1,5 +1,5 @@
 [cache]
-    dir = /home/has/dvc_cache
+    dir = /leonardo_scratch/large/userexternal/hschulz0/dvc_cache
 [core]
     remote = leonardo_local
 ['remote "mllam-dvc-exps-bucket"']
