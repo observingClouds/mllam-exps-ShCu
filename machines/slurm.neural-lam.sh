@@ -46,10 +46,6 @@ LOGLEVEL=INFO
 #OMPI_MCA_coll_hcoll_enable=0
 set +a
 
-echo "Using venv in ${MLLAM_VENV_PATH}"
-
-# source the virtual environment so that the python script can be run
-source ${MLLAM_VENV_PATH}/bin/activate
 
 # Check if 'eval' is in the arguments
 if [[ " $@ " == *" --eval "* ]]; then
@@ -60,4 +56,4 @@ fi
 
 # pass all arguments to the python script
 NCCL_DEBUG=INFO
-python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
+uv run python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"

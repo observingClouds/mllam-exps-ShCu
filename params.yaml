@@ -131,8 +131,8 @@ slurm-defaults: &slurm-defaults
   time: 00:30:00
   nodes: *num_nodes
                                    # set in baseline-defaults section above and referenced here via alias
-  ntasks-per-node: 1
-  gres: gpu:1  #per node
+  ntasks-per-node: 4
+  gres: gpu:4  #per node
   no-requeue: true                 # becomes `--no-requeue`
   exclusive: true
   mem: 100GB
