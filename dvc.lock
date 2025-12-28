@@ -366,3 +366,32 @@ stages:
       md5: 7a302e5f444ce97210cf1b78036ebf50.dir
       size: 14870643234
       nfiles: 83317
+  create_virtual_datastores_boundary@domain03:
+    cmd: "uv run --script src/create_virtual_subset.py --subset-type forcing_feature
+      --input $(pwd)/data/experiment/data/datastore.boundary.domain03.zarr --output
+      index.boundary.json --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate
+      pres_sfc sob_t thb_t t_seasfc hour_of_day_cos hour_of_day_sin toa_radiation\n\
+      uv run --script src/create_virtual_subset.py --subset-type state_feature --input
+      $(pwd)/data/experiment/data/datastore.interior.domain03.zarr --output index.interior.json
+      --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate pres_sfc sob_t
+      thb_t\n"
+    deps:
+    - path: data/experiment/data/datastore.boundary.domain03.zarr
+      hash: md5
+      md5: 7a302e5f444ce97210cf1b78036ebf50.dir
+      size: 14870643234
+      nfiles: 83317
+    - path: data/experiment/data/datastore.interior.domain03.zarr
+      hash: md5
+      md5: d9a5878df9f7c60a2dcca3da78f65028.dir
+      size: 77001037568
+      nfiles: 66690
+    outs:
+    - path: index.boundary.json
+      hash: md5
+      md5: 04536ee4df0a54ea562be49edbcf986e
+      size: 12467188
+    - path: index.interior.json
+      hash: md5
+      md5: 5bdcf2f655f1ec7362045859442c4f33
+      size: 43492544

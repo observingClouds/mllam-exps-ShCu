@@ -15,3 +15,5 @@ machines/secrets.sh
 .pixi
 *.egg-info
 /my.db
+/index.interior.json
+/index.boundary.json
