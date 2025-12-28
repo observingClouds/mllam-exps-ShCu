@@ -46,8 +46,11 @@ stages:
       size: 15286117
   train:
     cmd:
-    - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
-      --config_paths $(python -c "import yaml; 
+    - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name 
+      has/LES/hi_lam_200_ckptfalse --time 00:30:00 --nodes 1 --ntasks-per-node 4
+      --gres gpu:4 --no-requeue --exclusive --mem 100GB --account deste_330_25 
+      --partition boost_usr_prod --qos boost_qos_dbg --chdir ~/logs  
+      machines/slurm.neural-lam.sh --config_paths $(python -c "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
       print(','.join([f'./data/experiment/config/config.{k}.yaml' for k in 
       d]))") --logger mlflow --logger-project has/LES/hi_lam_200_ckptfalse 
@@ -58,15 +61,17 @@ stages:
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
       --eval_init_times --plot_vars u_10m qv_2m --metrics_watch 'val_rmse, mse, 
       random_metric' --num_nodes 1 --graph_names $(python -c "import yaml; 
-      d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
-      print(','.join([f'triangular2D_split{yaml.safe_load(open('params.yaml'))['graph-defaults']['splits']}_{k}_hierarchical'
-      for k in d]))") --graph_dir data/graph
+      params=yaml.safe_load(open('params.yaml')); 
+      d=params['mllam-data-prep']['domains']; 
+      splits=params['graph-defaults']['splits']; 
+      print(','.join([f'triangular2D_split{splits}_{k}_hierarchical' for k in 
+      d]))") --graph_dir data/graph
     deps:
     - path: data/experiment/
       hash: md5
-      md5: 2270a2816ce21a6b4b372379ad2a0745.dir
-      size: 91880337600
-      nfiles: 150010
+      md5: 41338204fda40b1c8cb2f81e4e4759f1.dir
+      size: 91880337674
+      nfiles: 150011
     - path: data/graph/
       hash: md5
       md5: f51ff80ba6e9591b5aefe83c7d40a0c4.dir
@@ -207,8 +212,8 @@ stages:
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: 6cc3e4765d6aea3132e4e3d889703b32.dir
-      size: 8656798
+      md5: 8b0f8d2c36646c17216f65c93098e1aa.dir
+      size: 8656864
       nfiles: 3
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
