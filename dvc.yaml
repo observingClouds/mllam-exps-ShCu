@@ -84,7 +84,7 @@ stages:
       - index.boundary.json
   train:
     cmd:
-      - export DVC_WORKING_DIR=$(pwd); sbatch -W ${slurm-defaults} --chdir ~/logs  machines/slurm.neural-lam.sh --config_paths $(python -c "import yaml; d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; print(','.join([f'./data/experiment/config/config.{k}.yaml' for k in d]))") --logger ${logger} --logger-project ${logger-project} ${baseline-defaults} --graph_names $(python -c "import yaml; params=yaml.safe_load(open('params.yaml')); d=params['mllam-data-prep']['domains']; splits=params['graph-defaults']['splits']; print(','.join([f'triangular2D_split{splits}_{k}_hierarchical' for k in d]))") --graph_dir data/graph
+      - export DVC_WORKING_DIR=$(pwd);  machines/slurm.neural-lam.sh --config_paths $(python -c "import yaml; d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; print(','.join([f'./data/experiment/config/config.{k}.yaml' for k in d]))") --logger ${logger} --logger-project ${logger-project} ${baseline-defaults} --graph_names $(python -c "import yaml; params=yaml.safe_load(open('params.yaml')); d=params['mllam-data-prep']['domains']; splits=params['graph-defaults']['splits']; print(','.join([f'triangular2D_split{splits}_{k}_hierarchical' for k in d]))") --graph_dir data/graph
     deps:
     - version.mllam.txt
     - data/graph/

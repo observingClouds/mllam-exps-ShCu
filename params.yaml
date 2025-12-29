@@ -65,7 +65,6 @@ baseline-defaults: &baseline-defaults
   processor_layers: 2
   model: hi_lam
   mesh_aggr: mean
-  seed: 11
   epochs: 50
   ar_steps_train: 1
   num_future_boundary_steps: 0
@@ -124,7 +123,6 @@ baseline-eval:
   - u_10m
   - qv_2m
   metrics_watch: val_rmse, mse, random_metric
-  seed: 10
 slurm-defaults: &slurm-defaults
                                    # SLURM directives, which gets passed to sbatch
   job-name: *logger-project
@@ -164,4 +162,3 @@ slurm-graph:
   partition: boost_usr_prod
   qos: normal
   ntasks-per-node: 1
-seed: 11

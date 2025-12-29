@@ -85,7 +85,7 @@ stages:
       params.yaml:
         baseline-defaults:
           num_workers: 4
-          batch_size: 1
+          batch_size: 4
           hidden_dim: 200
           hidden_dim_grid: 200
           grad_checkpointing: false
