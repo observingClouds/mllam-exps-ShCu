@@ -57,7 +57,7 @@ mllam-data-prep:
 baseline-defaults: &baseline-defaults
                                        # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4
-  batch_size: 1
+  batch_size: 4
   hidden_dim: 200
   hidden_dim_grid: 200
   grad_checkpointing: false
@@ -128,7 +128,7 @@ baseline-eval:
 slurm-defaults: &slurm-defaults
                                    # SLURM directives, which gets passed to sbatch
   job-name: *logger-project
-  time: 00:30:00
+  time: 23:30:00
   nodes: *num_nodes
                                    # set in baseline-defaults section above and referenced here via alias
   ntasks-per-node: 4
@@ -138,7 +138,7 @@ slurm-defaults: &slurm-defaults
   mem: 100GB
   account: deste_330_25
   partition: boost_usr_prod
-  qos: boost_qos_dbg               # see https://wiki.u-gov.it/confluence/display/SCAIUS/Booster+Section
+  qos: normal               # see https://wiki.u-gov.it/confluence/display/SCAIUS/Booster+Section
 
 slurm-eval:                        # Overwriting SLURM defaults with evaluation stage specifics
   <<: *slurm-defaults
