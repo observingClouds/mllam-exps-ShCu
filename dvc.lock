@@ -46,8 +46,9 @@ stages:
       size: 15286117
   train:
     cmd:
-    - export DVC_WORKING_DIR=$(pwd); bash machines/slurm.neural-lam.sh 
-      --config_paths $(python -c "import yaml; 
+    - export DVC_WORKING_DIR=$(pwd); uv run python -m neural_lam.train_model 
+      --logger_run_name train-hidden_200_full_set --config_paths $(python -c 
+      "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
       print(','.join([f'./data/experiment/config/config.{k}.yaml' for k in 
       d]))") --logger mlflow --logger-project has/LES/hi_lam_200_ckptfalse 
@@ -114,9 +115,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 4de8ffb349f286e1226781fb9a3f8ba7.dir
-      size: 21009441273
-      nfiles: 235
+      md5: 4b5ff0757eac831221c5735da5b4ebb8.dir
+      size: 21611912035
+      nfiles: 241
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-genal-dohs/; export 
@@ -134,15 +135,15 @@ stages:
     deps:
     - path: saved_models
       hash: md5
-      md5: 4de8ffb349f286e1226781fb9a3f8ba7.dir
-      size: 21009441273
-      nfiles: 235
+      md5: 4b5ff0757eac831221c5735da5b4ebb8.dir
+      size: 21611912035
+      nfiles: 241
     outs:
     - path: mlruns
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 4cc998c28b58e0f43dc34cbacc65cfc3.dir
+      size: 1028772
+      nfiles: 11
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
