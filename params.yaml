@@ -57,7 +57,7 @@ mllam-data-prep:
 baseline-defaults: &baseline-defaults
                                        # defaults across training and evaluation stage, which get passed to python -m neural_lam.train_model
   num_workers: 4
-  batch_size: 4
+  batch_size: 1
   hidden_dim: 100
   hidden_dim_grid: 100
   grad_checkpointing: false

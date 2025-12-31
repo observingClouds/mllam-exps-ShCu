@@ -10,7 +10,7 @@
 #echo "Started slurm job $SLURM_JOB_ID"
 
 # Get the hostname
-HOSTNAME=$(hostname)
+HOSTNAME=leonardo #$(hostname)
 
 # Flag to check if any script is sourced
 SOURCED=false
@@ -56,4 +56,4 @@ fi
 
 # pass all arguments to the python script
 NCCL_DEBUG=INFO
-srun -ul -K1 uv run --offline python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
+srun -ul -K1 uv run python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"

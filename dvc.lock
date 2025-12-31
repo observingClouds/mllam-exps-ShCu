@@ -47,17 +47,17 @@ stages:
   train:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name 
-      has/LES/hi_lam_200_ckptfalse --time 00:30:00 --nodes 1 --ntasks-per-node 4
+      has/LES/hi_lam_200_ckptfalse --time 23:30:00 --nodes 1 --ntasks-per-node 4
       --gres gpu:4 --no-requeue --exclusive --mem 100GB --account deste_330_25 
-      --partition boost_usr_prod --qos boost_qos_dbg --chdir ~/logs  
-      machines/slurm.neural-lam.sh --config_paths $(python -c "import yaml; 
+      --partition boost_usr_prod --qos normal machines/slurm.neural-lam.sh 
+      --config_paths $(python -c "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 
       print(','.join([f'./data/experiment/config/config.{k}.yaml' for k in 
       d]))") --logger mlflow --logger-project has/LES/hi_lam_200_ckptfalse 
-      --num_workers 4 --batch_size 1 --hidden_dim 200 --hidden_dim_grid 200 
+      --num_workers 4 --batch_size 1 --hidden_dim 100 --hidden_dim_grid 100 
       --precision bf16-mixed --processor_layers 2 --model hi_lam --mesh_aggr 
-      mean --seed 11 --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 
-      0 --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
+      mean --epochs 50 --ar_steps_train 1 --num_future_boundary_steps 0 
+      --num_past_boundary_steps 2 --lr 0.001 --min_lr 1e-05 --val_interval 5 
       --ar_steps_eval 5 --val_steps_to_log 1 2 3 4 5 --num_sanity_steps 1 
       --eval_init_times --plot_vars u_10m qv_2m --metrics_watch 'val_rmse, mse, 
       random_metric' --num_nodes 1 --graph_names $(python -c "import yaml; 
@@ -85,15 +85,14 @@ stages:
       params.yaml:
         baseline-defaults:
           num_workers: 4
-          batch_size: 4
-          hidden_dim: 200
-          hidden_dim_grid: 200
+          batch_size: 1
+          hidden_dim: 100
+          hidden_dim_grid: 100
           grad_checkpointing: false
           precision: bf16-mixed
           processor_layers: 2
           model: hi_lam
           mesh_aggr: mean
-          seed: 11
           epochs: 50
           ar_steps_train: 1
           num_future_boundary_steps: 0
@@ -119,9 +118,9 @@ stages:
     outs:
     - path: saved_models
       hash: md5
-      md5: 4de8ffb349f286e1226781fb9a3f8ba7.dir
-      size: 21009441273
-      nfiles: 235
+      md5: c934dab3ab25bd1205660a075489ff89.dir
+      size: 21908874821
+      nfiles: 255
   evaluate:
     cmd:
     - LASTCHECKPT=./saved_models/train-genal-dohs/; export 
@@ -130,7 +129,7 @@ stages:
       ${LASTCHECKPT}/last.ckpt --logger mlflow --logger-project 
       has/LES/hi_lam_200_ckptfalse --num_workers 4 --batch_size 1 --hidden_dim 
       200 --hidden_dim_grid 200 --precision bf16-mixed --processor_layers 2 
-      --model hi_lam --mesh_aggr mean --seed 10 --epochs 50 --ar_steps_train 1 
+      --model hi_lam --mesh_aggr mean --epochs 50 --ar_steps_train 1 
       --num_future_boundary_steps 0 --num_past_boundary_steps 2 --lr 0.001 
       --min_lr 1e-05 --val_interval 5 --ar_steps_eval 5 --val_steps_to_log 1 2 3
       4 5 --num_sanity_steps 1 --eval_init_times --plot_vars u_10m qv_2m 
@@ -139,15 +138,15 @@ stages:
     deps:
     - path: saved_models
       hash: md5
-      md5: 4de8ffb349f286e1226781fb9a3f8ba7.dir
-      size: 21009441273
-      nfiles: 235
+      md5: c934dab3ab25bd1205660a075489ff89.dir
+      size: 21908874821
+      nfiles: 255
     outs:
     - path: mlruns
       hash: md5
-      md5: d751713988987e9331980363e24189ce.dir
-      size: 0
-      nfiles: 0
+      md5: 5b7f0ecb6228ca0c5ca93f03a70b4395.dir
+      size: 5040750
+      nfiles: 51
   get_grid_information:
     cmd: $MLLAM_VENV_PATH/bin/python src/attach_grid.py
     outs:
@@ -375,12 +374,11 @@ stages:
   create_virtual_datastores_boundary@domain03:
     cmd: "uv run --script src/create_virtual_subset.py --subset-type forcing_feature
       --input $(pwd)/data/experiment/data/datastore.boundary.domain03.zarr --output
-      index.boundary.json --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate
-      pres_sfc sob_t thb_t t_seasfc hour_of_day_cos hour_of_day_sin toa_radiation\n\
-      uv run --script src/create_virtual_subset.py --subset-type state_feature --input
-      $(pwd)/data/experiment/data/datastore.interior.domain03.zarr --output index.interior.json
-      --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate pres_sfc sob_t
-      thb_t\n"
+      index.boundary.json --variables u_10m v_10m qv_2m tqc_dia t_2m sob_t thb_t t_seasfc
+      hour_of_day_cos hour_of_day_sin toa_radiation\nuv run --script src/create_virtual_subset.py
+      --subset-type state_feature --input $(pwd)/data/experiment/data/datastore.interior.domain03.zarr
+      --output index.interior.json --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s
+      rain_gsp_rate sob_t thb_t\n"
     deps:
     - path: data/experiment/data/datastore.boundary.domain03.zarr
       hash: md5
@@ -395,9 +393,9 @@ stages:
     outs:
     - path: index.boundary.json
       hash: md5
-      md5: 9cd515a006de625fe4c32d6c71295098
-      size: 15187003
+      md5: 6037358e5e5c9d33a4d863658d2631d2
+      size: 12164936
     - path: index.interior.json
       hash: md5
-      md5: adf6f727f37076c98a5829923b037c99
-      size: 45629609
+      md5: f7192e3d5eb75adb2983a74100cb203c
+      size: 44649293
