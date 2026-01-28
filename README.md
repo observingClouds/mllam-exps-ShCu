@@ -179,3 +179,42 @@ To continue training on a previous experiment a few steps are necessary with the
 
 # Adjust DVC cache
 Edit `.dvc/config` to point to a new DVC cache location. This can point to a local folder.
+
+
+## Running on compute nodes without internet access
+
+When running on compute nodes that don't have internet access, you need to pre-download Natural Earth shapefiles for cartopy plotting functionality.
+
+### Pre-download Natural Earth files
+
+First, find your cartopy data directory:
+```bash
+uv run python -c "import cartopy; print(cartopy.config['data_dir'])"
+```
+
+Then download the required shapefiles manually (this bypasses SSL certificate issues):
+```bash
+
+# Download 110m resolution coastline data
+mkdir -p ~/.local/share/cartopy/shapefiles/natural_earth/physical
+cd ~/.local/share/cartopy/shapefiles/natural_earth/physical
+wget --no-check-certificate https://naciscdn.org/naturalearth/110m/physical/ne_110m_coastline.zip
+unzip -o ne_110m_coastline.zip
+
+# Download 110m resolution countries/boundaries data
+mkdir -p ~/.local/share/cartopy/shapefiles/natural_earth/cultural
+cd ~/.local/share/cartopy/shapefiles/natural_earth/cultural
+wget --no-check-certificate https://naciscdn.org/naturalearth/110m/cultural/ne_110m_admin_0_countries.zip
+unzip -o ne_110m_admin_0_countries.zip
+
+# Download 10m resolution coastline data
+cd ~/.local/share/cartopy/shapefiles/natural_earth/physical
+wget --no-check-certificate https://naciscdn.org/naturalearth/10m/physical/ne_10m_coastline.zip
+unzip -o ne_10m_coastline.zip
+
+# Download 10m resolution boundary lines
+cd ~/.local/share/cartopy/shapefiles/natural_earth/cultural
+wget --no-check-certificate https://naciscdn.org/naturalearth/10m/cultural/ne_10m_admin_0_boundary_lines_land.zip
+unzip -o ne_10m_admin_0_boundary_lines_land.zip
+```
+```
