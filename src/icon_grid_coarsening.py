@@ -259,3 +259,153 @@ def visualize_multilevel_graph(graphs_data, figsize=(12, 10), title='Graph of Ov
     plt.tight_layout()
     
     return fig, ax
+
+
+from scipy.spatial import KDTree
+
+def connect_graph_components(G, pos, k_neighbors=3, max_distance=None):
+    """
+    Connect disconnected components in a graph using k-nearest neighbors
+    to complete a fully connected layer.
+    
+    Parameters
+    ----------
+    G : nx.Graph
+        Graph to modify (will be modified in-place)
+    pos : dict
+        Position dictionary mapping node IDs to (lon, lat) tuples
+    k_neighbors : int
+        Number of nearest neighbors to consider for each node
+    max_distance : float, optional
+        Maximum distance for adding edges (in degrees). If None, no limit.
+    
+    Returns
+    -------
+    G : nx.Graph
+        Modified graph with new edges connecting components
+    n_edges_added : int
+        Number of edges added
+    """
+    # Get all node positions as array
+    nodes = list(G.nodes())
+    positions = np.array([pos[node] for node in nodes])
+    
+    # Build KDTree for efficient nearest neighbor search
+    tree = KDTree(positions)
+    
+    edges_added = 0
+    
+    # For each node, find k nearest neighbors and add edges to nodes in different components
+    for i, node in enumerate(nodes):
+        # Query k+1 neighbors (including self)
+        distances, indices = tree.query(positions[i], k=k_neighbors + 1)
+        
+        # Skip self (first result)
+        for dist, idx in zip(distances[1:], indices[1:]):
+            neighbor = nodes[idx]
+            
+            # Check if edge should be added
+            if max_distance is not None and dist > max_distance:
+                continue
+                
+            # Add edge if not already present and nodes are in different components
+            if not G.has_edge(node, neighbor):
+                # Check if nodes are in different components
+                # try:
+                #     if not nx.has_path(G, node, neighbor):
+                G.add_edge(node, neighbor)
+                edges_added += 1
+                # except nx.NetworkXError:
+                #     # Nodes are in different components
+                #     G.add_edge(node, neighbor)
+                #     edges_added += 1
+    
+    return G, edges_added
+
+if __name__ == "__main__":
+    import json
+    import xarray as xr
+    import pickle
+    import argparse
+    
+    parser = argparse.ArgumentParser(
+        description="Create multi-level graph hierarchy from ICON grid data"
+    )
+    parser.add_argument(
+        "--domain",
+        type=str,
+        default="domain03",
+        help="Domain name to process (default: domain03)"
+    )
+    parser.add_argument(
+        "--num-levels",
+        type=int,
+        default=4,
+        help="Number of coarsening levels to create (default: 4)"
+    )
+    parser.add_argument(
+        "--output-path",
+        type=str,
+        default="../data/multilevel_graph_hierarchy.pkl",
+        help="Output path for the hierarchy file (default: ../data/multilevel_graph_hierarchy.pkl)"
+    )
+    parser.add_argument(
+        "--fully-connected",
+        action="store_true",
+        help="Apply within-level connectivity to fully connect graph components (default: False)"
+    )
+    
+    args = parser.parse_args()
+    
+    icon_grid = xr.open_dataset("../analysis/grid.nc")
+    icon_grid['cell'] = icon_grid.cell.values
+    with open("../src/domains_indices.json", "r") as f:
+        domains = json.load(f)
+    domain_cells = domains[args.domain]
+    grid_sel = icon_grid.sel(cell=domain_cells)
+
+    # Create multi-level graph hierarchy
+    all_cells = grid_sel.cell.values
+
+    # Create coarsened levels (automatically generates multiple levels)
+    coarsened_levels = create_multilevel_hierarchy(
+        all_cells, 
+        icon_grid, 
+        num_levels=args.num_levels
+    )
+
+    # Create finest level with neighbor edges
+    finest_level = create_finest_level(
+        all_cells, 
+        icon_grid, 
+        grid_sel,
+        triangles_for_neighbors=coarsened_levels[0]['triangles']
+    )
+
+    # Combine all levels (finest first, then coarsened levels)
+    all_levels = [finest_level] + coarsened_levels
+
+    if args.fully_connected:
+        all_levels_connectedwithinlevel = all_levels.copy()
+        distance_limits = {0: 0.0375, 1: 0.075, 2: 0.0125, 3: 0.025, 4: 0.05, 5: 0.1, 6: 0.2, 7: 0.4, 8: 0.8}
+        for l, level in enumerate(all_levels):
+            G = level['graph'].copy()
+            pos = level['pos']
+            G, _ = connect_graph_components(G, pos, k_neighbors=3, max_distance=distance_limits[l])
+            all_levels_connectedwithinlevel[l]['graph'] = G.copy()
+        all_levels = all_levels_connectedwithinlevel
+
+            
+
+    # Print summary
+    print("Multi-level hierarchy created:\n")
+    for level in all_levels:
+        print(f"{level['name']:25s} | "
+            f"Nodes: {level['graph'].number_of_nodes():5d} | "
+            f"Edges: {level['graph'].number_of_edges():5d}")
+
+    # Save the multi-level graph hierarchy to disk
+    with open(args.output_path, 'wb') as f:
+        pickle.dump(all_levels, f)
+
+    print(f"Saved {len(all_levels)} graph levels to {args.output_path}")
