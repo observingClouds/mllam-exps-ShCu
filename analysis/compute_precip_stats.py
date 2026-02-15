@@ -1,3 +1,6 @@
+#!/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/analysis/.venv/bin/python
+#SBATCH -n 1
+#SBATCH -t 1:00:00
 """
 Notebook to compute precipitation statistics to test physical consistency
 """
@@ -21,9 +24,16 @@ G_coarse = loaded_levels[level]['graph']
 level_cells = list(G_coarse.nodes.keys())
 coarse_positions = loaded_levels[level]['pos']
 
-pred = xr.open_dataset("../evals/rain_mse.zarr", engine="zarr")
-t_2m_full = pred.sel(state_feature='t_2m').rename({'grid_index': 'cell'})
-rr_full = pred.sel(state_feature='rain_gsp_rate').rename({'grid_index': 'cell'})
+pred = xr.open_dataset("../evals/rain_mse_boxcox2.zarr", engine="zarr")
+
+reference = False
+if reference:
+    ground_truth = xr.open_dataset("reference://", storage_options={'fo':"/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/ablation_study/index.interior.boxcoxrain.json"}, engine="zarr")
+    t_2m_full = ground_truth.sel(state_feature='t_2m').rename({'grid_index': 'cell'})
+    rr_full = ground_truth.sel(state_feature='rain_gsp_rate').rename({'grid_index': 'cell'})
+else:
+    t_2m_full = pred.sel(state_feature='t_2m').rename({'grid_index': 'cell'})
+    rr_full = pred.sel(state_feature='rain_gsp_rate').rename({'grid_index': 'cell'})
 
 # Get dimensions
 start_times = pred.start_time.values
@@ -47,8 +57,12 @@ coarsen = level
 for i, start_time in enumerate(tqdm(start_times, desc="Processing start times", leave=True)):
     for j, forecast_duration in enumerate(tqdm(forecast_durations, desc="Processing forecast durations", leave=False)):
         # Select data for this time point
-        t_2m = t_2m_full.isel(start_time=i, elapsed_forecast_duration=j)
-        rr = rr_full.isel(start_time=i, elapsed_forecast_duration=j)
+        if reference:
+            t_2m = t_2m_full.sel(time=start_time+forecast_duration)
+            rr = rr_full.sel(time=start_time+forecast_duration)
+        else:
+            t_2m = t_2m_full.isel(start_time=i, elapsed_forecast_duration=j)
+            rr = rr_full.isel(start_time=i, elapsed_forecast_duration=j)
         
         # Coarsen data and set node attributes
         level_data_t_2m = t_2m.state.values.reshape(-1, 4**coarsen).mean(axis=-1)
@@ -134,4 +148,5 @@ print("="*60)
 print("\nMetrics Dataset:")
 print(metrics_ds)
 
-metrics_ds.to_netcdf("../evals/precip_stats.nc")
+output_path = "../evals/precip_stats.nc"
+metrics_ds.to_netcdf(output_path)
