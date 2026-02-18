@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import cartopy.crs as ccrs
 import pandas as pd
+from pathlib import Path
 
 sys.path.append("../src/helpers")
 from analysis_helpers import combine_state_features
@@ -31,6 +32,47 @@ predictions = {
     name: combine_state_features(xr.open_dataset(path, engine="zarr"))
     for name, path in prediction_datasets.items()
 }
+
+# Map model names (keys from `prediction_datasets`) to precomputed metric files
+model_to_metrics = {
+    "Baseline + rr": "metrics_rain_mse_boxcox.nc",
+    "Baseline + qv": "metrics_qv.nc",
+    "Surface only": "metrics_sfconly.nc",
+    "Bare-minimum": "metrics_bare-minimum.nc",
+}
+base_dir = Path(__file__).resolve().parent
+metrics_datasets = {}
+for model_name, fname in model_to_metrics.items():
+    # only try to load metrics for models we actually plotted
+    if model_name not in predictions:
+        continue
+    p = base_dir / fname
+    if p.exists():
+        try:
+            metrics_datasets[model_name] = xr.open_dataset(p)
+        except Exception as e:
+            print(f"Could not open metrics file {p}: {e}")
+
+# Helper to look up metric values for a given forecast/init and leadtime (hours)
+def _lookup_metric(ds, var_name, forecast_time, lead_hours, tol_hours=1e-4):
+    """Return metric value (float) or None if not available/mismatch."""
+    if ds is None or var_name not in ds:
+        return None
+    try:
+        forecast_np = np.datetime64(pd.Timestamp(forecast_time).to_datetime64())
+    except Exception:
+        forecast_np = np.datetime64(forecast_time)
+    # forecast must exist exactly
+    if forecast_np not in ds.coords["forecast"].values:
+        return None
+    lead_vals = ds["leadtime"].values
+    idx = np.abs(lead_vals - lead_hours).argmin()
+    if abs(lead_vals[idx] - lead_hours) > tol_hours:
+        return None
+    try:
+        return float(ds[var_name].sel(forecast=forecast_np, leadtime=lead_vals[idx]).item())
+    except Exception:
+        return None
 
 # Load ground truth
 ground_truth = xr.open_dataset("../data/experiment/data/datastore.interior.domain03.zarr", engine="zarr")
@@ -132,9 +174,29 @@ for i, time_step in enumerate(time_steps):
         if i == 0:
             ax.set_title(name, size=10)
         
+        # Base label (start + lead minutes)
+        start_str = da_prediction.start_time.dt.strftime('%Y-%m-%d %H:%M:%S').values.item()
+        minutes = int(pd.to_timedelta(da_prediction.elapsed_forecast_duration.values[i]).total_seconds() / 60)
+        label_text = f"{start_str} + {minutes} minutes"
+
+        # Append RMSE / IQR from precomputed metrics if available for this model / forecast / lead
+        metrics_ds = metrics_datasets.get(name)
+        if metrics_ds is not None:
+            forecast_time = da_prediction.start_time.values.item()
+            lead_hours = pd.to_timedelta(da_prediction.elapsed_forecast_duration.values[i]).total_seconds() / 3600.0
+            rmse_val = _lookup_metric(metrics_ds, "t_2m_rmse", forecast_time, lead_hours)
+            iqr_val = _lookup_metric(metrics_ds, "t_2m_iqr", forecast_time, lead_hours)
+            if rmse_val is not None or iqr_val is not None:
+                parts = []
+                if rmse_val is not None:
+                    parts.append(f"RMSE {rmse_val:.2f} K")
+                if iqr_val is not None:
+                    parts.append(f"IQR {iqr_val:.2f} K")
+                label_text += " — " + ", ".join(parts)
+
         ax.annotate(
-            f"{da_prediction.start_time.dt.strftime('%Y-%m-%d %H:%M:%S').values.item()} + {int(da_prediction.elapsed_forecast_duration.values[i].astype('timedelta64[m]').item().total_seconds() / 60)} minutes",
-            xy=(0.8, 0.05), 
+            label_text,
+            xy=(0.8, 0.05),
             xycoords='axes fraction',
             fontsize=8,
             ha="right",
