@@ -1,4 +1,8 @@
 **/*.zarr
+**/slurm*.out
+**/*.db
+**/*.pkl
+**/*.png
 **/__pycache__
 **/.DS_Store
 dcgm-gpu*.stats
