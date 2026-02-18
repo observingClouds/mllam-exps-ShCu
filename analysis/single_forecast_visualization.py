@@ -2,7 +2,8 @@
 #SBATCH -n 1
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=4
-#SBATCH --mem=10G
+#SBATCH --mem=30G
+#SBATCH --gres=tmpfs:100G
 #SBATCH -t 0:10:00
 import xarray as xr
 import sys
@@ -16,13 +17,13 @@ from analysis_helpers import combine_state_features
 
 # Define prediction datasets to compare
 prediction_datasets = {
-    "Baseline": "../evals/rain_mse_boxcox2.zarr",
+    "Baseline + rr": "../evals/rain_mse_boxcox2.zarr",
     # "Baseline + rr": "../evals/rain_mse_boxcox_unroll100.zarr",
-    # "Baseline + q": "../evals/rain_mse_boxcox2.zarr",
+    "Baseline + qv": "../evals/qv_unroll30.zarr",
     # "Baseline + fluxes": "../evals/rain_mse_boxcox2.zarr",
     # "Baseline + BT": "../evals/rain_mse_boxcox2.zarr",
-    "Surface only": "../evals/rain_mse_boxcox2.zarr",
-    "Bare-minimum": "../evals/rain_mse_boxcox2.zarr",
+    "Surface only": "../evals/sfconly_unroll30.zarr",
+    "Bare-minimum": "../evals/bare-minimum_unroll30.zarr",
 }
 
 # Load predictions
@@ -37,7 +38,7 @@ combined_ground_truth = combine_state_features(ground_truth)
 
 # Extract prediction data arrays for each model
 da_predictions = {
-    name: pred.t_2m.sel(start_time="2020-02-12T15:00:00").isel(elapsed_forecast_duration=slice(0,4))
+    name: pred.t_2m.sel(start_time="2020-02-12T15:00:00").isel(elapsed_forecast_duration=[0,1,2,3,10,19])
     for name, pred in predictions.items()
 }
 
