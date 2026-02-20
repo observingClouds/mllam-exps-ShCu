@@ -3,6 +3,8 @@
 **/*.db
 **/*.pkl
 **/*.png
+**/*.nc
+**/*.npz
 **/__pycache__
 **/.DS_Store
 dcgm-gpu*.stats
