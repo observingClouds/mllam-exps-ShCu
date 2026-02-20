@@ -164,7 +164,7 @@ def calculate_all_spectra(ds_gt, ds_ml, ds_nwp, variables):
 
     return spectra_cache
 
-def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, temporal=False):
+def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, temporal=False, ax=None, label=None, add_gt=True, add_eff_res=True, add_lsd=True):
     """Plot energy spectra comparison using pre-calculated spectra.
 
     Parameters
@@ -179,33 +179,47 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
         Whether to show the legend (default: False)
     temporal : bool, optional
         Whether to plot temporal evolution (default: False)
+    label : str, optional
+        Label for the plot (default: None)
+    add_gt : bool, optional
+        Whether to add ground truth to the plot (default: True)
+    add_eff_res : bool, optional
+        Whether to add effective resolution to the plot (default: True)
+    add_lsd : bool, optional
+        Whether to add LSD metric to the plot (default: True)
     """
     k_gt, spec_gt, eff_res = spectra_cache["gt"][var]
     k_ml, spec_ml, _ = spectra_cache["ml"]["static"][var]
 
 
-    fig, ax = plt.subplots(figsize=(11, 6.5), dpi=DPI)
+    if ax is None:
+        fig, ax = plt.subplots(figsize=(11, 6.5), dpi=DPI)
+    else:
+        fig = ax.figure
 
     # Plot ground truth spectrum
-    ax.loglog(
-        k_gt,
-        spec_gt,
-        color=COLORS["gt"],
-        label="ground truth",
-        linestyle=LINE_STYLES["gt"][0],
-        marker=LINE_STYLES["gt"][1],
-        markevery=5,
-    )
+    if add_gt:
+        ax.loglog(
+            k_gt,
+            spec_gt,
+            color=COLORS["gt"],
+            label="ground truth",
+            linestyle=LINE_STYLES["gt"][0],
+            marker=LINE_STYLES["gt"][1],
+            markevery=5,
+        )
 
     if temporal:
         # Plot temporal evolution
         forecast_times = list(spectra_cache["ml"]["temporal"][var].keys())
+        if label is None:
+            label = f"ML-LES prediction (t={int(time / np.timedelta64(1, 'm'))} min)"
         for time in forecast_times:
             k_ml_t, spec_ml_t = spectra_cache["ml"]["temporal"][var][time]
             ax.loglog(
                 k_ml_t,
                 spec_ml_t,
-                label=f"ML-LES prediction (t={int(time / np.timedelta64(1, 'm'))} min)",
+                label=label,
                 linestyle=LINE_STYLES["ml_tmp"][0],
                 marker=LINE_STYLES["ml_tmp"][1],
                 markevery=4,
@@ -237,12 +251,13 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
     # )
 
     # Plot effective resolution
-    ax.axvline(
-        eff_res,
-        color="salmon",
-        linestyle="--",
-        label="eff. model res.",
-    )
+    if add_eff_res:
+        ax.axvline(
+            eff_res,
+            color="salmon",
+            linestyle="--",
+            label="eff. model res.",
+        )
 
     # Add LSD metric
     spec_nwp = (
@@ -250,7 +265,8 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
         if spectra_cache["nwp"] and var in spectra_cache["nwp"]["static"]
         else None
     )
-    add_lsd_to_plot(ax, spec_gt, spec_ml, spec_nwp)
+    if add_lsd:
+        add_lsd_to_plot(ax, spec_gt, spec_ml, spec_nwp)
 
     # Customize plot
     ax.set_xlabel("wavenumber / m$^{-1}$")
@@ -264,12 +280,7 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
         ax.legend(loc='upper right')
     ax.grid(True, which="both", ls="--", alpha=0.5)
 
-    # Save and display plot
-    plot_name = f"energy_spectra_{var}"
-    if level is not None:
-        plot_name += f"_level_{level}"
-    plt.tight_layout()
-    plt.show()
+    return fig, ax
 
 
 # def display_lsd_table(spectra_cache, variables, name, caption=""):
