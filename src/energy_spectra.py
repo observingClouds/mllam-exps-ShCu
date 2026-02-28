@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from xarray import static
 
 DPI = 300
 COLORS = {
@@ -22,6 +23,47 @@ VARIABLE_UNITS = {
     "t_2m": "K",
 
 }
+
+def load_spectra(path):
+    """Utility for notebooks: load an ``npz`` cache into a normal dict.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+        Path to the archive created by :func:`calculate_all_spectra`.
+
+    Returns
+    -------
+    dict
+        Maps keys present in the archive to their un-pickled values.
+    """
+    arr = np.load(path, allow_pickle=True)
+    return {k: arr[k].item() for k in arr.files}
+
+
+def restrict_to_time(cache, time=None):
+    """Keep only a single forecast time in an ML temporal spectrum.
+
+    The notebook previously discarded all but the 300‑minute entry; this
+    helper replicates that behaviour.  ``cache`` is mutated in-place and
+    returned for convenience.
+
+    Parameters
+    ----------
+    cache : dict
+        A single entry from a spectra cache (as produced by
+        :func:`calculate_all_spectra`).
+    time : numpy.timedelta64, optional
+        Time to keep.  Defaults to ``300 minutes``.
+    """
+    if time is None:
+        import datetime
+
+        time = np.timedelta64(datetime.timedelta(minutes=300), "ns")
+
+    cache["ml"]["temporal"]["t_2m"] = {time: cache["ml"]["temporal"]["t_2m"][time]}
+    return cache
+
 
 def calculate_energy_spectra(data):
     """Calculate the energy spectra of the given data using 2D FFT.
@@ -164,7 +206,7 @@ def calculate_all_spectra(ds_gt, ds_ml, ds_nwp, variables):
 
     return spectra_cache
 
-def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, temporal=False, ax=None, label=None, add_gt=True, add_eff_res=True, add_lsd=True):
+def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, temporal=False, ax=None, label=None, add_gt=True, add_eff_res=True, add_lsd=True, static=False):
     """Plot energy spectra comparison using pre-calculated spectra.
 
     Parameters
@@ -208,18 +250,36 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
             marker=LINE_STYLES["gt"][1],
             markevery=5,
         )
-
+        # Plot the theoretical -5/3 turbulence energy spectrum for reference
+        # Choose a normalization so the line is visible in the plot range
+        if len(k_gt) > 0:
+            # Find a reasonable scaling: match at the middle of the spectrum
+            mid_idx = len(k_gt) // 2
+            norm = spec_gt[mid_idx] / (k_gt[mid_idx] ** (-5 / 3))
+            k_ref = k_gt
+            spectrum_23 = norm * (k_ref ** (-5 / 3))
+            ax.loglog(
+                k_ref,
+                spectrum_23,
+                color="gray",
+                linestyle="dashdot",
+                label="k$^{-5/3}$",
+                linewidth=1.5,
+                alpha=0.7,
+            )
     if temporal:
         # Plot temporal evolution
         forecast_times = list(spectra_cache["ml"]["temporal"][var].keys())
-        if label is None:
-            label = f"ML-LES prediction (t={int(time / np.timedelta64(1, 'm'))} min)"
         for time in forecast_times:
+            if label is None:
+                plot_label = f"ML-LES prediction (t={int(time / np.timedelta64(1, 'm'))} min)"
+            else:
+                plot_label = label
             k_ml_t, spec_ml_t = spectra_cache["ml"]["temporal"][var][time]
             ax.loglog(
                 k_ml_t,
                 spec_ml_t,
-                label=label,
+                label=plot_label,
                 linestyle=LINE_STYLES["ml_tmp"][0],
                 marker=LINE_STYLES["ml_tmp"][1],
                 markevery=4,
@@ -239,16 +299,16 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
             markevery=3,
         )
 
-    # # Plot ML spectrum
-    # ax.loglog(
-    #     k_ml,
-    #     spec_ml,
-    #     color=COLORS["ml"],
-    #     label="ML Model Prediction (Avg)",
-    #     linestyle=LINE_STYLES["ml"][0],
-    #     marker=LINE_STYLES["ml"][1],
-    #     markevery=4,
-    # )
+    if static:
+        # Plot ML spectrum
+        ax.loglog(
+            k_ml,
+            spec_ml,
+            label=label,
+            linestyle=LINE_STYLES["ml"][0],
+            marker=LINE_STYLES["ml"][1],
+            markevery=4,
+        )
 
     # Plot effective resolution
     if add_eff_res:
@@ -271,7 +331,7 @@ def plot_energy_spectra(spectra_cache, var, level=None, show_legend=False, tempo
     # Customize plot
     ax.set_xlabel("wavenumber / m$^{-1}$")
     unit = VARIABLE_UNITS.get(var, "")
-    ax.set_ylabel(f"energy density / {unit}$^{2}\cdot$ m")
+    ax.set_ylabel(f"energy density / {unit}$^{{2}}\cdot$ m")
     title = f"energy spectra comparison for {var}"
     if level is not None:
         title += f" at level {level} hPa"

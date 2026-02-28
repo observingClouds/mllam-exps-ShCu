@@ -129,8 +129,8 @@ def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_o
     quantile_score = quantile_score.assign_coords(leadtime=quantile_score.leadtime.dt.total_seconds() / (60 * 60))
     
     # IQR
-    q25 = p.quantile(0.25, dim=['forecast', 'grid_index'])
-    q75 = p.quantile(0.75, dim=['forecast', 'grid_index'])
+    q25 = p.quantile(0.25, dim=['grid_index'])
+    q75 = p.quantile(0.75, dim=['grid_index'])
     iqr = q75 - q25
     iqr = iqr.assign_coords(leadtime=iqr.leadtime.dt.total_seconds() / (60 * 60))
     

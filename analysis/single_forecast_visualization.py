@@ -29,10 +29,13 @@ def _to_numpy(x):
 # Define prediction datasets to compare
 prediction_datasets = {
     "Baseline": "../evals/baseline_unroll30.zarr",
-    "Baseline + rr": "../evals/rain_mse_boxcox2.zarr",
+    "Baseline + rr": "../evals/rain_unroll30.zarr",
     # "Baseline + rr": "../evals/rain_mse_boxcox_unroll100.zarr",
     "Baseline + qv": "../evals/qv_unroll30.zarr",
     "Baseline + fluxes": "../evals/lhfl_unroll30.zarr",
+    "Baseline + lw": "../evals/lw_unroll30.zarr",
+    "Baseline + sw": "../evals/sw_unroll30.zarr",
+    "Baseline + swlw": "../evals/swlw_unroll30.zarr",
     # "Baseline + BT": "../evals/rain_mse_boxcox2.zarr",
     "Surface only": "../evals/sfconly_unroll30.zarr",
     "Bare-minimum": "../evals/bare-minimum_unroll30.zarr",
@@ -46,9 +49,12 @@ predictions = {
 
 # Map model names (keys from `prediction_datasets`) to precomputed metric files
 model_to_metrics = {
-    "Baseline + rr": "metrics_rain_mse_boxcox2.nc",
+    "Baseline + rr": "metrics_rr.nc",
     "Baseline + qv": "metrics_qv.nc",
     "Baseline + fluxes": "metrics_lhfl.nc",
+    "Baseline + lw": "metrics_lw.nc",
+    "Baseline + sw": "metrics_sw.nc",
+    "Baseline + swlw": "metrics_swlw.nc",
     "Surface only": "metrics_sfconly.nc",
     "Bare-minimum": "metrics_bare-minimum.nc",
     "Baseline": "metrics_baseline.nc"
@@ -104,9 +110,9 @@ assert da_target.time.shape == first_prediction.elapsed_forecast_duration.shape
 # Calculate global min/max across all predictions and target
 # Ensure values are computed (dask -> numpy scalars) so matplotlib receives plain floats
 vals_min = [da_target.min().compute().item()] + [pred.min().compute().item() for pred in da_predictions.values()]
-vmin = float(min(vals_min))
+vmin = da_target.min().compute().item() #float(min(vals_min))
 vals_max = [da_target.max().compute().item()] + [pred.max().compute().item() for pred in da_predictions.values()]
-vmax = float(max(vals_max))
+vmax = da_target.max().compute().item() #float(max(vals_max))
 
 
 # Extract the temporal dimension
