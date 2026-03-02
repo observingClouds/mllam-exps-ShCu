@@ -51,10 +51,31 @@ registry = ObjectStoreRegistry({f"file://{zarr_store}": store})
 parser = ZarrParser()
 vds = open_virtual_dataset(url=zarr_store,registry=registry,parser=parser)
 
+import ipdb; ipdb.set_trace()
+replacement_variables = 'rain_gsp_rate'
+replacement_zarr_store = "/home/has/repos/mllam-exps-ShCu/data/experiment/data/datastore.boundary.domain03.boxcoxrain.zarr"
+replacement_store = LocalStore(prefix=replacement_zarr_store)
+replacement_registry = ObjectStoreRegistry({f"file://{replacement_zarr_store}": replacement_store})
+replacement_parser = ZarrParser()
+replacement_vds = open_virtual_dataset(url=replacement_zarr_store,registry=replacement_registry,parser=replacement_parser)
+
 # Select subset of mllam-data-prep dataset, e.g. reduce number of state_features
 if args.variables is not None:
     slices = list(slice(int(x),int(x+1)) for x in np.argwhere(np.isin(vds[args.subset_type],args.variables))[:,0])
-    vds = xr.concat([vds.isel({args.subset_type: s}) for s in slices], dim=f'{args.subset_type}', data_vars='minimal')
+    original_data_slices = [vds.isel({args.subset_type: s}) for s in slices]
+
+replacement_data_slices = [replacement_vds.isel({args.subset_type: slice(0,1)})]
+joint_slices = original_data_slices + replacement_data_slices
+
+try:
+    vds = xr.concat(joint_slices, dim=f'{args.subset_type}', data_vars='minimal', coords='minimal')
+except Exception:
+    vds = xr.concat([*[original_data_slices[i][['state','state__train__std','static','static__train__std','static__train__mean','splits','forcing',
+                                'forcing__train__diff_std','forcing__train__mean','forcing__train__std','forcing__train__diff_mean',
+                                'state__train__mean', 'state__train__diff_mean', 'state__train__diff_std']] for i in range(len(original_data_slices))], 
+                                joint_slices[-1][['state','state__train__std','state__train__mean', 'state__train__diff_mean', 
+                                                  'state__train__diff_std']]],
+                                                  dim=f'{args.subset_type}', data_vars='minimal', coords='minimal')
 vds.vz.to_kerchunk(args.reference, format='json')
 
 # New subsetted mllam-data-prep dataset just containing references to original mllam-data-prep (e.g. no extra copy)
