@@ -60,4 +60,4 @@ WANDB_MODE=offline
 
 printenv
 
-srun --export=ALL -ul -K1 uv run python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
+srun --cpu-bind=none --export=ALL -ul -K1 uv run python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
