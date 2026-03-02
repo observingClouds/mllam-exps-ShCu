@@ -17,7 +17,7 @@
 logger-project: &logger-project has/LES/hi_lam_200_ckptfalse
 
 graph-defaults:
-  splits: 13
+  splits: 15
   g2m_radius: 0.8
   g2m_radius_boundary: 0.8
   rotate_ico: true
