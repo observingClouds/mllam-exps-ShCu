@@ -23,8 +23,8 @@ See also: https://github.com/mllam/mllam-data-prep/issues/88
 """
 from loguru import logger
 from virtualizarr import open_virtual_dataset
-from virtualizarr.parsers import ZarrParser
-from obstore.store import LocalStore
+from virtualizarr.parsers import ZarrParser, KerchunkJSONParser
+from obstore.store import LocalStore, from_url
 from virtualizarr.registry import ObjectStoreRegistry
 from pathlib import Path
 import argparse
@@ -45,15 +45,25 @@ parser.add_argument('--variables', '-v', dest='variables', nargs='+', default=No
 args = parser.parse_args()
 
 
-zarr_store = str(args.zarr_store)
-store = LocalStore(prefix=zarr_store)
-registry = ObjectStoreRegistry({f"file://{zarr_store}": store})
-parser = ZarrParser()
-vds = open_virtual_dataset(url=zarr_store,registry=registry,parser=parser)
+if args.zarr_store.endswith('.json'):
+    zarr_store = str(args.zarr_store)
+    file_url = f"file://{zarr_store}"
+    store = from_url("file://")
+    registry = ObjectStoreRegistry({"file://": store})
+    registry.register(file_url, store)
+    parser = KerchunkJSONParser()
+    vds = open_virtual_dataset(url=zarr_store,registry=registry,parser=parser)
+else:
+    zarr_store = str(args.zarr_store)
+    store = LocalStore(prefix=zarr_store)
+    registry = ObjectStoreRegistry({f"file://{zarr_store}": store})
+    parser = ZarrParser()
+    vds = open_virtual_dataset(url=zarr_store,registry=registry,parser=parser)
+
 
 import ipdb; ipdb.set_trace()
-replacement_variables = 'rain_gsp_rate'
-replacement_zarr_store = "/home/has/repos/mllam-exps-ShCu/data/experiment/data/datastore.boundary.domain03.boxcoxrain.zarr"
+replacement_variables = 'tqc_dia'
+replacement_zarr_store = "/home/has/repos/mllam-exps-ShCu/data/experiment/data/datastore.interior.domain03.boxcoxtqc.zarr"
 replacement_store = LocalStore(prefix=replacement_zarr_store)
 replacement_registry = ObjectStoreRegistry({f"file://{replacement_zarr_store}": replacement_store})
 replacement_parser = ZarrParser()
