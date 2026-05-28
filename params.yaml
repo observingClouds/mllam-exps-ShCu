@@ -17,7 +17,7 @@
 logger-project: &logger-project has/LES/hi_lam_200_ckptfalse
 
 graph-defaults:
-  splits: 15
+  splits: 13
   g2m_radius: 0.8
   g2m_radius_boundary: 0.8
   rotate_ico: true
@@ -28,7 +28,9 @@ graph-defaults:
 
 mllam-data-prep:
   domains:
-  - domain03
+  - domain01
+  - domain02
+  - domain04
   boundary-input-variables:
   - u_10m
   - v_10m
