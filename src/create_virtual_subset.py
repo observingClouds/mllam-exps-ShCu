@@ -46,6 +46,11 @@ parser.add_argument('--replacement-variable', dest='replacement_variable', defau
                     help='Replacement variable name to inject into the subset.')
 parser.add_argument('--replacement-zarr-store', dest='replacement_zarr_store',
                     help='Path to replacement zarr store.')
+parser.add_argument('--stats-zarr-store', dest='stats_zarr_stores', nargs='+', default=None,
+                    help='Stats-only zarr store(s) created with src/compute_diff_stats.py. '
+                         'Their state statistics overwrite those of the subset (inlined '
+                         'into the index). Every state feature of the subset must be '
+                         'covered; later stores take precedence.')
 args = parser.parse_args()
 
 
@@ -108,6 +113,29 @@ else:
     elif len(original_data_slices) == 1:
         vds = original_data_slices[0]
     # else vds remains as originally loaded
+
+# Overwrite statistics with corrected ones, e.g. one-step diff statistics
+# (https://github.com/mllam/mllam-data-prep/issues/102)
+if args.stats_zarr_stores is not None:
+    if args.subset_type != 'state_feature':
+        raise ValueError('--stats-zarr-store is only supported for --subset-type state_feature')
+    ds_stats = None
+    for p in reversed(args.stats_zarr_stores):
+        ds_p = xr.open_zarr(p).load()
+        ds_stats = ds_p if ds_stats is None else ds_stats.combine_first(ds_p)
+    features = vds['state_feature'].values
+    missing = set(features) - set(ds_stats['state_feature'].values)
+    if missing:
+        raise ValueError(f'Statistics for {missing} not found in {args.stats_zarr_stores}')
+    for var in ds_stats.data_vars:
+        values = ds_stats[var].sel(state_feature=features).values
+        # Small in-memory arrays are inlined into the kerchunk index
+        vds[var] = xr.DataArray(
+            values.astype(np.float32), dims=['state_feature'], attrs=ds_stats[var].attrs
+        )
+        logger.info(f'Replaced {var} with values from {args.stats_zarr_stores}: '
+                    f'{dict(zip(features, values))}')
+    vds.attrs['stats_zarr_stores'] = ' '.join(str(Path(p).resolve()) for p in args.stats_zarr_stores)
 
 vds.vz.to_kerchunk(args.reference, format='json')
 
