@@ -76,6 +76,8 @@ stages:
       cmd: |
         uv run --script src/create_virtual_subset.py --subset-type forcing_feature --input $(pwd)/data/experiment/data/datastore.boundary.${item}.zarr --output index.boundary.json --variables u_10m v_10m qv_2m tqc_dia t_2m sob_t thb_t t_seasfc hour_of_day_cos hour_of_day_sin toa_radiation
         uv run --script src/create_virtual_subset.py --subset-type state_feature --input $(pwd)/data/experiment/data/datastore.interior.${item}.zarr --output index.interior.json --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate sob_t thb_t
+        uv run --script src/create_virtual_subset.py --subset-type forcing_feature --input $(pwd)/data/experiment/data/datastore.boundary.domain03.zarr --output index.boundary.domain03.boxcoxtqc_1-15.json --variables u_10m v_10m qv_2m tqc_dia t_2m t_seasfc hour_of_day_cos hour_of_day_sin toa_radiation --replacement-variable tqc_dia --replacement-zarr-store $(pwd)/data/experiment/data/datastore.boundary.domain03.boxcoxtqc_1-15.zarr
+        uv run --script src/create_virtual_subset.py --subset-type state_feature --input $(pwd)/data/experiment/data/datastore.interior.domain03.zarr --output index.interior.domain03.boxcoxtqc_1-15.json --variables u_10m v_10m qv_2m tqc_dia t_2m --replacement-variable tqc_dia --replacement-zarr-store $(pwd)/data/experiment/data/datastore.interior.domain03.boxcoxtqc_1-15.zarr
       deps:
       - data/experiment/data/datastore.interior.${item}.zarr
       - data/experiment/data/datastore.boundary.${item}.zarr
