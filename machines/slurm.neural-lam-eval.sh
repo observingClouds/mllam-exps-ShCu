@@ -63,4 +63,7 @@ TORCH_USE_CUDA_DSA=1
 
 printenv
 
-srun --cpu-bind=none --export=ALL -ul -K1 uv run python -m neural_lam.eval_multi_domain "$@"
+# Call the venv python directly instead of `uv run`: tasks start with SIGCHLD
+# blocked, and uv (0.6.14) then never reaps its exited child, so the job hangs
+# until the time limit. The venv is synced by the dvc `version` stage.
+srun --cpu-bind=none --export=ALL -ul -K1 .venv/bin/python -m neural_lam.eval_multi_domain "$@"
