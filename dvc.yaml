@@ -76,12 +76,14 @@ stages:
       cmd: |
         uv run --script src/create_virtual_subset.py --subset-type forcing_feature --input $(pwd)/data/experiment/data/datastore.boundary.${item}.zarr --output index.boundary.json --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate pres_sfc sob_t thb_t t_seasfc hour_of_day_cos hour_of_day_sin toa_radiation
         uv run --script src/create_virtual_subset.py --subset-type state_feature --input $(pwd)/data/experiment/data/datastore.interior.${item}.zarr --output index.interior.json --variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s rain_gsp_rate pres_sfc sob_t thb_t
+        # uv run --script src/create_virtual_subset.py -i /home/has/repos/mllam-exps-ShCu/index.boundary.boxcoxrain.json -o index.boundary.boxcoxrain+tqc.json --subset-type forcing_feature --variables u_10m v_10m tqc_dia t_2m rain_gsp_rate t_seasfc hour_of_day_cos hour_of_day_sin toa_radiation
+        # uv run --script src/create_virtual_subset.py -i /home/has/repos/mllam-exps-ShCu/index.interior.boxcoxrain.json -o index.interior.boxcoxrain+tqc.json --subset-type state_feature --variables u_10m v_10m tqc_dia t_2m rain_gsp_rate
       deps:
       - data/experiment/data/datastore.interior.${item}.zarr
       - data/experiment/data/datastore.boundary.${item}.zarr
       outs:
-      - index.interior.json
-      - index.boundary.json
+      - index.interior.${item}.json
+      - index.boundary.${item}.json
   train:
     cmd:
       - export DVC_WORKING_DIR=$(pwd); uv run python -m neural_lam.train_model --logger_run_name train-hidden_200_full_set --config_paths $(python -c "import yaml; d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; print(','.join([f'./data/experiment/config/config.{k}.yaml' for k in d]))") --logger ${logger} --logger-project ${logger-project} ${baseline-defaults} --graph_names $(python -c "import yaml; d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; print(','.join([f'triangular2D_split{yaml.safe_load(open('params.yaml'))['graph-defaults']['splits']}_{k}_hierarchical' for k in d]))") --graph_dir data/graph
