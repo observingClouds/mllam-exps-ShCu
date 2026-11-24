@@ -1,4 +1,4 @@
-#!/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/.venv/bin/python
+#!/leonardo_work/DestE_340_26/users/hschulz0/repos/mllam-exps-ShCu/.venv/bin/python
 #SBATCH -n 1
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=4

@@ -1,4 +1,4 @@
-#!/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/analysis/.venv/bin/python
+#!/leonardo_work/DestE_340_26/users/hschulz0/repos/mllam-exps-ShCu/analysis/.venv/bin/python
 #SBATCH -n 1
 #SBATCH -t 1:00:00
 """
@@ -28,7 +28,7 @@ pred = xr.open_dataset("../evals/rain_mse_boxcox2.zarr", engine="zarr")
 
 reference = False
 if reference:
-    ground_truth = xr.open_dataset("reference://", storage_options={'fo':"/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/ablation_study/index.interior.boxcoxrain.json"}, engine="zarr")
+    ground_truth = xr.open_dataset("reference://", storage_options={'fo':"/leonardo_work/DestE_340_26/users/hschulz0/repos/mllam-exps-ShCu/ablation_study/index.interior.boxcoxrain.json"}, engine="zarr")
     t_2m_full = ground_truth.sel(state_feature='t_2m').rename({'grid_index': 'cell'})
     rr_full = ground_truth.sel(state_feature='rain_gsp_rate').rename({'grid_index': 'cell'})
 else:

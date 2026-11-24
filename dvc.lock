@@ -48,7 +48,7 @@ stages:
     cmd:
     - export DVC_WORKING_DIR=$(pwd); sbatch -W --job-name 
       has/LES/hi_lam_200_ckptfalse --time 23:30:00 --nodes 1 --ntasks-per-node 4
-      --gres gpu:4 --no-requeue --exclusive --mem 100GB --account deste_330_25 
+      --gres gpu:4 --no-requeue --exclusive --mem 100GB --account DestE_340_26 
       --partition boost_usr_prod --qos normal machines/slurm.neural-lam.sh 
       --config_paths $(python -c "import yaml; 
       d=yaml.safe_load(open('params.yaml'))['mllam-data-prep']['domains']; 

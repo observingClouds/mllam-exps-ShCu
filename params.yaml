@@ -134,7 +134,7 @@ slurm-defaults: &slurm-defaults
   no-requeue: true                 # becomes `--no-requeue`
   exclusive: true
   mem: 100GB
-  account: deste_330_25
+  account: DestE_340_26
   partition: boost_usr_prod
   qos: normal               # see https://wiki.u-gov.it/confluence/display/SCAIUS/Booster+Section
 
@@ -148,7 +148,7 @@ slurm-eval:                        # Overwriting SLURM defaults with evaluation 
   no-requeue: true
   exclusive: true
   mem: 100GB
-  account: deste_330_25
+  account: DestE_340_26
   partition: boost_usr_prod
   qos: boost_qos_dbg
 
@@ -158,7 +158,7 @@ slurm-graph:
   nodes: *num_nodes
   gres: gpu:0
   mem: 300GB
-  account: deste_330_25
+  account: DestE_340_26
   partition: boost_usr_prod
   qos: normal
   ntasks-per-node: 1
