@@ -1,0 +1,5 @@
+outs:
+- md5: a1b354ce23aa280c8ec6337c99dd2695
+  size: 62766244
+  hash: md5
+  path: domains_indices.json
