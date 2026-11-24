@@ -34,6 +34,7 @@ dependencies = [
     "seaborn>=0.13.2",
     "dvc-ssh>=4.2.2",
     "fastparquet>=2025.12.0",
+    "dvc-webdav>=3.0.1",
 ]
 
 [dependency-groups]
