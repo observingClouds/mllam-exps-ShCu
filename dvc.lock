@@ -211,9 +211,9 @@ stages:
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: 8b0f8d2c36646c17216f65c93098e1aa.dir
-      size: 8656864
-      nfiles: 3
+      md5: 9b7636390a68e114df7b9558ba6eaf84.dir
+      size: 34391984
+      nfiles: 50
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
@@ -342,7 +342,8 @@ stages:
           hierarchical: true
           two_dim_features: true
       data/experiment/config/datastore.boundary.domain03.yaml:
-        inputs.icon_merged.path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
+        inputs.icon_merged.path: 
+          /leonardo_work/DestE_340_26/users/hschulz0/data/sources/icon/ICON312_v1.0.0.zarr
         output.domain_cropping.margin_width_degrees: 0.06
     outs:
     - path: data/graph/triangular2D_split13_domain03_hierarchical
