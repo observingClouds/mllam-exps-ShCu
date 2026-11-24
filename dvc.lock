@@ -153,11 +153,11 @@ stages:
       size: 334935821
       nfiles: 99
   create_domain_specific_datastores:
-    cmd: uv run python src/create_datastores.py --domains domain03 
-      --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s shfl_s 
-      rain_gsp_rate pres_sfc t_seasfc sob_t thb_t --interior-input-variables 
-      u_10m v_10m qv_2m tqc_dia t_2m lhfl_s shfl_s rain_gsp_rate pres_sfc sob_t 
-      thb_t
+    cmd: uv run python src/create_datastores.py --domains domain01 domain02 
+      domain04 --boundary-input-variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s 
+      shfl_s rain_gsp_rate pres_sfc t_seasfc sob_t thb_t 
+      --interior-input-variables u_10m v_10m qv_2m tqc_dia t_2m lhfl_s shfl_s 
+      rain_gsp_rate pres_sfc sob_t thb_t
     deps:
     - path: data/template/config.yaml
       hash: md5
@@ -179,7 +179,9 @@ stages:
       params.yaml:
         mllam-data-prep:
           domains:
-          - domain03
+          - domain01
+          - domain02
+          - domain04
           boundary-input-variables:
           - u_10m
           - v_10m
@@ -208,9 +210,9 @@ stages:
     outs:
     - path: data/experiment/config
       hash: md5
-      md5: 6cc3e4765d6aea3132e4e3d889703b32.dir
-      size: 8656798
-      nfiles: 3
+      md5: 12e074403965c55b378ded5029840167.dir
+      size: 25708238
+      nfiles: 9
   create_interior_datastore_zarrs@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
@@ -219,8 +221,8 @@ stages:
     deps:
     - path: data/experiment/config/datastore.interior.domain01.yaml
       hash: md5
-      md5: e7c0bc7cd90e44f2cd94ef535e39f84a
-      size: 8391511
+      md5: c260f0c0cf8174b7a175a45103d992e8
+      size: 8391633
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -228,9 +230,9 @@ stages:
     outs:
     - path: data/experiment/data/datastore.interior.domain01.zarr
       hash: md5
-      md5: 7b057a0c07cb06db7227634e925ea10f.dir
-      size: 23239191874
-      nfiles: 16740
+      md5: 2322f096aec985448ec5121a0ac7fe1b.dir
+      size: 75509410068
+      nfiles: 66690
   create_interior_datastore_zarrs@domain02:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
@@ -239,8 +241,8 @@ stages:
     deps:
     - path: data/experiment/config/datastore.interior.domain02.yaml
       hash: md5
-      md5: dcadeaa798104e6008d3e6eb7b3c4c60
-      size: 8391492
+      md5: 8d3f7eba9c6a845dc6392fef0e59bc9c
+      size: 8391628
     - path: data/semaphore.lsm.created
       hash: md5
       md5: d41d8cd98f00b204e9800998ecf8427e
@@ -248,9 +250,9 @@ stages:
     outs:
     - path: data/experiment/data/datastore.interior.domain02.zarr
       hash: md5
-      md5: a21441000788da3b0318ce19e8dd6ae1.dir
-      size: 42550591931
-      nfiles: 11190
+      md5: efcde2c00445eae9f87566499f896cd2.dir
+      size: 76270010395
+      nfiles: 66690
   create_interior_datastore_zarrs@domain03:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
@@ -275,11 +277,12 @@ stages:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
       mllam-data-prep mllam_data_prep 
       data/experiment/config/datastore.boundary.domain01.yaml --output 
-      data/experiment/data/datastore.boundary.domain01.zarr
+      data/experiment/data/datastore.boundary.domain01.zarr 
+      --dask-distributed-local-core-fraction 0.8
     deps:
     - path: data/experiment/config/datastore.boundary.domain01.yaml
       hash: md5
-      md5: 600063672cd1989122aa848be9d10907
+      md5: 830adaca1d5ff25596b3fd8fa6ff46ae
       size: 2677
     - path: data/semaphore.lsm.created
       hash: md5
@@ -288,8 +291,8 @@ stages:
     outs:
     - path: data/experiment/data/datastore.boundary.domain01.zarr
       hash: md5
-      md5: d2055ec7949c6176af99e55ef1158788.dir
-      size: 10629598273
+      md5: 4dc54a1f7db68095ff99eb3994f1bf62.dir
+      size: 16407753108
       nfiles: 83317
   create_graph@domain01:
     cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam 
@@ -397,3 +400,93 @@ stages:
       hash: md5
       md5: 5bdcf2f655f1ec7362045859442c4f33
       size: 43492544
+  create_interior_datastore_zarrs@domain04:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.interior.domain04.yaml --output 
+      data/experiment/data/datastore.interior.domain04.zarr
+    deps:
+    - path: data/experiment/config/datastore.interior.domain04.yaml
+      hash: md5
+      md5: e266e9278aa4b8d51617e11badfa1b98
+      size: 8915920
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.interior.domain04.zarr
+      hash: md5
+      md5: 34d3390b2df48364e300d026feef9fb0.dir
+      size: 76504805952
+      nfiles: 66690
+  create_boundary_datastore_zarrs@domain02:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.boundary.domain02.yaml --output 
+      data/experiment/data/datastore.boundary.domain02.zarr 
+      --dask-distributed-local-core-fraction 0.8
+    deps:
+    - path: data/experiment/config/datastore.boundary.domain02.yaml
+      hash: md5
+      md5: 902886da49c2a246e2df26e616bcd0a3
+      size: 2672
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.boundary.domain02.zarr
+      hash: md5
+      md5: 8654f49a4a0239da2067e02ac099a7cb.dir
+      size: 15657809913
+      nfiles: 83317
+  create_boundary_datastore_zarrs@domain04:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package 
+      mllam-data-prep mllam_data_prep 
+      data/experiment/config/datastore.boundary.domain04.yaml --output 
+      data/experiment/data/datastore.boundary.domain04.zarr 
+      --dask-distributed-local-core-fraction 0.8
+    deps:
+    - path: data/experiment/config/datastore.boundary.domain04.yaml
+      hash: md5
+      md5: 0a0a9cb88c642b7471e6d6547733ffaa
+      size: 2676
+    - path: data/semaphore.lsm.created
+      hash: md5
+      md5: d41d8cd98f00b204e9800998ecf8427e
+      size: 0
+    outs:
+    - path: data/experiment/data/datastore.boundary.domain04.zarr
+      hash: md5
+      md5: e63b017dc075f618e21a3eb8787ca7d7.dir
+      size: 14078939693
+      nfiles: 83317
+  create_graph@domain02:
+    cmd: export DVC_WORKING_DIR=$(pwd); uv run --reinstall-package neural-lam 
+      --reinstall-package mllam-data-prep python -m 
+      neural_lam.build_triangular_graph --config_path 
+      data/experiment/config/config.domain02.yaml --splits 13 --g2m_radius 0.8 
+      --g2m_radius_boundary 0.8 --rotate_ico --levels 3 --hierarchical 
+      --two_dim_features --graph_name triangular2D_split13_domain02_hierarchical
+      --save_dir data/graph/
+    params:
+      params.yaml:
+        graph-defaults:
+          splits: 13
+          g2m_radius: 0.8
+          g2m_radius_boundary: 0.8
+          rotate_ico: true
+          levels: 3
+          plot: false
+          hierarchical: true
+          two_dim_features: true
+      data/experiment/config/datastore.boundary.domain02.yaml:
+        inputs.icon_merged.path: /home/has/data/sources/icon/ICON312_v1.0.0.zarr
+        output.domain_cropping.margin_width_degrees: 0.06
+    outs:
+    - path: data/graph/triangular2D_split13_domain02_hierarchical
+      hash: md5
+      md5: cf4e3681ea71047785a196f9801025e1.dir
+      size: 103051587
+      nfiles: 13
