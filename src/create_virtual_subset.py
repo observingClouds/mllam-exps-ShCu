@@ -5,6 +5,8 @@
 #   "loguru",
 #   "ipdb",
 #   "zarr>3.1.4",
+#   "kerchunk",
+#   "fastparquet",
 # ]
 # ///
 """
@@ -63,11 +65,18 @@ else:
 
 import ipdb; ipdb.set_trace()
 replacement_variables = 'tqc_dia'
-replacement_zarr_store = "/home/has/repos/mllam-exps-ShCu/data/experiment/data/datastore.interior.domain03.boxcoxtqc.zarr"
+replacement_zarr_store = "/home/has/repos/mllam-exps-ShCu/data/experiment/data/datastore.boundary.domain03.boxcoxtqc.zarr"
 replacement_store = LocalStore(prefix=replacement_zarr_store)
 replacement_registry = ObjectStoreRegistry({f"file://{replacement_zarr_store}": replacement_store})
 replacement_parser = ZarrParser()
 replacement_vds = open_virtual_dataset(url=replacement_zarr_store,registry=replacement_registry,parser=replacement_parser)
+
+# replacement_variables = 'rain_gsp_rate'
+# replacement_zarr_store = "/home/has/repos/mllam-exps-ShCu/data/experiment/data/datastore.interior.domain03.boxcoxrain.zarr"
+# replacement_store = LocalStore(prefix=replacement_zarr_store)
+# replacement_registry = ObjectStoreRegistry({f"file://{replacement_zarr_store}": replacement_store})
+# replacement_parser = ZarrParser()
+# replacement_vds = open_virtual_dataset(url=replacement_zarr_store,registry=replacement_registry,parser=replacement_parser)
 
 # Select subset of mllam-data-prep dataset, e.g. reduce number of state_features
 if args.variables is not None:
