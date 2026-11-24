@@ -17,3 +17,9 @@ machines/secrets.sh
 /my.db
 /index.interior.json
 /index.boundary.json
+/index.boundary.baseline.boxcoxtqc.json
+/index.boundary.boxcoxrain.json
+/index.boundary.boxcoxrain+tqc.json
+/index.interior.baseline.boxcoxtqc.json
+/index.interior.boxcoxrain.json
+/index.interior.boxcoxrain+tqc.json

@@ -1,0 +1,5 @@
+outs:
+- md5: a07e0b0f9643a6bda4bfffa798f66ecd
+  size: 8460864
+  hash: md5
+  path: index.boundary.boxcoxrain.json
