@@ -1,0 +1,7 @@
+outs:
+- md5: 4ce894f8c76a7b2724ef8a792a378fde.dir
+  size: 3053209527
+  nfiles: 5612
+  hash: md5
+  path: 
+    datastore.interior.domain03.boxcoxrain_gsp_rate_posonly_neg0p08907066350763708.zarr
