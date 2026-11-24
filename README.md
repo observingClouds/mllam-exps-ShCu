@@ -126,6 +126,28 @@ follow. Patch the installed package once per virtual environment:
 uv run python src/patch_webdav4_redirects.py
 ```
 
+##### Pushing with rclone instead of `dvc push`
+For large pushes, `rclone` is a faster and resumable alternative. The DVC 3 remote layout mirrors the local cache
+(`files/md5/xx/...`), so cache objects can be copied directly and are afterwards visible to `dvc pull` / `dvc status -c`.
+
+Create the rclone remote once (reusing the password stored for DVC):
+
+```bash
+rclone config create hetzner webdav url=https://u728541.your-storagebox.de vendor=other user=u728541 \
+  pass="$(uv run dvc config --local remote.hetzner.password)"
+```
+
+List the cache objects used by the workspace and copy them (run in tmux, re-run to resume):
+
+```bash
+uv run python src/dvc_used_objects.py > objects.txt
+rclone copy "$(uv run dvc cache dir)/files" hetzner:mllam-exps-ShCu/files \
+  --files-from objects.txt --size-only --immutable --transfers 8 --checkers 16 --progress
+```
+
+`src/dvc_used_objects.py` skips outputs whose cache cannot be collected (e.g. a missing `.dir` object) with a
+warning instead of aborting like `dvc push`; fix those with `dvc commit <output>`.
+
 ## Running an experiment
 
 Experiments are generally run by:
