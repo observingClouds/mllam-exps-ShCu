@@ -1,22 +1,29 @@
-#!/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/.venv/bin/python
+#!/leonardo_work/DestE_340_26/users/hschulz0/repos/mllam-exps-ShCu/.venv/bin/python
 """
 Compute evaluation metrics (RMSE, quantile score, IQR) for a single prediction dataset.
 
 Usage:
-    python compute_metrics.py <prediction_path> <output_name>
+    python compute_metrics.py <prediction_path> <output_name> [--ground_truth PATH] [--margin MARGIN]
     
 Example:
-    python compute_metrics.py ../evals/baseline_unroll30.zarr baseline
+    python compute_metrics.py ../evals/baseline_unroll30.zarr baseline --margin 0.005
 """
 import xarray as xr
 import pandas as pd
+import numpy as np
 import datetime as dt
 import tqdm
 import sys
 import logging
 from pathlib import Path
+import argparse
 import scores.continuous as scc_cont
 from dask.distributed import LocalCluster
+
+# shapely is used for interior-domain masking (same logic as compute_percentiles)
+from shapely.geometry import MultiPoint, Polygon
+from shapely.ops import unary_union
+from shapely import vectorized
 
 # Configure logging
 logging.basicConfig(
@@ -31,7 +38,21 @@ def combine_state_features(ds):
     from analysis_helpers import combine_state_features as csf
     return csf(ds)
 
-def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_of_forecast=20):
+
+def get_interior_domain_mask(ds, margin):
+    """Return cell index mask for interior domain with given margin.
+
+    The algorithm is copied from :mod:`compute_percentiles` to ensure the
+    same cells are excluded when a margin is requested.  The function returns
+    a boolean array suitable for use with ``isel(grid_index=mask)``.
+    """
+    points = np.column_stack([ds.clon.values.ravel(), ds.clat.values.ravel()])
+    hull = MultiPoint(points).convex_hull
+    inner_polygon = hull.buffer(-margin)
+    mask = vectorized.contains(inner_polygon, ds.clon.values, ds.clat.values)
+    return mask
+
+def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_of_forecast=29, margin=0):
     """
     Compute metrics for a single prediction dataset.
     
@@ -45,6 +66,9 @@ def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_o
         Frequency of forecasts (default: "1h")
     length_of_forecast : int
         Number of time steps in forecast (default: 20)
+    margin : float
+        Degrees margin to trim from domain edges; if >0 a mask is applied to
+        both truth and prediction datasets.
         
     Returns:
     --------
@@ -53,13 +77,24 @@ def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_o
     """
     logging.info(f"Loading ground truth from {ground_truth_path}")
     ground_truth_ds = xr.open_dataset(ground_truth_path, engine="zarr", chunks='auto')
+
+    # apply interior-domain mask if requested
+    mask = None
+    if margin > 0:
+        logging.info(f"Computing interior-domain mask with margin={margin}")
+        mask = get_interior_domain_mask(ground_truth_ds, margin)
+
     combined_ground_truth = combine_state_features(ground_truth_ds)
+    if mask is not None:
+        combined_ground_truth = combined_ground_truth.isel(grid_index=mask)
     
     logging.info(f"Loading predictions from {prediction_path}")
     predictions = xr.open_dataset(prediction_path, engine="zarr", chunks='auto').isel(
         elapsed_forecast_duration=slice(0, length_of_forecast)
     )
     combined_predictions = combine_state_features(predictions)
+    if mask is not None:
+        combined_predictions = combined_predictions.isel(grid_index=mask)
     
     # Collect forecast pairs
     pcollection = []
@@ -129,8 +164,8 @@ def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_o
     quantile_score = quantile_score.assign_coords(leadtime=quantile_score.leadtime.dt.total_seconds() / (60 * 60))
     
     # IQR
-    q25 = p.quantile(0.25, dim=['grid_index'])
-    q75 = p.quantile(0.75, dim=['grid_index'])
+    q25 = p.quantile(0.05, dim=['grid_index'])
+    q75 = p.quantile(0.95, dim=['grid_index'])
     iqr = q75 - q25
     iqr = iqr.assign_coords(leadtime=iqr.leadtime.dt.total_seconds() / (60 * 60))
     
@@ -146,28 +181,44 @@ def compute_metrics(prediction_path, ground_truth_path, frequency="1h", length_o
 
 
 def main():
-    if len(sys.argv) != 3:
-        print("Usage: python compute_metrics.py <prediction_path> <output_name>")
-        print("Example: python compute_metrics.py ../evals/baseline_unroll30.zarr baseline")
-        sys.exit(1)
-    
-    prediction_path = sys.argv[1]
-    output_name = sys.argv[2]
-    
-    # Default ground truth path
-    ground_truth_path = "../data/experiment/data/datastore.interior.domain03.zarr"
-    
-    # Compute metrics
+    parser = argparse.ArgumentParser(
+        description="Compute evaluation metrics for a single prediction dataset."
+    )
+    parser.add_argument("prediction_path", help="Path to prediction zarr dataset")
+    parser.add_argument("output_name", help="Identifier to use in the output filename")
+    parser.add_argument(
+        "--ground_truth",
+        default="../data/experiment/data/datastore.interior.domain03.zarr",
+        help="Path to ground truth zarr dataset",
+    )
+    parser.add_argument(
+        "--margin",
+        type=float,
+        default=0,
+        help="Margin in degrees to exclude from edges (default: 0, no masking)",
+    )
+
+    args = parser.parse_args()
+
+    prediction_path = args.prediction_path
+    output_name = args.output_name
+    ground_truth_path = args.ground_truth
+
+    # compute metrics with optional domain mask
     cluster = LocalCluster()
     client = cluster.get_client()
     logging.info(f"Dask dashboard available at: {client.dashboard_link}")
-    metrics = compute_metrics(prediction_path, ground_truth_path)
-    
+    metrics = compute_metrics(
+        prediction_path,
+        ground_truth_path,
+        margin=args.margin,
+    )
+
     # Save metrics
     output_file = f"metrics_{output_name}.nc"
     logging.info(f"Saving metrics to {output_file}")
     metrics.to_netcdf(output_file)
-    
+
     logging.info("Done!")
 
 

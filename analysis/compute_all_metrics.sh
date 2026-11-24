@@ -9,7 +9,7 @@
 
 # Array of prediction datasets (path and name)
 declare -A DATASETS=(
-    ["../evals/rain_unroll30.zarr"]="rr"
+    # ["../evals/rain_unroll30.zarr"]="rr"
     # ["../evals/baseline_unroll30.zarr"]="baseline"
     # ["../evals/bare-minimum_unroll30.zarr"]="bare-minimum"
     # ["../evals/lhfl_unroll30.zarr"]="lhfl"
@@ -17,7 +17,8 @@ declare -A DATASETS=(
     # ["../evals/qv_unroll30.zarr"]="qv"
     # ["../evals/sw_unroll30.zarr"]="sw"
     # ["../evals/swlw_unroll30.zarr"]="swlw"
-    #["../evals/sfconly_unroll30.zarr"]="sfconly"
+    # ["../evals/sfconly_unroll30.zarr"]="sfconly"
+    ["../evals/qvbaselinetqcboxcox1_15_singletqc_last-v1-domain03_mse_unroll30.zarr"]="qvbaseline"
 )
 
 source .venv/bin/activate
@@ -25,7 +26,7 @@ source .venv/bin/activate
 for path in "${!DATASETS[@]}"; do
     name="${DATASETS[$path]}"
     echo "Computing metrics for $name..."
-    python compute_metrics.py "$path" "$name"
+    uv run python compute_metrics.py "$path" "$name" --margin 0.005
 done
 
 echo "All metrics computed!"
