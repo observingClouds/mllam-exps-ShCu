@@ -111,6 +111,21 @@ git init
 
 Further info can be found in the [DVC documentation](https://dvc.org/doc/user-guide/experiment-management/sharing-experiments).
 
+#### Hetzner storage box (WebDAV)
+The default remote `hetzner` is a Hetzner storage box accessed via WebDAV over HTTPS (outgoing SSH is blocked on
+some networks). Store the password locally (not committed):
+
+```bash
+uv run dvc remote modify --local hetzner password '<storagebox-password>'
+```
+
+The server redirects directory paths without a trailing slash, which `webdav4` (used by `dvc-webdav`) does not
+follow. Patch the installed package once per virtual environment:
+
+```bash
+uv run python src/patch_webdav4_redirects.py
+```
+
 ## Running an experiment
 
 Experiments are generally run by:
