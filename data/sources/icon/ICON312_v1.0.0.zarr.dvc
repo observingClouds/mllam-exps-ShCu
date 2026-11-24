@@ -1,0 +1,6 @@
+outs:
+- md5: 26cef2966a4fa9e5539c7d3bb64075d6.dir
+  size: 887870084231
+  nfiles: 44442
+  hash: md5
+  path: ICON312_v1.0.0.zarr

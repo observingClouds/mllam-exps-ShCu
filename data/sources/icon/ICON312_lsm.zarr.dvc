@@ -1,0 +1,6 @@
+outs:
+- md5: 44cab6e6b49d67a3f4ee89e00b1ce303.dir
+  size: 88611772
+  nfiles: 83
+  hash: md5
+  path: ICON312_lsm.zarr

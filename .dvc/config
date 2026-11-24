@@ -1,6 +1,6 @@
 [cache]
     dir = /home/has/dvc_cache
-    type = "hardlink,symlink"
+    type = "reflink,hardlink,symlink"
 [core]
     remote = hetzner
 ['remote "mllam-dvc-exps-bucket"']

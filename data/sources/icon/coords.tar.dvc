@@ -1,0 +1,5 @@
+outs:
+- md5: a89b85c125b7a61c3ac136660f96dbf1
+  size: 134318080
+  hash: md5
+  path: coords.tar
