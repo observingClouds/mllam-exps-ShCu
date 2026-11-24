@@ -1,0 +1,6 @@
+outs:
+- md5: 899a4a13b269c7b6ffce91be0474a49c.dir
+  size: 1900033676
+  nfiles: 5590
+  hash: md5
+  path: datastore.boundary.domain03.boxcoxtqc_1-15.zarr
