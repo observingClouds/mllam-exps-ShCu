@@ -26,10 +26,18 @@ graph-defaults:
   hierarchical: true
   two_dim_features: true
 
+# domains used for training (subset of mllam-data-prep.domains)
+train-domains:
+- domain01
+- domain02
+- domain04
+
 mllam-data-prep:
+  # all domains for which datastores and graphs are created (training + evaluation)
   domains:
   - domain01
   - domain02
+  - domain03
   - domain04
   boundary-input-variables:
   - u_10m
