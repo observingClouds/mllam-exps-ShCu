@@ -60,4 +60,4 @@ fi
 
 # pass all arguments to the python script
 NCCL_DEBUG=INFO
-python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
+uv run python -m neural_lam.train_model --logger_run_name $MODE-$DVC_EXP_NAME "$@"
