@@ -1,4 +1,4 @@
-#!/leonardo_work/DestE_330_25/users/hschulz0/repos/mllam-exps-ShCu/.venv/bin/python
+#!/leonardo_work/DestE_340_26/users/hschulz0/repos/mllam-exps-ShCu/.venv/bin/python
 #SBATCH -n 1
 #SBATCH --cpus-per-task=1
 #SBATCH --ntasks=4
@@ -29,13 +29,15 @@ def _to_numpy(x):
 # Define prediction datasets to compare
 prediction_datasets = {
     "Baseline": "../evals/baseline_unroll30.zarr",
-    "Baseline + rr": "../evals/rain_unroll30.zarr",
+    "Baseline + rr (rr boxcox)": "../evals/rain_unroll30.zarr",
+    "Baseline (boxcox)": "../evals/baselineboxcox_unroll30.zarr",
+    "Baseline + rr (tqc+rr boxcox)": "../evals/raintqcboxcox_unroll30.zarr",
     # "Baseline + rr": "../evals/rain_mse_boxcox_unroll100.zarr",
     "Baseline + qv": "../evals/qv_unroll30.zarr",
     "Baseline + fluxes": "../evals/lhfl_unroll30.zarr",
     "Baseline + lw": "../evals/lw_unroll30.zarr",
-    "Baseline + sw": "../evals/sw_unroll30.zarr",
-    "Baseline + swlw": "../evals/swlw_unroll30.zarr",
+    # "Baseline + sw": "../evals/sw_unroll30.zarr",
+    # "Baseline + swlw": "../evals/swlw_unroll30.zarr",
     # "Baseline + BT": "../evals/rain_mse_boxcox2.zarr",
     "Surface only": "../evals/sfconly_unroll30.zarr",
     "Bare-minimum": "../evals/bare-minimum_unroll30.zarr",
@@ -49,13 +51,15 @@ predictions = {
 
 # Map model names (keys from `prediction_datasets`) to precomputed metric files
 model_to_metrics = {
-    "Baseline + rr": "metrics_rr.nc",
+    "Baseline + rr (rr boxcox)": "metrics_rr.nc",
+    "Baseline + rr (tqc+rr boxcox)": "metrics_sfconly.nc",
     "Baseline + qv": "metrics_qv.nc",
     "Baseline + fluxes": "metrics_lhfl.nc",
     "Baseline + lw": "metrics_lw.nc",
     "Baseline + sw": "metrics_sw.nc",
     "Baseline + swlw": "metrics_swlw.nc",
     "Surface only": "metrics_sfconly.nc",
+    "Baseline (boxcox)": "metrics_sfconly.nc",
     "Bare-minimum": "metrics_bare-minimum.nc",
     "Baseline": "metrics_baseline.nc"
 }
