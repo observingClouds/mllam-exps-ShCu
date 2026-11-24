@@ -23,3 +23,5 @@ machines/secrets.sh
 /index.interior.baseline.boxcoxtqc.json
 /index.interior.boxcoxrain.json
 /index.interior.boxcoxrain+tqc.json
+/da_mindist_to_ref.nc
+/da_xyz.nc

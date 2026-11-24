@@ -1,0 +1,5 @@
+outs:
+- md5: d12f8a503125219b2cdd2a5556f88eec
+  size: 360578088
+  hash: md5
+  path: da_mindist_to_ref.nc
