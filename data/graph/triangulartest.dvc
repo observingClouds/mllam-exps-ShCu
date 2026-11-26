@@ -1,0 +1,6 @@
+outs:
+- md5: bc16c656a2da1a84c210fe51c88f6c4d.dir
+  size: 182002233
+  nfiles: 9
+  hash: md5
+  path: triangulartest

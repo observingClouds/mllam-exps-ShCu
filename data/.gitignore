@@ -1,4 +1,6 @@
-/graph
+/graph/*
+!/graph/*.dvc
+!/graph/.gitignore
 /graphs
 /datastore.boundary.zarr
 /datastore.interior.zarr

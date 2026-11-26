@@ -1,0 +1,6 @@
+outs:
+- md5: 49544bb219d9c568c6dd22c33848c907.dir
+  size: 72634873
+  nfiles: 9
+  hash: md5
+  path: triangular2D_debug

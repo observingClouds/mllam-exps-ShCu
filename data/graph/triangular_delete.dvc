@@ -1,0 +1,6 @@
+outs:
+- md5: 159ae6f16192053bd1c6c362b28e7b9c.dir
+  size: 5039948
+  nfiles: 1
+  hash: md5
+  path: triangular_delete

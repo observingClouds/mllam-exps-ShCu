@@ -1,0 +1,6 @@
+outs:
+- md5: 195f39c18a2bee87d2a42780ed118930.dir
+  size: 103004483
+  nfiles: 13
+  hash: md5
+  path: triangular2D_split13_DOM02_hierarchical

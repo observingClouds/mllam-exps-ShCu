@@ -1,0 +1,6 @@
+outs:
+- md5: a3dfecae161054f2375fd0cd6641f46b.dir
+  size: 96235641
+  nfiles: 9
+  hash: md5
+  path: triangular2D_split13_DOM03
