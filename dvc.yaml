@@ -27,6 +27,27 @@ stages:
     - src/create_state_dataset.py
     outs:
     - data/semaphore.lsm.created
+  get_grid_topology:
+    cmd: uv run python src/find_domains.py download-grid --output data/grid_topo.nc
+    outs:
+    - data/grid_topo.nc
+  find_domains:
+    foreach: ${domain-finder.levels}
+    do:
+      cmd: uv run python src/find_domains.py find --grid data/grid_topo.nc --level ${item} --reference-domain ${domain-finder.reference-domain} --reference-level ${domain-finder.reference-level} --output data/domains.level${item}.py --plot figures/domains.level${item}.png
+      deps:
+      - src/find_domains.py
+      - src/icon_domains.py
+      - data/grid_topo.nc
+      - data/domains.py
+      params:
+      - domain-finder.reference-domain
+      - domain-finder.reference-level
+      outs:
+      - data/domains.level${item}.py:
+          cache: false
+      - figures/domains.level${item}.png:
+          cache: false
   create_domain_specific_datastores:
     cmd: uv run python src/create_datastores.py ${mllam-data-prep}
     deps:

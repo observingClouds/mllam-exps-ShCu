@@ -148,6 +148,67 @@ rclone copy "$(uv run dvc cache dir)/files" hetzner:mllam-exps-ShCu/files \
 `src/dvc_used_objects.py` skips outputs whose cache cannot be collected (e.g. a missing `.dir` object) with a
 warning instead of aborting like `dvc push`; fix those with `dvc commit <output>`.
 
+## Finding sub-domains
+The training/evaluation sub-domains in `data/domains.py` were originally picked by hand. The DVC stage
+`find_domains` generates them programmatically for any size (`src/find_domains.py`, logic in `src/icon_domains.py`).
+
+**Background.** ICON grids are refined by repeated bisection and store cells in that hierarchical order, so
+`4**L` consecutive cells *usually* form one triangle with side `2**L` ("level `L`"; `data/domains.py` uses
+`16**4 = 4**8`, i.e. level 8). In this limited-area grid, however, the lateral boundary rows (`refin_c_ctrl` 1–5)
+are moved to the front of the cell list. That leaves gaps in the ordering, so fixed index offsets drift wherever
+a triangle touches such a region.
+
+**Approach.**
+1. *Rebuild the triangle hierarchy bottom-up* (about 5 s). Four consecutive, index-contiguous level-`k` triangles
+   are merged into a level-`k+1` triangle only if their corners really form one: of the 12 corner vertices,
+   3 occur once (parent corners) and 3 occur three times (edge midpoints). Level 1 is additionally checked
+   against ICON's `parent_cell_index`. Incomplete triangles at the boundary simply stay unmerged.
+2. *Build domains from vertex/edge adjacency* of the complete level-`L` triangles. A domain is a 2×2 parallelogram
+   of 8 triangles (a hexagon around a centre vertex plus two triangles at opposite ends), the same shape as the
+   hand-made domains. There are three possible orientations, 60° apart. Only those matching the reference
+   domain's orientation are kept (long diagonal ≈ 34° counter-clockwise from east for `domain01`).
+3. *Select the maximum number of non-overlapping domains* exactly, as an integer program (`scipy.optimize.milp`).
+
+The two stages:
+- `get_grid_topology` downloads the needed grid variables (`vertex_of_cell`, `parent_cell_index`, …;
+  about 660 MB) from DKRZ to `data/grid_topo.nc`.
+- `find_domains@<level>` writes `data/domains.level<level>.py` (same format as `data/domains.py`) and the map
+  `figures/domains.level<level>.png`.
+
+The levels and the orientation reference are set in `params.yaml`:
+
+```yaml
+domain-finder:
+  levels: [7, 8]
+  reference-domain: domain01   # entry of data/domains.py whose orientation is used
+  reference-level: 8
+```
+
+```bash
+uv run dvc repro --single-item get_grid_topology find_domains@7
+```
+
+| level | cells per domain | candidates (orientation of `domain01`) | non-overlapping |
+|---|---|---|---|
+| 7 | 131,072 | 261 | 71 |
+| 8 | 524,288 | 46 | 15 (vs. 13 hand-picked in `data/domains.py`) |
+
+The generated files are not wired into the pipeline. `src/create_datastores.py` still imports `data/domains.py`.
+To use generated domains, copy the wanted entries over (or point the import at `domains.level<level>.py`). Domains
+touching the grid edge may leave too little room for the boundary ring (`margin_width_degrees`) of the boundary
+datastore; check before use.
+
+For interactive use:
+
+```python
+import sys; sys.path.insert(0, "src")
+from icon_domains import TriangleTree, load_grid, select_non_overlapping
+tree = TriangleTree(load_grid(cache="data/grid_topo.nc"))
+ref = tree.domain_from_slices(domains["domain01"]["cells"], level=8)
+doms = select_non_overlapping(tree.parallelograms(7, orientation=ref))  # also: seed=[...] to keep existing ones
+tree.parallelogram_at(13.2, -57.7, level=7, orientation=ref)          # domain centred nearest a point
+```
+
 ## Running an experiment
 
 Experiments are generally run by:

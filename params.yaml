@@ -26,6 +26,16 @@ graph-defaults:
   hierarchical: true
   two_dim_features: true
 
+# programmatic sub-domain search (src/find_domains.py, stage find_domains):
+# non-overlapping 2x2 parallelograms of complete level-L triangles (4**L cells each),
+# oriented like the reference domain in data/domains.py
+domain-finder:
+  levels:
+  - 7
+  - 8
+  reference-domain: domain01
+  reference-level: 8  # data/domains.py uses 16**4 = 4**8 cells per triangle
+
 # domains used for training (subset of mllam-data-prep.domains)
 train-domains:
 - domain01

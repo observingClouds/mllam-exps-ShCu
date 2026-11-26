@@ -491,3 +491,79 @@ stages:
       md5: cf4e3681ea71047785a196f9801025e1.dir
       size: 103051587
       nfiles: 13
+  get_grid_topology:
+    cmd: uv run python src/find_domains.py download-grid --output 
+      data/grid_topo.nc
+    outs:
+    - path: data/grid_topo.nc
+      hash: md5
+      md5: d7f32582dcb19e2f05b03561f043cb64
+      size: 518949509
+  find_domains@7:
+    cmd: uv run python src/find_domains.py find --grid data/grid_topo.nc --level
+      7 --reference-domain domain01 --reference-level 8 --output 
+      data/domains.level7.py --plot figures/domains.level7.png
+    deps:
+    - path: data/domains.py
+      hash: md5
+      md5: 07ba0670a7adfb61a346c618164f6bc0
+      size: 8447
+    - path: data/grid_topo.nc
+      hash: md5
+      md5: d7f32582dcb19e2f05b03561f043cb64
+      size: 518949509
+    - path: src/find_domains.py
+      hash: md5
+      md5: 1608edfd530afbae42df3e28c1d43051
+      size: 6071
+    - path: src/icon_domains.py
+      hash: md5
+      md5: a4c02c048bc7363cfe2f7cd8870e2cb0
+      size: 13824
+    params:
+      params.yaml:
+        domain-finder.reference-domain: domain01
+        domain-finder.reference-level: 8
+    outs:
+    - path: data/domains.level7.py
+      hash: md5
+      md5: 826cb297266d78078ed0942d7580244f
+      size: 14415
+    - path: figures/domains.level7.png
+      hash: md5
+      md5: dca5749c6bcef6b1c9dab75d73fa0211
+      size: 644656
+  find_domains@8:
+    cmd: uv run python src/find_domains.py find --grid data/grid_topo.nc --level
+      8 --reference-domain domain01 --reference-level 8 --output 
+      data/domains.level8.py --plot figures/domains.level8.png
+    deps:
+    - path: data/domains.py
+      hash: md5
+      md5: 07ba0670a7adfb61a346c618164f6bc0
+      size: 8447
+    - path: data/grid_topo.nc
+      hash: md5
+      md5: d7f32582dcb19e2f05b03561f043cb64
+      size: 518949509
+    - path: src/find_domains.py
+      hash: md5
+      md5: 1608edfd530afbae42df3e28c1d43051
+      size: 6071
+    - path: src/icon_domains.py
+      hash: md5
+      md5: a4c02c048bc7363cfe2f7cd8870e2cb0
+      size: 13824
+    params:
+      params.yaml:
+        domain-finder.reference-domain: domain01
+        domain-finder.reference-level: 8
+    outs:
+    - path: data/domains.level8.py
+      hash: md5
+      md5: c7a13df9abee8d57813d22a014be0c30
+      size: 2747
+    - path: figures/domains.level8.png
+      hash: md5
+      md5: 3baaca6365db8b55514f3e1a1707540c
+      size: 458198
