@@ -1,0 +1,6 @@
+outs:
+- md5: bec3985a473529610d002585deba344e.dir
+  size: 7306303
+  nfiles: 39
+  hash: md5
+  path: coordinates.zarr
